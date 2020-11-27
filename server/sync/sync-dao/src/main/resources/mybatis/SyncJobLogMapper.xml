@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.SyncJobLogMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.SyncJobLog">
+    <!-- 任务日志主键 -->
+    <id column="job_log_id" jdbcType="BIGINT" property="jobLogId" />
+    <!-- 任务主键 -->
+    <result column="job_id" jdbcType="BIGINT" property="jobId" />
+    <result column="job_name" jdbcType="VARCHAR" property="jobName" />
+    <result column="job_group" jdbcType="VARCHAR" property="jobGroup" />
+    <!-- 日志消息 -->
+    <result column="log_message" jdbcType="VARCHAR" property="logMessage" />
+    <!-- 日志状态，0-正常，1-异常 -->
+    <result column="log_state" jdbcType="INTEGER" property="logState" />
+    <!-- 耗时 -->
+    <result column="lost_time" jdbcType="BIGINT" property="lostTime" />
+    <!-- 错误日志信息 -->
+    <result column="error_message" jdbcType="VARCHAR" property="errorMessage" />
+    <!-- 创建时间 -->
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    job_log_id, job_id, job_name, job_group, log_message, log_state, lost_time, error_message, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sync_job_log
+    where job_log_id = #{jobLogId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sync_job_log
+    where job_log_id = #{jobLogId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" keyProperty="jobLogId" parameterType="com.nodecollege.cloud.common.model.po.SyncJobLog" useGeneratedKeys="true">
+    insert into sync_job_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="jobLogId != null">
+        job_log_id,
+      </if>
+      <if test="jobName != null">
+        job_name,
+      </if>
+      <if test="jobGroup != null">
+        job_group,
+      </if>
+      <if test="logMessage != null">
+        log_message,
+      </if>
+      <if test="logState != null">
+        log_state,
+      </if>
+      <if test="lostTime != null">
+        lost_time,
+      </if>
+      <if test="errorMessage != null">
+        error_message,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="jobId != null">
+        job_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="jobLogId != null">
+        #{jobLogId,jdbcType=BIGINT},
+      </if>
+      <if test="jobName != null">
+        #{jobName,jdbcType=VARCHAR},
+      </if>
+      <if test="jobGroup != null">
+        #{jobGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="logMessage != null">
+        #{logMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="logState != null">
+        #{logState,jdbcType=INTEGER},
+      </if>
+      <if test="lostTime != null">
+        #{lostTime,jdbcType=BIGINT},
+      </if>
+      <if test="errorMessage != null">
+        #{errorMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jobId != null">
+        #{jobId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-06-12 17:13:24 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  <select id="selectListByMap" parameterType="java.util.HashMap"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sync_job_log
+    <where>
+      <if test="jobLogId != null">
+        job_log_id = #{jobLogId,jdbcType=BIGINT}
+      </if>
+      <if test="jobId != null">
+        job_id = #{jobId,jdbcType=BIGINT}
+      </if>
+      <if test="jobName != null">
+        job_name = #{jobName,jdbcType=VARCHAR}
+      </if>
+      <if test="jobGroup != null">
+        job_group = #{jobGroup,jdbcType=VARCHAR}
+      </if>
+      <if test="logMessage != null">
+        log_message = #{logMessage,jdbcType=VARCHAR}
+      </if>
+      <if test="logState != null">
+        log_state = #{logState,jdbcType=INTEGER}
+      </if>
+      <if test="errorMessage != null">
+        error_message = #{errorMessage,jdbcType=VARCHAR}
+      </if>
+      <if test="startTime != null">
+        <![CDATA[ and create_time >= #{startTime,jdbcType=TIMESTAMP} ]]>
+      </if>
+      <if test="endTime != null">
+        <![CDATA[ and create_time <= #{endTime,jdbcType=TIMESTAMP} ]]>
+      </if>
+    </where>
+    order by create_time desc, job_log_id desc
+  </select>
+</mapper>

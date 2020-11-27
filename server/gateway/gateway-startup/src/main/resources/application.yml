@@ -1,0 +1,86 @@
+# 端口设置
+server:
+  port: 1081
+  servlet:
+    context-path: /
+    session:
+      # 超时时间配置，多长时间需要重新登陆
+      timeout: 3600s
+
+#########  sqlite  ##########
+spring:
+  application:
+    name: gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+          lower-case-service-id: true
+      routes:
+        - id: operate
+          uri: lb://operate
+          predicates:
+            - Path= /ncApi/**
+          filters:
+            - StripPrefix=1
+  profiles:
+    active: dev
+  # redis配置开始
+  # Redis数据库索引（默认为0）
+  redis:
+    database: 0
+    # Redis服务器地址
+    host: 127.0.0.1
+    # Redis服务器连接端口
+    port: 6379
+    # Redis服务器连接密码（默认为空）
+    password: 123456
+    # 连接池最大连接数（使用负值表示没有限制）
+    jedis:
+      pool:
+        max-active: 1024
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: 10000
+        # 连接池中的最大空闲连接
+        max-idle: 200
+        # 连接池中的最小空闲连接
+        min-idle: 0
+    # 连接超时时间（毫秒）
+    timeout: 10000
+    # redis配置结束
+    block-when-exhausted: true
+feign:
+  hystrix:
+    enabled: true
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+ribbon:
+  ConnectTimeout: 60000
+  ReadTimeout: 60000
+# 暴露端点
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: '*'
+#  endpoint:
+#    health:
+#      show-details: always
+
+# 日志配置
+log:
+  # 日志是否上传
+  posh: true
+# 打印sql语句
+logging:
+  level:
+    com.nodecollege.cloud.dao: DEBUG

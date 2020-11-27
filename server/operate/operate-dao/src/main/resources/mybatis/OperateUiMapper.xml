@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.OperateUiMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.OperateUi">
+    <!-- 主键 -->
+    <id column="ui_id" jdbcType="BIGINT" property="uiId" />
+    <!-- 前端名称 -->
+    <result column="ui_name" jdbcType="VARCHAR" property="uiName" />
+    <!-- 前端代码 -->
+    <result column="ui_code" jdbcType="VARCHAR" property="uiCode" />
+    <!-- 描述 -->
+    <result column="ui_desc" jdbcType="VARCHAR" property="uiDesc" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ui_id, ui_name, ui_code, ui_desc
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from o_ui
+    where ui_id = #{uiId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from o_ui
+    where ui_id = #{uiId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" keyProperty="uiId" parameterType="com.nodecollege.cloud.common.model.po.OperateUi" useGeneratedKeys="true">
+    insert into o_ui
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="uiId != null">
+        ui_id,
+      </if>
+      <if test="uiName != null">
+        ui_name,
+      </if>
+      <if test="uiCode != null">
+        ui_code,
+      </if>
+      <if test="uiDesc != null">
+        ui_desc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="uiId != null">
+        #{uiId,jdbcType=BIGINT},
+      </if>
+      <if test="uiName != null">
+        #{uiName,jdbcType=VARCHAR},
+      </if>
+      <if test="uiCode != null">
+        #{uiCode,jdbcType=VARCHAR},
+      </if>
+      <if test="uiDesc != null">
+        #{uiDesc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update o_ui
+    <set>
+      <if test="uiName != null">
+        ui_name = #{uiName,jdbcType=VARCHAR},
+      </if>
+      <if test="uiDesc != null">
+        ui_desc = #{uiDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ui_id = #{uiId,jdbcType=BIGINT}
+  </update>
+  
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-08-11 19:48:53 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  <select id="selectUiList" parameterType="com.nodecollege.cloud.common.model.po.OperateUi" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from o_ui
+    <where>
+      <if test="uiCode != null">
+        and ui_code = #{uiCode,jdbcType=VARCHAR}
+      </if>
+      <if test="uiName != null">
+        and ui_name = #{uiName,jdbcType=VARCHAR}
+      </if>
+      <if test="uiDesc != null">
+        and ui_desc = #{uiDesc,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+</mapper>

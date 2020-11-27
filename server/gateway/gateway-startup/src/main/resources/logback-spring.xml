@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+    <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径 -->
+    <springProperty scope="context" name="logSystem" source="spring.application.name" defaultValue=""/>
+    <springProperty scope="context" name="logPath" source="log.path" defaultValue="/mnt/log/"/>
+    <springProperty scope="context" name="logLevel" source="log.level" defaultValue="info"/>
+    <springProperty scope="context" name="logStdout" source="log.stdout" defaultValue="true"/>
+    <property name="LOG_SYSTEM" value="${logSystem}"/>
+    <property name="LOG_HOME" value="${logPath}/${logSystem}"/>
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%requestId表示请求id，%level：级别从左显示5个字符宽度 %M：方法 %L 行号 %msg：日志消息，%n是换行符 -->
+            <!--            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-16X{requestId}] %-5level ${LOG_SYSTEM} [%logger{10}_%M][%L] - %msg%n</pattern>-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{requestId}] [%X{callIds}] %-5level ${LOG_SYSTEM} [%logger{10}][%L] - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- 按照每天生成日志文件 -->
+    <appender name="infoAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOG_HOME}/info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- each file should be at most 100MB, keep 60 days worth of history, but at most 20GB -->
+            <maxFileSize>500MB</maxFileSize>
+            <maxHistory>15</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%requestId表示请求id，%level：级别从左显示5个字符宽度 %M：方法 %L 行号 %msg：日志消息，%n是换行符 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{requestId}] [%X{callIds}] %-5level ${LOG_SYSTEM} [%logger{10}][%L] - %msg%n
+            </pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+    </appender>
+    <appender name="errorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOG_HOME}/${LOG_SYSTEM}-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- each file should be at most 100MB, keep 60 days worth of history, but at most 20GB -->
+            <maxFileSize>500MB</maxFileSize>
+            <maxHistory>15</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%requestId表示请求id，%level：级别从左显示5个字符宽度 %M：方法 %L 行号 %msg：日志消息，%n是换行符 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{requestId}] [%X{callIds}] %-5level ${LOG_SYSTEM} [%logger{10}][%L] - %msg%n
+            </pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <appender name="springAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/spring.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOG_HOME}/${LOG_SYSTEM}-spring-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- each file should be at most 100MB, keep 60 days worth of history, but at most 20GB -->
+            <maxFileSize>500MB</maxFileSize>
+            <maxHistory>15</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%requestId表示请求id，%level：级别从左显示5个字符宽度 %M：方法 %L 行号 %msg：日志消息，%n是换行符 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{requestId}] [%X{callIds}] %-5level ${LOG_SYSTEM} [%logger{10}][%L] - %msg%n
+            </pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+    </appender>
+
+    <logger name="com.nodecollege.cloud" level="${logLevel}" additivity="false">
+        <appender-ref ref="infoAppender"/>
+        <appender-ref ref="errorAppender"/>
+        <if condition='property("logStdout").contains("true")'>
+            <then>
+                <appender-ref ref="STDOUT"/>
+            </then>
+        </if>
+    </logger>
+
+    <!-- datasource -->
+    <logger name="com.alibaba.druid" level="${logLevel}" additivity="false">
+        <appender-ref ref="infoAppender"/>
+        <appender-ref ref="errorAppender"/>
+        <if condition='property("logStdout").contains("true")'>
+            <then>
+                <appender-ref ref="STDOUT"/>
+            </then>
+        </if>
+    </logger>
+
+    <!--  -->
+    <logger name="org.apache" level="${logLevel}" additivity="false">
+        <appender-ref ref="infoAppender"/>
+        <appender-ref ref="errorAppender"/>
+        <if condition='property("logStdout").contains("true")'>
+            <then>
+                <appender-ref ref="STDOUT"/>
+            </then>
+        </if>
+    </logger>
+
+    <!--  -->
+    <logger name="com.lambdaworks" level="${logLevel}" additivity="false">
+        <appender-ref ref="springAppender"/>
+        <appender-ref ref="errorAppender"/>
+        <if condition='property("logStdout").contains("true")'>
+            <then>
+                <appender-ref ref="STDOUT"/>
+            </then>
+        </if>
+    </logger>
+
+    <!--  -->
+    <logger name="com.netflix" level="${logLevel}" additivity="false">
+        <appender-ref ref="springAppender"/>
+        <appender-ref ref="errorAppender"/>
+        <if condition='property("logStdout").contains("true")'>
+            <then>
+                <appender-ref ref="STDOUT"/>
+            </then>
+        </if>
+    </logger>
+
+    <!-- spring -->
+    <logger name="org.springframework" level="${logLevel}" additivity="false">
+        <appender-ref ref="springAppender"/>
+        <appender-ref ref="errorAppender"/>
+        <if condition='property("logStdout").contains("true")'>
+            <then>
+                <appender-ref ref="STDOUT"/>
+            </then>
+        </if>
+    </logger>
+
+    <!-- 日志输出级别 -->
+    <root level="${logLevel}">
+        <if condition='property("logStdout").contains("true")'>
+            <then>
+                <appender-ref ref="STDOUT"/>
+            </then>
+        </if>
+        <appender-ref ref="infoAppender"/>
+        <appender-ref ref="errorAppender"/>
+        <appender-ref ref="springAppender"/>
+    </root>
+</configuration>

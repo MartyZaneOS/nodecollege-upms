@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.7.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>com.nodecollege.cloud</groupId>
+    <artifactId>sync</artifactId>
+    <version>1.0.2-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>sync</name>
+    <description>节点学院同步模块</description>
+
+    <modules>
+        <module>sync-common</module>
+        <module>sync-dao</module>
+        <module>sync-service</module>
+        <module>sync-web</module>
+        <module>sync-startup</module>
+    </modules>
+
+    <properties>
+        <revision>1.0.2-SNAPSHOT</revision>
+        <!-- 模块项目版本 -->
+        <com.nodecollege.version>1.0</com.nodecollege.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.worldTreeEncoding>UTF-8</project.reporting.worldTreeEncoding>
+        <java.version>1.8</java.version>
+
+        <spring-cloud.version>Hoxton.SR5</spring-cloud.version>
+        <quartz.version>2.3.2</quartz.version>
+        <tools.version>1.0.2-SNAPSHOT</tools.version>
+        <chat.version>1.0.2-SNAPSHOT</chat.version>
+        <article.version>1.0.2-SNAPSHOT</article.version>
+        <worldTree.version>1.0.2-SNAPSHOT</worldTree.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                <version>2.2.1.RELEASE</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-openfeign</artifactId>
+                <version>2.2.3.RELEASE</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz</artifactId>
+                <version>2.3.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz-jobs</artifactId>
+                <version>2.3.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>0.9.11</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.nodecollege.cloud</groupId>
+                <artifactId>tools-common</artifactId>
+                <version>${tools.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.nodecollege.cloud</groupId>
+                <artifactId>tools-dao</artifactId>
+                <version>${tools.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.nodecollege.cloud</groupId>
+                <artifactId>base-client</artifactId>
+                <version>${tools.version}</version>
+            </dependency>
+
+            <!-- 自定义模块 -->
+            <dependency>
+                <groupId>com.nodecollege.cloud</groupId>
+                <artifactId>sync-common</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.nodecollege.cloud</groupId>
+                <artifactId>sync-dao</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.nodecollege.cloud</groupId>
+                <artifactId>sync-service</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.nodecollege.cloud</groupId>
+                <artifactId>sync-web</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.nodecollege.cloud</groupId>
+                <artifactId>sync-startup</artifactId>
+                <version>${revision}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

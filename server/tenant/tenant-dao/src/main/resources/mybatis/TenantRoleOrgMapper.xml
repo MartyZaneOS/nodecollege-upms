@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.TenantRoleOrgMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.TenantRoleOrg">
+    <!-- 主键 -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <!-- 租户id -->
+    <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+    <!-- 角色代码 -->
+    <result column="role_code" jdbcType="VARCHAR" property="roleCode" />
+    <!-- 机构代码 -->
+    <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
+    <!-- 机构代码 -->
+    <result column="role_source" jdbcType="INTEGER" property="roleSource" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, tenant_id, role_code, org_code, role_source
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_role_org
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_role_org
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyProperty="id" parameterType="com.nodecollege.cloud.common.model.po.TenantRoleOrg" useGeneratedKeys="true">
+    insert into t_role_org (id, tenant_id, role_code, org_code, role_source)
+    values (#{id,jdbcType=BIGINT}, #{tenantId,jdbcType=BIGINT}, #{roleCode,jdbcType=VARCHAR}, 
+      #{orgCode,jdbcType=VARCHAR}, #{roleSource,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey">
+    update t_role_org
+    set tenant_id = #{tenantId,jdbcType=BIGINT},
+      role_code = #{roleCode,jdbcType=VARCHAR},
+      org_code = #{orgCode,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-10-16 20:05:03 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  <select id="selectList" parameterType="com.nodecollege.cloud.common.model.po.TenantRoleOrg" resultMap="BaseResultMap">
+  select
+  <include refid="Base_Column_List" />
+  from t_role_org
+  <where>
+    <if test="tenantId != null">
+      and tenant_id = #{tenantId,jdbcType=BIGINT}
+    </if>
+    <if test="orgCode != null">
+      and org_code = #{orgCode,jdbcType=VARCHAR}
+    </if>
+    <if test="roleCode != null">
+      and role_code = #{roleCode,jdbcType=VARCHAR}
+    </if>
+    <if test="roleSource != null">
+      and role_source = #{roleSource,jdbcType=INTEGER}
+    </if>
+  </where>
+</select>
+  
+</mapper>

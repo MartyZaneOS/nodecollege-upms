@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.ChatDebateMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.ChatDebate">
+    <id column="debate_id" jdbcType="BIGINT" property="debateId" />
+    <result column="debate_type" jdbcType="INTEGER" property="debateType" />
+    <result column="original_json" jdbcType="VARCHAR" property="originalJson" />
+    <result column="update_json" jdbcType="VARCHAR" property="updateJson" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="result" jdbcType="INTEGER" property="result" />
+    <result column="result_msg" jdbcType="VARCHAR" property="resultMsg" />
+    <result column="support_num" jdbcType="INTEGER" property="supportNum" />
+    <result column="refuse_num" jdbcType="INTEGER" property="refuseNum" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+      <result column="uuid" jdbcType="VARCHAR" property="uuid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    debate_id, debate_type, original_json, update_json, user_id, result, result_msg, support_num,
+    refuse_num, create_time, end_time, uuid
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from chat_debate
+    where debate_id = #{debateId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from chat_debate
+    where debate_id = #{debateId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" parameterType="com.nodecollege.cloud.common.model.po.ChatDebate" keyProperty="debateId">
+    insert into chat_debate
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="debateId != null">
+        debate_id,
+      </if>
+      <if test="debateType != null">
+        debate_type,
+      </if>
+      <if test="originalJson != null">
+        original_json,
+      </if>
+      <if test="updateJson != null">
+        update_json,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="result != null">
+        result,
+      </if>
+      <if test="resultMsg != null">
+        result_msg,
+      </if>
+      <if test="supportNum != null">
+        support_num,
+      </if>
+      <if test="refuseNum != null">
+        refuse_num,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+        <if test="uuid != null">
+            uuid,
+        </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="debateId != null">
+        #{debateId,jdbcType=BIGINT},
+      </if>
+      <if test="debateType != null">
+        #{debateType,jdbcType=INTEGER},
+      </if>
+      <if test="originalJson != null">
+        #{originalJson,jdbcType=VARCHAR},
+      </if>
+      <if test="updateJson != null">
+        #{updateJson,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="result != null">
+        #{result,jdbcType=INTEGER},
+      </if>
+      <if test="resultMsg != null">
+        #{resultMsg,jdbcType=INTEGER},
+      </if>
+      <if test="supportNum != null">
+        #{supportNum,jdbcType=INTEGER},
+      </if>
+      <if test="refuseNum != null">
+        #{refuseNum,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+        <if test="uuid != null">
+            #{uuid,jdbcType=VARCHAR},
+        </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update chat_debate
+    <set>
+      <if test="result != null">
+        result = #{result,jdbcType=INTEGER},
+      </if>
+      <if test="resultMsg != null">
+        result_msg = #{resultMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="supportNum != null">
+        support_num = #{supportNum,jdbcType=INTEGER},
+      </if>
+      <if test="refuseNum != null">
+        refuse_num = #{refuseNum,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where debate_id = #{debateId,jdbcType=BIGINT}
+  </update>
+
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-02-22 18:16:08 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  <select id="selectListByMap" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from chat_debate
+    <where>
+      <if test="debateType != null">
+        and debate_type = #{debateType,jdbcType=INTEGER}
+      </if>
+      <if test="result != null">
+        and result = #{result,jdbcType=INTEGER}
+      </if>
+    </where>
+    order by create_time desc
+  </select>
+
+  <!-- 查找需要同步的数据 -->
+  <select id="selectEndDebateList" parameterType="java.util.Date"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from chat_debate where end_time &lt; now() and result = 2
+    </select>
+</mapper>

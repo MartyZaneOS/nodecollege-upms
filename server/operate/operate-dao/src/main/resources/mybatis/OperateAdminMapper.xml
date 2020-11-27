@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.OperateAdminMapper">
+    <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.OperateAdmin">
+        <id column="admin_id" jdbcType="BIGINT" property="adminId"/>
+        <result column="account" jdbcType="VARCHAR" property="account"/>
+        <result column="telephone" jdbcType="VARCHAR" property="telephone"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="salt" jdbcType="VARCHAR" property="salt"/>
+        <result column="first_login" jdbcType="BIT" property="firstLogin"/>
+        <result column="show_all_org" jdbcType="BIT" property="showAllOrg"/>
+        <result column="show_all_role" jdbcType="BIT" property="showAllRole"/>
+        <result column="default_org_code" jdbcType="VARCHAR" property="defaultOrgCode"/>
+        <result column="default_role_code" jdbcType="VARCHAR" property="defaultRoleCode"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    a.admin_id, a.account, a.telephone, a.password, a.salt, a.first_login,
+    a.show_all_org, a.show_all_role, a.default_org_code, a.default_role_code,
+    a.state, a.create_time
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from o_admin a
+        where a.admin_id = #{adminId,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from o_admin
+    where admin_id = #{adminId,jdbcType=BIGINT}
+  </delete>
+    <insert id="insertSelective" parameterType="com.nodecollege.cloud.common.model.po.OperateAdmin" keyProperty="adminId">
+        insert into o_admin
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="adminId != null">
+                admin_id,
+            </if>
+            <if test="account != null">
+                account,
+            </if>
+            <if test="telephone != null">
+                telephone,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="salt != null">
+                salt,
+            </if>
+            <if test="firstLogin != null">
+                first_login,
+            </if>
+            <if test="showAllOrg != null">
+                show_all_org,
+            </if>
+            <if test="showAllRole != null">
+                show_all_role,
+            </if>
+            <if test="defaultOrgCode != null">
+                default_org_code,
+            </if>
+            <if test="defaultRoleCode != null">
+                default_role_code,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="adminId != null">
+                #{adminId,jdbcType=BIGINT},
+            </if>
+            <if test="account != null">
+                #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="telephone != null">
+                #{telephone,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="salt != null">
+                #{salt,jdbcType=VARCHAR},
+            </if>
+            <if test="firstLogin != null">
+                #{firstLogin,jdbcType=BIT},
+            </if>
+            <if test="showAllOrg != null">
+                #{showAllOrg,jdbcType=BIT},
+            </if>
+            <if test="showAllRole != null">
+                #{showAllRole,jdbcType=BIT},
+            </if>
+            <if test="defaultOrgCode != null">
+                #{defaultOrgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="defaultRoleCode != null">
+                #{defaultRoleCode,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective">
+        update o_admin
+        <set>
+            <if test="account != null">
+                account = #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="telephone != null">
+                telephone = #{telephone,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="salt != null">
+                salt = #{salt,jdbcType=VARCHAR},
+            </if>
+            <if test="firstLogin != null">
+                first_login = #{firstLogin,jdbcType=BIGINT},
+            </if>
+            <if test="showAllOrg != null">
+                show_all_org = #{showAllOrg,jdbcType=BIGINT},
+            </if>
+            <if test="showAllRole != null">
+                show_all_role = #{showAllRole,jdbcType=BIGINT},
+            </if>
+            <if test="defaultOrgCode != null">
+                default_org_code = #{defaultOrgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="defaultRoleCode != null">
+                default_role_code = #{defaultRoleCode,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where admin_id = #{adminId,jdbcType=BIGINT}
+    </update>
+
+    <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2019-11-27 19:32:32 ### -->
+
+
+    <!-- Your codes goes here!!! -->
+
+    <!-- 查询管理员列表 -->
+    <select id="selectAdminListByMap" parameterType="java.util.HashMap"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from o_admin a
+        <where>
+            <![CDATA[ and state > -1 ]]>
+            <if test="account !=null and account !=''">
+                and a.account = #{account,jdbcType=VARCHAR}
+            </if>
+            <if test="telephone !=null and telephone !=''">
+                and a.telephone = #{telephone,jdbcType=VARCHAR}
+            </if>
+            <if test="state !=null">
+                and a.state = #{state,jdbcType=INTEGER}
+            </if>
+
+            <if test="startTime != null">
+                <![CDATA[ and a.create_time >= #{startTime,jdbcType=TIMESTAMP} ]]>
+            </if>
+            <if test="endTime != null">
+                <![CDATA[ and a.create_time <= #{endTime,jdbcType=TIMESTAMP} ]]>
+            </if>
+            <choose>
+                <when test="longList!=null and longList.size>0">
+                    and a.admin_id in
+                    <foreach item="_itemType" collection="longList" open="(" separator="," close=")">
+                        #{_itemType,jdbcType=BIGINT}
+                    </foreach>
+                </when>
+            </choose>
+        </where>
+        order by a.create_time desc
+    </select>
+
+    <select id="selectListByOpRoleAdmin" parameterType="java.util.HashMap"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from o_admin a left join upms_op_role_admin ora on a.admin_id = ora.admin_id
+        <where>
+            <![CDATA[ and a.state > -1 ]]>
+            <if test="account !=null and account !=''">
+                and a.account = #{account,jdbcType=VARCHAR}
+            </if>
+            <if test="telephone !=null and telephone !=''">
+                and a.telephone = #{telephone,jdbcType=VARCHAR}
+            </if>
+            <if test="opRoleId !=null ">
+                and ora.op_role_id = #{opRoleId,jdbcType=BIGINT}
+            </if>
+        </where>
+        order by a.create_time desc
+    </select>
+
+
+    <select id="selectListByOrg" parameterType="java.util.HashMap"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from o_admin a left join o_admin_org o on a.admin_id = o.admin_id
+        <where>
+            <![CDATA[ a.state > -1 ]]>
+            <if test="orgCode != null and orgCode != ''">
+                and o.org_code = #{orgCode,jdbcType=VARCHAR}
+            </if>
+            <choose>
+                <when test="stringList!=null and stringList.size>0">
+                    and o.org_code in
+                    <foreach item="_item" collection="stringList" open="(" separator="," close=")">
+                        #{_item,jdbcType=VARCHAR}
+                    </foreach>
+                </when>
+            </choose>
+        </where>
+        order by a.create_time desc
+    </select>
+
+    <select id="selectListByRoleOrg" parameterType="com.nodecollege.cloud.common.model.po.OperateAdminOrgRole"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from o_admin a left join o_admin_org_role o on a.admin_id = o.admin_id
+        <where>
+            <![CDATA[ a.state > -1 ]]>
+            and o.role_code = #{roleCode,jdbcType=VARCHAR}
+            <if test="orgCode != null and orgCode != ''">
+                and o.org_code = #{orgCode,jdbcType=VARCHAR}
+            </if>
+            <if test="adminId != null">
+                and o.admin_id = #{adminId,jdbcType=BIGINT}
+            </if>
+        </where>
+        order by a.create_time desc
+    </select>
+</mapper>

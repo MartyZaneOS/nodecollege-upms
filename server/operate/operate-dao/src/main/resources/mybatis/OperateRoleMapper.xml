@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.OperateRoleMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.OperateRole">
+    <!-- 主键 -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <!-- 归属产品代码 -->
+    <result column="product_code" jdbcType="VARCHAR" property="productCode" />
+    <!-- 角色名称 -->
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+    <!-- 角色代码 -->
+    <result column="role_code" jdbcType="VARCHAR" property="roleCode" />
+    <!-- 角色描述 -->
+    <result column="role_desc" jdbcType="VARCHAR" property="roleDesc" />
+    <!-- 角色用途 0-运维角色，1-2C角色，2-2B角色 -->
+    <result column="role_usage" jdbcType="INTEGER" property="roleUsage" />
+    <!-- 角色类型2B用途有效  0-组织角色，1-组织成员角色 -->
+    <result column="role_type" jdbcType="INTEGER" property="roleType" />
+    <!-- 数据权限 2B用途有效
+      0-可以操作该租户的所有数据
+      1-可以操作所属机构及下级机构所有数据
+      2-可以操作所属机构及当前机构所有下级机构数据
+      3-可以操作所属机构的数据
+      4-可以操作当前机构及下级所有机构数据
+      5-仅能操作当前机构数据
+      6-仅能操作用户自己的数据 -->
+    <result column="data_power" jdbcType="TINYINT" property="dataPower" />
+    <!-- 状态 -1-已删除，0-正常，1-禁用 -->
+    <result column="role_state" jdbcType="INTEGER" property="roleState" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, product_code, role_name, role_code, role_desc, role_usage, role_type, data_power, 
+    role_state
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from o_role
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from o_role
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" keyProperty="id" parameterType="com.nodecollege.cloud.common.model.po.OperateRole" useGeneratedKeys="true">
+    insert into o_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="productCode != null">
+        product_code,
+      </if>
+      <if test="roleName != null">
+        role_name,
+      </if>
+      <if test="roleCode != null">
+        role_code,
+      </if>
+      <if test="roleDesc != null">
+        role_desc,
+      </if>
+      <if test="roleUsage != null">
+        role_usage,
+      </if>
+      <if test="roleType != null">
+        role_type,
+      </if>
+      <if test="dataPower != null">
+        data_power,
+      </if>
+      <if test="roleState != null">
+        role_state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="productCode != null">
+        #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="roleName != null">
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleCode != null">
+        #{roleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="roleDesc != null">
+        #{roleDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="roleUsage != null">
+        #{roleUsage,jdbcType=INTEGER},
+      </if>
+      <if test="roleType != null">
+        #{roleType,jdbcType=INTEGER},
+      </if>
+      <if test="dataPower != null">
+        #{dataPower,jdbcType=TINYINT},
+      </if>
+      <if test="roleState != null">
+        #{roleState,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update o_role
+    <set>
+      <if test="productCode != null">
+        product_code = #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="roleName != null">
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleCode != null">
+        role_code = #{roleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="roleDesc != null">
+        role_desc = #{roleDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="roleUsage != null">
+        role_usage = #{roleUsage,jdbcType=INTEGER},
+      </if>
+      <if test="roleType != null">
+        role_type = #{roleType,jdbcType=INTEGER},
+      </if>
+      <if test="dataPower != null">
+        data_power = #{dataPower,jdbcType=TINYINT},
+      </if>
+      <if test="roleState != null">
+        role_state = #{roleState,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-08-31 20:22:36 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  <select id="selectListByMap" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from o_role
+    <where>
+      role_usage = #{roleUsage,jdbcType=INTEGER}
+      <if test="productCode != null and productCode != ''">
+        and product_code = #{productCode,jdbcType=VARCHAR}
+      </if>
+      <if test="roleName != null and roleName != ''">
+        and role_name = #{roleName,jdbcType=VARCHAR}
+      </if>
+      <if test="roleCode != null and roleCode != ''">
+        and role_code = #{roleCode,jdbcType=VARCHAR}
+      </if>
+      <if test="roleDesc != null and roleDesc != ''">
+        and role_desc = #{roleDesc,jdbcType=VARCHAR}
+      </if>
+      <if test="roleType != null">
+        and role_type = #{roleType,jdbcType=INTEGER}
+      </if>
+      <if test="dataPower != null">
+        and data_power = #{dataPower,jdbcType=TINYINT}
+      </if>
+      <if test="roleState != null">
+        and role_state = #{roleState,jdbcType=INTEGER}
+      </if>
+      <choose>
+        <when test="stringList!=null and stringList.size>0">
+          and product_code in
+          <foreach item="_itemType" collection="stringList" open="(" separator="," close=")">
+            #{_itemType,jdbcType=VARCHAR}
+          </foreach>
+        </when>
+      </choose>
+    </where>
+    order by role_name, role_code
+  </select>
+
+  <select id="selectListByOrg" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select
+    distinct r.id, r.product_code, r.role_name, r.role_code, r.role_desc, r.role_usage, r.role_type, r.data_power,
+    r.role_state
+    from o_role r left join o_role_org o on r.role_code = o.role_code and r.role_usage = o.role_org_usage
+    <where>
+        o.role_org_usage = #{roleOrgUsage,jdbcType=INTEGER}
+      <if test="orgCode != null and orgCode != ''">
+        and o.org_code = #{orgCode,jdbcType=VARCHAR}
+      </if>
+      <choose>
+        <when test="stringList!=null and stringList.size>0">
+          and o.org_code in
+          <foreach item="_item" collection="stringList" open="(" separator="," close=")">
+            #{_item,jdbcType=VARCHAR}
+          </foreach>
+        </when>
+      </choose>
+    </where>
+    order by r.role_code, r.role_name
+  </select>
+
+  <select id="selectListByAdmin" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select
+    distinct r.id, r.product_code, r.role_name, r.role_code, r.role_desc, r.role_usage, r.role_type, r.data_power,
+    r.role_state
+    from o_role r left join o_admin_org_role a on r.role_code = a.role_code and r.role_usage = 0
+    <where>
+      <if test="adminId != null">
+        and a.admin_id = #{adminId,jdbcType=BIGINT}
+      </if>
+      <choose>
+        <when test="longList!=null and longList.size>0">
+          and a.admin_id in
+          <foreach item="_item" collection="longList" open="(" separator="," close=")">
+            #{_item,jdbcType=BIGINT}
+          </foreach>
+        </when>
+      </choose>
+    </where>
+    order by r.role_code, r.role_name
+  </select>
+
+  <select id="selectListByUser" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select
+    distinct r.id, r.product_code, r.role_name, r.role_code, r.role_desc, r.role_usage, r.role_type, r.data_power,
+    r.role_state
+    from o_role r left join o_user_org_role u on r.role_code = u.role_code and r.role_usage = 1
+    <where>
+      <if test="userId != null">
+        and u.user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <choose>
+        <when test="longList!=null and longList.size>0">
+          and u.user_id in
+          <foreach item="_item" collection="longList" open="(" separator="," close=")">
+            #{_item,jdbcType=BIGINT}
+          </foreach>
+        </when>
+      </choose>
+    </where>
+    order by r.role_code, r.role_name
+  </select>
+</mapper>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.OperateRoleMenuMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.OperateRoleMenu">
+    <!-- 主键 -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <!-- 用途 0-运营/运维，1-2C，2-2B -->
+    <result column="role_menu_usage" jdbcType="INTEGER" property="roleMenuUsage" />
+    <!-- 角色代码 -->
+    <result column="role_code" jdbcType="VARCHAR" property="roleCode" />
+    <!-- 菜单代码 -->
+    <result column="menu_code" jdbcType="VARCHAR" property="menuCode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, role_menu_usage, role_code, menu_code
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from o_role_menu
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from o_role_menu
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyProperty="id" parameterType="com.nodecollege.cloud.common.model.po.OperateRoleMenu" useGeneratedKeys="true">
+    insert into o_role_menu (id, role_menu_usage, role_code, menu_code
+      )
+    values (#{id,jdbcType=BIGINT}, #{roleMenuUsage,jdbcType=INTEGER}, #{roleCode,jdbcType=VARCHAR}, #{menuCode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey">
+    update o_role_menu
+    set role_menu_usage = #{roleMenuUsage,jdbcType=INTEGER},
+      role_code = #{roleCode,jdbcType=VARCHAR},
+      menu_code = #{menuCode,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-08-31 20:23:12 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  <select id="selectListByMap" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from o_role_menu
+    <where>
+        role_menu_usage = #{roleMenuUsage,jdbcType=INTEGER}
+      <if test="roleCode != null and roleCode != ''">
+        and role_code = #{roleCode,jdbcType=VARCHAR}
+      </if>
+      <if test="menuCode != null and menuCode != ''">
+        and menu_code = #{menuCode,jdbcType=VARCHAR}
+      </if>
+      <choose>
+        <when test="stringList!=null and stringList.size>0">
+          and role_code in
+          <foreach item="item" collection="stringList" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+          </foreach>
+        </when>
+      </choose>
+    </where>
+  </select>
+</mapper>

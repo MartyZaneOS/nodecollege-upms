@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.OperateRouteMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.OperateRoute">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <!-- 唯一id -->
+    <result column="route_id" jdbcType="VARCHAR" property="routeId" />
+    <!-- 网关名称 -->
+    <result column="route_name" jdbcType="VARCHAR" property="routeName" />
+    <!-- 转发类型 0-从注册中心获取地址，1-直接跳转网络地址 -->
+    <result column="route_type" jdbcType="INTEGER" property="routeType" />
+    <!-- 路由地址 -->
+    <result column="route_url" jdbcType="VARCHAR" property="routeUrl" />
+    <!-- 路由排序 越小越优先 -->
+    <result column="route_order" jdbcType="INTEGER" property="routeOrder" />
+    <!-- 路由状态 0-禁用，1-启用 -->
+    <result column="route_state" jdbcType="INTEGER" property="routeState" />
+    <!-- 断言 -->
+    <result column="predicate_json" jdbcType="VARCHAR" property="predicateJson" />
+    <!-- 过滤器 -->
+    <result column="filter_json" jdbcType="VARCHAR" property="filterJson" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, route_id, route_name, route_type, route_url, route_order, route_state, predicate_json,
+    filter_json
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from o_route
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from o_route
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" keyProperty="id" parameterType="com.nodecollege.cloud.common.model.po.OperateRoute" useGeneratedKeys="true">
+    insert into o_route
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="routeId != null">
+        route_id,
+      </if>
+      <if test="routeName != null">
+        route_name,
+      </if>
+      <if test="routeType != null">
+        route_type,
+      </if>
+      <if test="routeUrl != null">
+        route_url,
+      </if>
+      <if test="routeOrder != null">
+        route_order,
+      </if>
+      <if test="routeState != null">
+        route_state,
+      </if>
+      <if test="predicateJson != null">
+        predicate_json,
+      </if>
+      <if test="filterJson != null">
+        filter_json,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="routeId != null">
+        #{routeId,jdbcType=VARCHAR},
+      </if>
+      <if test="routeName != null">
+        #{routeName,jdbcType=VARCHAR},
+      </if>
+      <if test="routeType != null">
+        #{routeType,jdbcType=INTEGER},
+      </if>
+      <if test="routeUrl != null">
+        #{routeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="routeOrder != null">
+        #{routeOrder,jdbcType=INTEGER},
+      </if>
+      <if test="routeState != null">
+        #{routeState,jdbcType=INTEGER},
+      </if>
+      <if test="predicateJson != null">
+        #{predicateJson,jdbcType=VARCHAR},
+      </if>
+      <if test="filterJson != null">
+        #{filterJson,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update o_route
+    <set>
+      <if test="routeId != null">
+        route_id = #{routeId,jdbcType=VARCHAR},
+      </if>
+      <if test="routeName != null">
+        route_name = #{routeName,jdbcType=VARCHAR},
+      </if>
+      <if test="routeType != null">
+        route_type = #{routeType,jdbcType=INTEGER},
+      </if>
+      <if test="routeUrl != null">
+        route_url = #{routeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="routeOrder != null">
+        route_order = #{routeOrder,jdbcType=INTEGER},
+      </if>
+      <if test="routeState != null">
+        route_state = #{routeState,jdbcType=INTEGER},
+      </if>
+      <if test="predicateJson != null">
+        predicate_json = #{predicateJson,jdbcType=VARCHAR},
+      </if>
+      <if test="filterJson != null">
+        filter_json = #{filterJson,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-09-21 20:20:50 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  <select id="selectList" parameterType="com.nodecollege.cloud.common.model.po.OperateRoute" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from o_route
+    <where>
+      <if test="routeId != null">
+        and route_id = #{routeId,jdbcType=VARCHAR}
+      </if>
+      <if test="routeName != null">
+        and route_name = #{routeName,jdbcType=VARCHAR}
+      </if>
+      <if test="routeType != null">
+        and route_type = #{routeType,jdbcType=INTEGER}
+      </if>
+      <if test="routeUrl != null">
+        and route_url = #{routeUrl,jdbcType=VARCHAR}
+      </if>
+      <if test="routeOrder != null">
+        and route_order = #{routeOrder,jdbcType=INTEGER}
+      </if>
+      <if test="routeState != null">
+        and route_state = #{routeState,jdbcType=INTEGER}
+      </if>
+      <if test="predicateJson != null">
+        and predicate_json = #{predicateJson,jdbcType=VARCHAR}
+      </if>
+      <if test="filterJson != null">
+        and filter_json = #{filterJson,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+</mapper>

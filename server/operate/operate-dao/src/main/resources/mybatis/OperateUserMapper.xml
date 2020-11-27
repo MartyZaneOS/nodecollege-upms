@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.OperateUserMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.OperateUser">
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="sex" jdbcType="INTEGER" property="sex" />
+    <result column="birthday" jdbcType="DATE" property="birthday" />
+    <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+    <result column="tenant_code" jdbcType="VARCHAR" property="tenantCode" />
+    <result column="first_login" jdbcType="INTEGER" property="firstLogin" />
+    <result column="show_all_org" jdbcType="BIT" property="showAllOrg"/>
+    <result column="show_all_role" jdbcType="BIT" property="showAllRole"/>
+    <result column="default_org_code" jdbcType="VARCHAR" property="defaultOrgCode"/>
+    <result column="default_role_code" jdbcType="VARCHAR" property="defaultRoleCode"/>
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="salt" jdbcType="VARCHAR" property="salt" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    u.user_id, u.account, u.nickname, u.email, u.telephone, u.avatar, u.sex, u.birthday, u.tenant_id, u.tenant_code, u.first_login,
+    u.show_all_org, u.show_all_role, u.default_org_code, u.default_role_code,
+    u.password, u.salt, u.state, u.create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from o_user u
+    where u.user_id = #{userId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from o_user
+    where user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insertSelective" parameterType="com.nodecollege.cloud.common.model.po.OperateUser" keyProperty="userId">
+    insert into o_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="account != null">
+        account,
+      </if>
+      <if test="birthday != null">
+        birthday,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="telephone != null">
+        telephone,
+      </if>
+      <if test="nickname != null">
+        nickname,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="tenantId != null">
+        tenant_id,
+      </if>
+      <if test="tenantCode != null">
+        tenant_code,
+      </if>
+      <if test="showAllOrg != null">
+        show_all_org,
+      </if>
+      <if test="showAllRole != null">
+        show_all_role,
+      </if>
+      <if test="defaultOrgCode != null">
+        default_org_code,
+      </if>
+      <if test="defaultRoleCode != null">
+        default_role_code,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="salt != null">
+        salt,
+      </if>
+      <if test="firstLogin != null">
+        first_login,
+      </if>
+      <if test="avatar != null">
+        avatar,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="account != null">
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        #{birthday,jdbcType=DATE},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null">
+        #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null">
+        #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="tenantId != null">
+        #{tenantId,jdbcType=BIGINT},
+      </if>
+      <if test="tenantCode != null">
+        #{tenantCode,jdbcType=VARCHAR},
+      </if>
+      <if test="showAllOrg != null">
+        #{showAllOrg,jdbcType=BIT},
+      </if>
+      <if test="showAllRole != null">
+        #{showAllRole,jdbcType=BIT},
+      </if>
+      <if test="defaultOrgCode != null">
+        #{defaultOrgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="defaultRoleCode != null">
+        #{defaultRoleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="firstLogin != null">
+        #{firstLogin,jdbcType=INTEGER},
+      </if>
+      <if test="avatar != null">
+        #{avatar,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update o_user
+    <set>
+      <if test="account != null">
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null">
+        telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null">
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="tenantId != null">
+        tenant_id = #{tenantId,jdbcType=BIGINT},
+      </if>
+      <if test="tenantCode != null">
+        tenant_code = #{tenantCode,jdbcType=VARCHAR},
+      </if>
+      <if test="showAllOrg != null">
+        show_all_org = #{showAllOrg,jdbcType=BIGINT},
+      </if>
+      <if test="showAllRole != null">
+        show_all_role = #{showAllRole,jdbcType=BIGINT},
+      </if>
+      <if test="defaultOrgCode != null">
+        default_org_code = #{defaultOrgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="defaultRoleCode != null">
+        default_role_code = #{defaultRoleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        salt = #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="firstLogin != null">
+        first_login = #{firstLogin,jdbcType=INTEGER},
+      </if>
+      <if test="avatar != null">
+        avatar = #{avatar,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=BIGINT}
+  </update>
+  
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2019-12-03 23:25:09 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+
+  <!-- 查询管理员列表 -->
+  <select id="selectUserListByMap" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from o_user u
+    <where>
+      <![CDATA[ and state > -1 ]]>
+      <if test="account !=null and account !=''">
+        and u.account = #{account,jdbcType=VARCHAR}
+      </if>
+      <if test="email !=null and email !=''">
+        and u.email = #{email,jdbcType=VARCHAR}
+      </if>
+      <if test="telephone !=null and telephone !=''">
+        and u.telephone = #{telephone,jdbcType=VARCHAR}
+      </if>
+      <if test="nickname !=null and nickname !=''">
+        and u.nickname = #{nickname,jdbcType=VARCHAR}
+      </if>
+      <if test="sex !=null and sex !=''">
+        and u.sex = #{sex,jdbcType=VARCHAR}
+      </if>
+      <if test="state !=null">
+        and u.state = #{state,jdbcType=INTEGER}
+      </if>
+      <if test="tenantId !=null">
+        and u.tenant_id = #{tenantId,jdbcType=BIGINT}
+      </if>
+      <if test="tenantCode !=null">
+        and u.tenant_code = #{tenantCode,jdbcType=VARCHAR}
+      </if>
+      <if test="password !=null">
+        and u.password = #{password,jdbcType=VARCHAR}
+      </if>
+      <if test="salt !=null">
+        and u.salt = #{salt,jdbcType=VARCHAR}
+      </if>
+
+      <if test="startDate != null">
+        <![CDATA[ and u.birthday >= #{startDate,jdbcType=DATE} ]]>
+      </if>
+      <if test="endDate != null">
+        <![CDATA[ and u.birthday <= #{endDate,jdbcType=DATE} ]]>
+      </if>
+      <if test="startTime != null">
+        <![CDATA[ and u.create_time >= #{startTime,jdbcType=TIMESTAMP} ]]>
+      </if>
+      <if test="endTime != null">
+        <![CDATA[ and u.create_time <= #{endTime,jdbcType=TIMESTAMP} ]]>
+      </if>
+      <choose>
+        <when test="longList!=null and longList.size>0">
+          and u.user_id in
+          <foreach item="_itemType" collection="longList" open="(" separator="," close=")">
+            #{_itemType,jdbcType=BIGINT}
+          </foreach>
+        </when>
+      </choose>
+    </where>
+    order by create_time desc
+  </select>
+
+  <!-- 根据昵称查询用户信息 -->
+  <select id="getUserListByNickname" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from o_user u
+    <where>
+      <![CDATA[ u.state > -1 ]]>
+     and (
+      u.account like CONCAT(#{nickname,jdbcType=VARCHAR}, '%')
+        or u.email like CONCAT(#{nickname,jdbcType=VARCHAR}, '%')
+        or u.telephone like CONCAT(#{nickname,jdbcType=VARCHAR}, '%')
+        or u.nickname like CONCAT(#{nickname,jdbcType=VARCHAR}, '%')
+      )
+    </where>
+    order by create_time desc
+  </select>
+
+  <select id="selectListByOrg" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from o_user u left join o_user_org o on u.user_id = o.user_id
+    <where>
+      <![CDATA[ u.state > -1 ]]>
+      <if test="orgCode != null and orgCode != ''">
+        and o.org_code = #{orgCode,jdbcType=VARCHAR}
+      </if>
+      <choose>
+        <when test="stringList!=null and stringList.size>0">
+          and o.org_code in
+          <foreach item="_item" collection="stringList" open="(" separator="," close=")">
+            #{_item,jdbcType=VARCHAR}
+          </foreach>
+        </when>
+      </choose>
+    </where>
+    order by u.create_time desc
+  </select>
+
+
+  <select id="selectListByRoleOrg" parameterType="com.nodecollege.cloud.common.model.po.OperateUserOrgRole"
+          resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from o_user u left join o_user_org_role o on u.user_id = o.user_id
+    <where>
+      <![CDATA[ u.state > -1 ]]>
+      and o.role_code = #{roleCode,jdbcType=VARCHAR}
+      <if test="orgCode != null and orgCode != ''">
+        and o.org_code = #{orgCode,jdbcType=VARCHAR}
+      </if>
+      <if test="userId != null">
+        and o.user_id = #{userId,jdbcType=BIGINT}
+      </if>
+    </where>
+    order by u.create_time desc
+  </select>
+</mapper>

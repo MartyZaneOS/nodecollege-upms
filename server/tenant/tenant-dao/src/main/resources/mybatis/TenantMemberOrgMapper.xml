@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.TenantMemberOrgMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.TenantMemberOrg">
+    <!-- 主键 -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <!-- 租户id -->
+    <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+    <!-- 成员id -->
+    <result column="member_id" jdbcType="BIGINT" property="memberId" />
+    <!-- 机构代码 -->
+    <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, member_id, org_code
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_member_org
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_member_org
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyProperty="id" parameterType="com.nodecollege.cloud.common.model.po.TenantMemberOrg" useGeneratedKeys="true">
+    insert into t_member_org (id, tenant_id, member_id, org_code
+      )
+    values (#{id,jdbcType=BIGINT}, #{tenantId,jdbcType=BIGINT}, #{memberId,jdbcType=BIGINT}, #{orgCode,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-10-15 21:53:33 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  <select id="selectList" parameterType="com.nodecollege.cloud.common.model.po.TenantMemberOrg" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_member_org
+    <where>
+      <if test="memberId != null">
+        and member_id = #{memberId,jdbcType=BIGINT}
+      </if>
+      <if test="orgCode != null and orgCode != ''">
+        and org_code = #{orgCode,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+  
+</mapper>

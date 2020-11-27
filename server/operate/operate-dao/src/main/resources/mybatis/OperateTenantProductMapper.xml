@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.OperateTenantProductMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.OperateTenantProduct">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <!-- 租户id -->
+    <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+    <!-- 产品代码 -->
+    <result column="product_code" jdbcType="VARCHAR" property="productCode" />
+    <!-- 状态 0-停用，1-启用 -->
+    <result column="state" jdbcType="TINYINT" property="state" />
+    <!-- 创建用户 -->
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <!-- 创建时间 -->
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <!-- 修改用户 -->
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <!-- 修改时间 -->
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, tenant_id, product_code, state, create_user, create_time, update_user, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from o_tenant_product
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from o_tenant_product
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" keyProperty="id" parameterType="com.nodecollege.cloud.common.model.po.OperateTenantProduct" useGeneratedKeys="true">
+    insert into o_tenant_product
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="tenantId != null">
+        tenant_id,
+      </if>
+      <if test="productCode != null">
+        product_code,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="tenantId != null">
+        #{tenantId,jdbcType=BIGINT},
+      </if>
+      <if test="productCode != null">
+        #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update o_tenant_product
+    <set>
+      <if test="state != null">
+        state = #{state,jdbcType=TINYINT},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-10-19 10:20:04 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  <select id="selectList" parameterType="com.nodecollege.cloud.common.model.po.OperateTenantProduct" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from o_tenant_product
+    <where>
+      <if test="tenantId != null">
+        and tenant_id = #{tenantId,jdbcType=BIGINT}
+      </if>
+      <if test="productCode != null">
+        and product_code = #{productCode,jdbcType=VARCHAR}
+      </if>
+      <if test="state != null">
+        and state = #{state,jdbcType=TINYINT}
+      </if>
+    </where>
+  </select>
+</mapper>

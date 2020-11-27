@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.OperateProductMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.OperateProduct">
+    <!-- 主键 -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <!-- 产品名称 -->
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+    <!-- 产品代码 -->
+    <result column="product_code" jdbcType="VARCHAR" property="productCode" />
+    <!-- 产品类型：0-顶级产品，1-共存式产品，2-排斥式产品 -->
+    <result column="product_type" jdbcType="TINYINT" property="productType" />
+    <!-- 产品用途：0-运维，1-2C，2-2B -->
+    <result column="product_usage" jdbcType="TINYINT" property="productUsage" />
+    <!-- 父级产品代码 -->
+    <result column="parent_code" jdbcType="VARCHAR" property="parentCode" />
+    <!-- 产品描述 -->
+    <result column="product_desc" jdbcType="VARCHAR" property="productDesc" />
+    <!-- 产品图标 -->
+    <result column="product_icon" jdbcType="VARCHAR" property="productIcon" />
+    <!-- 顶级产品代码 -->
+    <result column="top_code" jdbcType="VARCHAR" property="topCode" />
+    <!-- 归属产品代码 -->
+    <result column="belong_code" jdbcType="VARCHAR" property="belongCode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, product_name, product_code, product_type, product_usage, parent_code, product_desc, product_icon, top_code, belong_code
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from o_product
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from o_product
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" keyProperty="id" parameterType="com.nodecollege.cloud.common.model.po.OperateProduct" useGeneratedKeys="true">
+    insert into o_product
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="productName != null">
+        product_name,
+      </if>
+      <if test="productCode != null">
+        product_code,
+      </if>
+      <if test="productType != null">
+        product_type,
+      </if>
+      <if test="productUsage != null">
+        product_usage,
+      </if>
+      <if test="parentCode != null">
+        parent_code,
+      </if>
+      <if test="productDesc != null">
+        product_desc,
+      </if>
+      <if test="productIcon != null">
+        product_icon,
+      </if>
+      <if test="topCode != null">
+        top_code,
+      </if>
+      <if test="belongCode != null">
+        belong_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="productName != null">
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null">
+        #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null">
+        #{productType,jdbcType=TINYINT},
+      </if>
+      <if test="productUsage != null">
+        #{productUsage,jdbcType=TINYINT},
+      </if>
+      <if test="parentCode != null">
+        #{parentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productDesc != null">
+        #{productDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="productIcon != null">
+        #{productIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="topCode != null">
+        #{topCode,jdbcType=VARCHAR},
+      </if>
+      <if test="belongCode != null">
+        #{belongCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update o_product
+    <set>
+      <if test="productName != null">
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null">
+        product_code = #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null">
+        product_type = #{productType,jdbcType=TINYINT},
+      </if>
+      <if test="productUsage != null">
+        product_usage = #{productUsage,jdbcType=TINYINT},
+      </if>
+      <if test="parentCode != null">
+        parent_code = #{parentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productDesc != null">
+        product_desc = #{productDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="productIcon != null">
+        product_icon = #{productIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="topCode != null">
+        top_code = #{topCode,jdbcType=VARCHAR},
+      </if>
+      <if test="belongCode != null">
+        belong_code = #{belongCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-08-17 20:18:43 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  <select id="selectProductList" parameterType="com.nodecollege.cloud.common.model.po.OperateProduct" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from o_product
+    <where>
+      <if test="productName != null">
+        and product_name = #{productName,jdbcType=VARCHAR}
+      </if>
+      <if test="productCode != null">
+        and product_code = #{productCode,jdbcType=VARCHAR}
+      </if>
+      <if test="productType != null">
+        and product_type = #{productType,jdbcType=TINYINT}
+      </if>
+      <if test="productUsage != null">
+        and product_usage = #{productUsage,jdbcType=TINYINT}
+      </if>
+      <if test="parentCode != null">
+        and parent_code = #{parentCode,jdbcType=VARCHAR}
+      </if>
+      <if test="topCode != null">
+        and top_code = #{topCode,jdbcType=VARCHAR}
+      </if>
+      <if test="belongCode != null">
+        and belong_code = #{belongCode,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+</mapper>

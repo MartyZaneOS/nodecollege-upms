@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.OperateConfigMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.OperateConfig">
+    <id column="config_id" jdbcType="BIGINT" property="configId" />
+    <result column="pre_flag" jdbcType="INTEGER" property="preFlag" />
+    <result column="config_usage" jdbcType="INTEGER" property="configUsage" />
+    <result column="config_group" jdbcType="VARCHAR" property="configGroup" />
+    <result column="config_code" jdbcType="VARCHAR" property="configCode" />
+    <result column="config_name" jdbcType="VARCHAR" property="configName" />
+    <result column="config_value" jdbcType="VARCHAR" property="configValue" />
+    <result column="config_explain" jdbcType="VARCHAR" property="configExplain" />
+    <result column="config_type" jdbcType="INTEGER" property="configType" />
+    <result column="option_list" jdbcType="VARCHAR" property="optionList" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="admin_org_code" jdbcType="VARCHAR" property="adminOrgCode" />
+    <result column="admin_account" jdbcType="VARCHAR" property="adminAccount" />
+    <result column="user_org_code" jdbcType="VARCHAR" property="userOrgCode" />
+    <result column="user_account" jdbcType="VARCHAR" property="userAccount" />
+    <result column="tenant_code" jdbcType="VARCHAR" property="tenantCode" />
+    <result column="tenant_org_code" jdbcType="VARCHAR" property="tenantOrgCode" />
+    <result column="member_account" jdbcType="VARCHAR" property="memberAccount" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    config_id, config_group, config_code, config_name, config_value, config_explain, config_usage, config_type, option_list, state,
+    admin_org_code, admin_account, user_org_code, user_account, tenant_code, tenant_org_code, member_account,
+    create_user, create_time, update_user, update_time, pre_flag
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from o_config
+    where config_id = #{configId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from o_config
+    where config_id = #{configId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" parameterType="com.nodecollege.cloud.common.model.po.OperateConfig" keyProperty="configId">
+    insert into o_config
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="configId != null">
+        config_id,
+      </if>
+      <if test="configGroup != null">
+        config_group,
+      </if>
+      <if test="configCode != null">
+        config_code,
+      </if>
+      <if test="configName != null">
+        config_name,
+      </if>
+      <if test="configValue != null">
+        config_value,
+      </if>
+      <if test="configExplain != null">
+        config_explain,
+      </if>
+      <if test="configUsage != null">
+        config_usage,
+      </if>
+      <if test="configType != null">
+        config_type,
+      </if>
+      <if test="optionList != null">
+        option_list,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="adminOrgCode != null">
+        admin_org_code,
+      </if>
+      <if test="adminAccount != null">
+        admin_account,
+      </if>
+      <if test="userOrgCode != null">
+        user_org_code,
+      </if>
+      <if test="userAccount != null">
+        user_account,
+      </if>
+      <if test="tenantCode != null">
+        tenant_code,
+      </if>
+      <if test="tenantOrgCode != null">
+        tenant_org_code,
+      </if>
+      <if test="memberAccount != null">
+        member_account,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="preFlag != null">
+        pre_flag
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="configId != null">
+        #{configId,jdbcType=BIGINT},
+      </if>
+      <if test="configGroup != null">
+        #{configGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="configCode != null">
+        #{configCode,jdbcType=VARCHAR},
+      </if>
+      <if test="configName != null">
+        #{configName,jdbcType=VARCHAR},
+      </if>
+      <if test="configValue != null">
+        #{configValue,jdbcType=VARCHAR},
+      </if>
+      <if test="configExplain != null">
+        #{configExplain,jdbcType=VARCHAR},
+      </if>
+      <if test="configUsage != null">
+        #{configUsage,jdbcType=INTEGER},
+      </if>
+      <if test="configType != null">
+        #{configType,jdbcType=INTEGER},
+      </if>
+      <if test="optionList != null">
+        #{optionList,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="adminOrgCode != null">
+        #{adminOrgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="adminAccount != null">
+        #{adminAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="userOrgCode != null">
+        #{userOrgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userAccount != null">
+        #{userAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantCode != null">
+        #{tenantCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantOrgCode != null">
+        #{tenantOrgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="memberAccount != null">
+        #{memberAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="preFlag != null">
+        #{preFlag,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update o_config
+    <set>
+      <if test="configGroup != null">
+        config_group = #{configGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="configCode != null">
+        config_code = #{configCode,jdbcType=VARCHAR},
+      </if>
+      <if test="configName != null">
+        config_name = #{configName,jdbcType=VARCHAR},
+      </if>
+      <if test="configValue != null">
+        config_value = #{configValue,jdbcType=VARCHAR},
+      </if>
+      <if test="configExplain != null">
+        config_explain = #{configExplain,jdbcType=VARCHAR},
+      </if>
+      <if test="configUsage != null">
+        config_usage = #{configUsage,jdbcType=INTEGER},
+      </if>
+      <if test="configType != null">
+        config_type = #{configType,jdbcType=INTEGER},
+      </if>
+      <if test="optionList != null">
+        option_list = #{optionList,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantCode != null">
+        tenant_code = #{tenantCode,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="adminOrgCode != null">
+        admin_org_code = #{adminOrgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="adminAccount != null">
+        admin_account = #{adminAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="userOrgCode != null">
+        user_org_code = #{userOrgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userAccount != null">
+        user_account = #{userAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantCode != null">
+        tenant_code = #{tenantCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantOrgCode != null">
+        tenant_org_code = #{tenantOrgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="memberAccount != null">
+        member_account = #{memberAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where config_id = #{configId,jdbcType=BIGINT}
+  </update>
+  
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-02-07 21:58:25 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  <!-- 查询配置列表 -->
+  <select id="selectListByMap" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from o_config
+    <where>
+      <if test="configId != null">
+        and config_id = #{configId,jdbcType=BIGINT}
+      </if>
+      <if test="configGroup != null and configCode != ''">
+        and config_group = #{configGroup,jdbcType=VARCHAR}
+      </if>
+      <if test="configCode != null and configCode != ''">
+        and config_code = #{configCode,jdbcType=VARCHAR}
+      </if>
+      <if test="configName != null and configName != ''">
+        and config_name = #{configName,jdbcType=VARCHAR}
+      </if>
+      <if test="configValue != null and configCode != ''">
+        and config_value = #{configValue,jdbcType=VARCHAR}
+      </if>
+      <if test="preFlag != null">
+        and pre_flag = #{preFlag,jdbcType=INTEGER}
+      </if>
+      <if test="configUsage != null">
+        and config_usage = #{configUsage,jdbcType=INTEGER}
+      </if>
+      <if test="configType != null">
+        and config_type = #{configType,jdbcType=INTEGER}
+      </if>
+      <if test="state != null">
+        and state = #{state,jdbcType=INTEGER}
+      </if>
+      <if test="adminOrgCode != null and adminOrgCode != ''">
+        and admin_org_code = #{adminOrgCode,jdbcType=VARCHAR}
+      </if>
+      <if test="adminAccount != null and adminAccount != ''">
+        and admin_account = #{adminAccount,jdbcType=VARCHAR}
+      </if>
+      <if test="userOrgCode != null and userOrgCode != ''">
+        and user_org_code = #{userOrgCode,jdbcType=VARCHAR}
+      </if>
+      <if test="userAccount != null and userAccount != ''">
+        and user_account = #{userAccount,jdbcType=VARCHAR}
+      </if>
+      <if test="tenantCode != null and tenantCode != ''">
+        and tenant_code = #{tenantCode,jdbcType=VARCHAR}
+      </if>
+      <if test="tenantOrgCode != null and tenantOrgCode != ''">
+        and tenant_org_code = #{tenantOrgCode,jdbcType=VARCHAR}
+      </if>
+      <if test="memberAccount != null and memberAccount != ''">
+        and member_account = #{memberAccount,jdbcType=VARCHAR}
+      </if>
+      <if test="createUser != null and createUser != ''">
+        and create_user = #{createUser,jdbcType=VARCHAR}
+      </if>
+      <if test="updateUser != null and updateUser != ''">
+        and update_user = #{updateUser,jdbcType=VARCHAR}
+      </if>
+      <choose>
+        <when test="longList!=null and longList.size>0">
+          and config_usage in
+          <foreach item="_item" collection="longList" open="(" separator="," close=")">
+            #{_item,jdbcType=BIGINT}
+          </foreach>
+        </when>
+      </choose>
+    </where>
+    order by config_usage, config_group, config_name
+  </select>
+</mapper>

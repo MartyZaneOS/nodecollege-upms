@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.7.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>com.nodecollege.cloud</groupId>
+    <artifactId>operate</artifactId>
+    <version>1.0.2-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>operate</name>
+    <description>节点学院运维模块</description>
+
+    <modules>
+        <module>operate-common</module>
+        <module>operate-dao</module>
+        <module>operate-service</module>
+        <module>operate-web</module>
+        <module>operate-startup</module>
+    </modules>
+
+    <properties>
+        <revision>1.0.2-SNAPSHOT</revision>
+        <!-- 模块项目版本 -->
+        <com.nodecollege.version>1.0</com.nodecollege.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.worldTreeEncoding>UTF-8</project.reporting.worldTreeEncoding>
+        <java.version>1.8</java.version>
+
+        <spring-cloud.version>Hoxton.SR5</spring-cloud.version>
+        <quartz.version>2.3.2</quartz.version>
+        <fastdfs.version>1.26.5</fastdfs.version>
+        <tools.version>1.0.2-SNAPSHOT</tools.version>
+        <upms.version>1.0.2-SNAPSHOT</upms.version>
+        <base-client.version>1.0.2-SNAPSHOT</base-client.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                <version>2.2.1.RELEASE</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-openfeign</artifactId>
+                <version>2.2.3.RELEASE</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-crypto</artifactId>
+                <version>5.5.0</version>
+            </dependency>
+
+            <!-- 高性能分布式文件服务器 -->
+            <dependency>
+                <groupId>com.github.tobato</groupId>
+                <artifactId>fastdfs-client</artifactId>
+                <version>${fastdfs.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.nodecollege.cloud</groupId>
+                <artifactId>tools-common</artifactId>
+                <version>${tools.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.nodecollege.cloud</groupId>
+                <artifactId>tools-dao</artifactId>
+                <version>${tools.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.nodecollege.cloud</groupId>
+                <artifactId>base-client</artifactId>
+                <version>${base-client.version}</version>
+            </dependency>
+
+            <!-- 自定义模块 -->
+            <dependency>
+                <groupId>com.nodecollege.cloud</groupId>
+                <artifactId>operate-common</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.nodecollege.cloud</groupId>
+                <artifactId>operate-dao</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.nodecollege.cloud</groupId>
+                <artifactId>operate-service</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.nodecollege.cloud</groupId>
+                <artifactId>operate-web</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.nodecollege.cloud</groupId>
+                <artifactId>operate-startup</artifactId>
+                <version>${revision}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

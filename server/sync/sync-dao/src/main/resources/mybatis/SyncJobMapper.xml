@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.SyncJobMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.SyncJob">
+    <id column="job_id" jdbcType="BIGINT" property="jobId" />
+    <result column="job_name" jdbcType="VARCHAR" property="jobName" />
+    <result column="job_group" jdbcType="VARCHAR" property="jobGroup" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="job_class" jdbcType="VARCHAR" property="jobClass" />
+    <result column="job_param" jdbcType="VARCHAR" property="jobParam" />
+    <result column="cron_expression" jdbcType="VARCHAR" property="cronExpression" />
+    <result column="misfire_policy" jdbcType="INTEGER" property="misfirePolicy" />
+    <result column="job_status" jdbcType="INTEGER" property="jobStatus" />
+    <result column="job_type" jdbcType="INTEGER" property="jobType" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    job_id, job_name, job_group, description, job_class, job_param, cron_expression, misfire_policy, job_status, job_type,
+    create_time, update_user, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sync_job
+    where job_id = #{jobId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sync_job
+    where job_id = #{jobId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" keyProperty="jobId" parameterType="com.nodecollege.cloud.common.model.po.SyncJob" useGeneratedKeys="true">
+    insert into sync_job
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="jobId != null">
+        job_id,
+      </if>
+      <if test="jobName != null">
+        job_name,
+      </if>
+      <if test="jobGroup != null">
+        job_group,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="jobClass != null">
+        job_class,
+      </if>
+      <if test="jobParam != null">
+        job_param,
+      </if>
+      <if test="cronExpression != null">
+        cron_expression,
+      </if>
+      <if test="misfirePolicy != null">
+        misfire_policy,
+      </if>
+      <if test="jobStatus != null">
+        job_status,
+      </if>
+      <if test="jobType != null">
+        job_type,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="jobId != null">
+        #{jobId,jdbcType=BIGINT},
+      </if>
+      <if test="jobName != null">
+        #{jobName,jdbcType=VARCHAR},
+      </if>
+      <if test="jobGroup != null">
+        #{jobGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="jobClass != null">
+        #{jobClass,jdbcType=VARCHAR},
+      </if>
+      <if test="jobParam != null">
+        #{jobParam,jdbcType=VARCHAR},
+      </if>
+      <if test="cronExpression != null">
+        #{cronExpression,jdbcType=VARCHAR},
+      </if>
+      <if test="misfirePolicy != null">
+        #{misfirePolicy,jdbcType=INTEGER},
+      </if>
+      <if test="jobStatus != null">
+        #{jobStatus,jdbcType=INTEGER},
+      </if>
+      <if test="jobType != null">
+        #{jobType,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update sync_job
+    <set>
+      <if test="jobGroup != null">
+        job_group = #{jobGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="cronExpression != null">
+        cron_expression = #{cronExpression,jdbcType=VARCHAR},
+      </if>
+      <if test="misfirePolicy != null">
+        misfire_policy = #{misfirePolicy,jdbcType=INTEGER},
+      </if>
+      <if test="jobStatus != null">
+        job_status = #{jobStatus,jdbcType=INTEGER},
+      </if>
+      <if test="jobParam != null">
+        job_param = #{jobParam,jdbcType=INTEGER},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where job_id = #{jobId,jdbcType=BIGINT}
+  </update>
+  
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-06-10 15:42:30 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  <select id="selectList" parameterType="com.nodecollege.cloud.common.model.po.SyncJob" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sync_job
+    <where>
+      <if test="jobName != null">
+        job_name = #{jobName,jdbcType=VARCHAR}
+      </if>
+      <if test="jobGroup != null">
+        job_group = #{jobGroup,jdbcType=VARCHAR}
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR}
+      </if>
+      <if test="jobClass != null">
+        job_class = #{jobClass,jdbcType=VARCHAR}
+      </if>
+      <if test="cronExpression != null">
+        cron_expression = #{cronExpression,jdbcType=VARCHAR}
+      </if>
+      <if test="misfirePolicy != null">
+        misfire_policy = #{misfirePolicy,jdbcType=INTEGER}
+      </if>
+      <if test="jobStatus != null">
+        job_status = #{jobStatus,jdbcType=INTEGER}
+      </if>
+      <if test="jobType != null">
+        job_type = #{jobType,jdbcType=INTEGER}
+      </if>
+    </where>
+    order by create_time desc
+  </select>
+
+  <select id="selectListByMap" parameterType="java.util.HashMap"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sync_job
+    <where>
+      <if test="jobName != null">
+        job_name = #{jobName,jdbcType=VARCHAR}
+      </if>
+      <if test="jobGroup != null">
+        job_group = #{jobGroup,jdbcType=VARCHAR}
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR}
+      </if>
+      <if test="jobClass != null">
+        job_class = #{jobClass,jdbcType=VARCHAR}
+      </if>
+      <if test="cronExpression != null">
+        cron_expression = #{cronExpression,jdbcType=VARCHAR}
+      </if>
+      <if test="misfirePolicy != null">
+        misfire_policy = #{misfirePolicy,jdbcType=INTEGER}
+      </if>
+      <if test="jobStatus != null">
+        job_status = #{jobStatus,jdbcType=INTEGER}
+      </if>
+      <if test="jobType != null">
+        job_type = #{jobType,jdbcType=INTEGER}
+      </if>
+    </where>
+    order by create_time desc
+  </select>
+</mapper>

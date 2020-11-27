@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.ChatGroupUserMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.ChatGroupUser">
+    <id column="group_user_id" jdbcType="BIGINT" property="groupUserId" />
+    <result column="group_id" jdbcType="BIGINT" property="groupId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="user_type" jdbcType="INTEGER" property="userType" />
+    <result column="member_id" jdbcType="BIGINT" property="memberId" />
+    <result column="group_state" jdbcType="INTEGER" property="groupState" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="record_read_time" jdbcType="TIMESTAMP" property="recordReadTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    group_user_id, group_id, user_id, nickname, user_type, member_id, group_state, state, record_read_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from chat_group_user
+    where group_user_id = #{groupUserId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from chat_group_user
+    where group_user_id = #{groupUserId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" parameterType="com.nodecollege.cloud.common.model.po.ChatGroupUser" keyProperty="groupUserId">
+    insert into chat_group_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="groupUserId != null">
+        group_user_id,
+      </if>
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="nickname != null">
+        nickname,
+      </if>
+      <if test="userType != null">
+        user_type,
+      </if>
+      <if test="memberId != null">
+        member_id,
+      </if>
+      <if test="groupState != null">
+        group_state,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="recordReadTime != null">
+        record_read_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="groupUserId != null">
+        #{groupUserId,jdbcType=BIGINT},
+      </if>
+      <if test="groupId != null">
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="nickname != null">
+        #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null">
+        #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null">
+        #{memberId,jdbcType=BIGINT},
+      </if>
+      <if test="groupState != null">
+        #{groupState,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="recordReadTime != null">
+        #{recordReadTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update chat_group_user
+    <set>
+      <if test="nickname != null">
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null">
+        user_type = #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="groupState != null">
+        group_state = #{groupState,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="recordReadTime != null">
+        record_read_time = #{recordReadTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where group_user_id = #{groupUserId,jdbcType=INTEGER}
+  </update>
+  
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-02-16 00:43:36 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  <select id="selectGroupUserList" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from chat_group_user
+    <where>
+      group_id = #{groupId,jdbcType=BIGINT}
+      <if test="nickname != null">
+        and nickname = #{nickname,jdbcType=VARCHAR}
+      </if>
+      <if test="userType != null">
+        and user_type = #{userType,jdbcType=INTEGER}
+      </if>
+      <if test="groupState != null">
+        and group_state = #{groupState,jdbcType=INTEGER}
+      </if>
+      <if test="state != null">
+        and state = #{state,jdbcType=INTEGER}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="longList!=null and longList.size>0">
+        and user_id in
+        <foreach item="_itemType" collection="longList" open="(" separator="," close=")">
+          #{_itemType,jdbcType=BIGINT}
+        </foreach>
+      </if>
+    </where>
+    order by user_type, nickname
+  </select>
+</mapper>

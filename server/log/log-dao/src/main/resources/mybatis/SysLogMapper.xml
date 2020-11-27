@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.SysLogMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.SysLog">
+    <!-- 主键 -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <!-- 请求id -->
+    <result column="request_id" jdbcType="VARCHAR" property="requestId" />
+    <!-- 线程ids -->
+    <result column="call_ids" jdbcType="VARCHAR" property="callIds" />
+    <!-- 访问来源 -->
+    <result column="access_source" jdbcType="VARCHAR" property="accessSource" />
+    <!-- 服务名称 -->
+    <result column="app_name" jdbcType="VARCHAR" property="appName" />
+    <!-- 请求地址 -->
+    <result column="request_uri" jdbcType="VARCHAR" property="requestUri" />
+    <!-- 请求页面 -->
+    <result column="referer" jdbcType="VARCHAR" property="referer" />
+    <!-- 请求ip -->
+    <result column="request_ip" jdbcType="VARCHAR" property="requestIp" />
+    <!-- 入参 -->
+    <result column="in_param" jdbcType="VARCHAR" property="inParam" />
+    <!-- 出参 -->
+    <result column="out_param" jdbcType="VARCHAR" property="outParam" />
+    <!-- 请求是否成功 -->
+    <result column="success" jdbcType="TINYINT" property="success" />
+    <!-- 异常信息 -->
+    <result column="error_msg" jdbcType="VARCHAR" property="errorMsg" />
+    <!-- 耗时 -->
+    <result column="lost_time" jdbcType="BIGINT" property="lostTime" />
+    <!-- 管理员id -->
+    <result column="admin_id" jdbcType="BIGINT" property="adminId" />
+    <!-- 管理员账号 -->
+    <result column="admin_account" jdbcType="VARCHAR" property="adminAccount" />
+    <!-- 用户id -->
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <!-- 用户账号 -->
+    <result column="user_account" jdbcType="VARCHAR" property="userAccount" />
+    <!-- 成员id -->
+    <result column="member_id" jdbcType="BIGINT" property="memberId" />
+    <!-- 租户成员账号 -->
+    <result column="member_account" jdbcType="VARCHAR" property="memberAccount" />
+    <!-- 租户id -->
+    <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+    <!-- 租户代码 -->
+    <result column="tenant_code" jdbcType="VARCHAR" property="tenantCode" />
+    <!-- 创建时间 -->
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, request_id, call_ids, access_source, app_name, request_uri, referer, request_ip, 
+    in_param, out_param, success, error_msg, lost_time, admin_id, admin_account, user_id, user_account,
+    member_id, member_account, tenant_id, tenant_code, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sys_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" keyProperty="id" parameterType="com.nodecollege.cloud.common.model.po.SysLog" useGeneratedKeys="true">
+    insert into sys_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="requestId != null">
+        request_id,
+      </if>
+      <if test="callIds != null">
+        call_ids,
+      </if>
+      <if test="accessSource != null">
+        access_source,
+      </if>
+      <if test="appName != null">
+        app_name,
+      </if>
+      <if test="requestUri != null">
+        request_uri,
+      </if>
+      <if test="referer != null">
+        referer,
+      </if>
+      <if test="requestIp != null">
+        request_ip,
+      </if>
+      <if test="inParam != null">
+        in_param,
+      </if>
+      <if test="outParam != null">
+        out_param,
+      </if>
+      <if test="success != null">
+        success,
+      </if>
+      <if test="errorMsg != null">
+        error_msg,
+      </if>
+      <if test="lostTime != null">
+        lost_time,
+      </if>
+      <if test="adminId != null">
+        admin_id,
+      </if>
+      <if test="adminAccount != null">
+        admin_account,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userAccount != null">
+        user_account,
+      </if>
+      <if test="memberId != null">
+        member_id,
+      </if>
+      <if test="memberAccount != null">
+        member_account,
+      </if>
+      <if test="tenantId != null">
+        tenant_id,
+      </if>
+      <if test="tenantCode != null">
+        tenant_code,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="requestId != null">
+        #{requestId,jdbcType=VARCHAR},
+      </if>
+      <if test="callIds != null">
+        #{callIds,jdbcType=VARCHAR},
+      </if>
+      <if test="accessSource != null">
+        #{accessSource,jdbcType=VARCHAR},
+      </if>
+      <if test="appName != null">
+        #{appName,jdbcType=VARCHAR},
+      </if>
+      <if test="requestUri != null">
+        #{requestUri,jdbcType=VARCHAR},
+      </if>
+      <if test="referer != null">
+        #{referer,jdbcType=VARCHAR},
+      </if>
+      <if test="requestIp != null">
+        #{requestIp,jdbcType=VARCHAR},
+      </if>
+      <if test="inParam != null">
+        #{inParam,jdbcType=VARCHAR},
+      </if>
+      <if test="outParam != null">
+        #{outParam,jdbcType=VARCHAR},
+      </if>
+      <if test="success != null">
+        #{success,jdbcType=TINYINT},
+      </if>
+      <if test="errorMsg != null">
+        #{errorMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="lostTime != null">
+        #{lostTime,jdbcType=BIGINT},
+      </if>
+      <if test="adminId != null">
+        #{adminId,jdbcType=BIGINT},
+      </if>
+      <if test="adminAccount != null">
+        #{adminAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="userAccount != null">
+        #{userAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null">
+        #{memberId,jdbcType=BIGINT},
+      </if>
+      <if test="memberAccount != null">
+        #{memberAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null">
+        #{tenantId,jdbcType=BIGINT},
+      </if>
+      <if test="tenantCode != null">
+        #{tenantCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update sys_log
+    <set>
+      <if test="requestId != null">
+        request_id = #{requestId,jdbcType=VARCHAR},
+      </if>
+      <if test="callIds != null">
+        call_ids = #{callIds,jdbcType=VARCHAR},
+      </if>
+      <if test="accessSource != null">
+        access_source = #{accessSource,jdbcType=VARCHAR},
+      </if>
+      <if test="appName != null">
+        app_name = #{appName,jdbcType=VARCHAR},
+      </if>
+      <if test="requestUri != null">
+        request_uri = #{requestUri,jdbcType=VARCHAR},
+      </if>
+      <if test="referer != null">
+        referer = #{referer,jdbcType=VARCHAR},
+      </if>
+      <if test="requestIp != null">
+        request_ip = #{requestIp,jdbcType=VARCHAR},
+      </if>
+      <if test="inParam != null">
+        in_param = #{inParam,jdbcType=VARCHAR},
+      </if>
+      <if test="outParam != null">
+        out_param = #{outParam,jdbcType=VARCHAR},
+      </if>
+      <if test="success != null">
+        success = #{success,jdbcType=TINYINT},
+      </if>
+      <if test="errorMsg != null">
+        error_msg = #{errorMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="lostTime != null">
+        lost_time = #{lostTime,jdbcType=BIGINT},
+      </if>
+      <if test="adminId != null">
+        admin_id = #{adminId,jdbcType=BIGINT},
+      </if>
+      <if test="adminAccount != null">
+        admin_account = #{adminAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="userAccount != null">
+        user_account = #{userAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null">
+        member_id = #{memberId,jdbcType=BIGINT},
+      </if>
+      <if test="memberAccount != null">
+        member_account = #{memberAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null">
+        tenant_id = #{tenantId,jdbcType=BIGINT},
+      </if>
+      <if test="tenantCode != null">
+        tenant_code = #{tenantCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-09-27 16:37:18 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  <select id="selectListByMap" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_log
+    <where>
+      <if test="requestId != null and requestId != ''">
+        and request_id = #{requestId,jdbcType=VARCHAR}
+      </if>
+      <if test="callIds != null and callIds != ''">
+        and call_ids = #{callIds,jdbcType=VARCHAR}
+      </if>
+      <if test="accessSource != null and accessSource != ''">
+        and access_source = #{accessSource,jdbcType=VARCHAR}
+      </if>
+      <if test="appName != null and appName != ''">
+        and app_name = #{appName,jdbcType=VARCHAR}
+      </if>
+      <if test="requestUri != null and requestUri != ''">
+        and request_uri = #{requestUri,jdbcType=VARCHAR}
+      </if>
+      <if test="referer != null and referer != ''">
+        and referer = #{referer,jdbcType=VARCHAR}
+      </if>
+      <if test="requestIp != null and requestIp != ''">
+        and request_ip = #{requestIp,jdbcType=VARCHAR}
+      </if>
+      <if test="success != null">
+        and success = #{success,jdbcType=TINYINT}
+      </if>
+      <if test="adminId != null">
+        and admin_id = #{adminId,jdbcType=BIGINT}
+      </if>
+      <if test="adminAccount != null and adminAccount != ''">
+        and admin_account = #{adminAccount,jdbcType=VARCHAR}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="userAccount != null and userAccount != ''">
+        and user_account = #{userAccount,jdbcType=VARCHAR}
+      </if>
+      <if test="memberId != null">
+        and member_id = #{memberId,jdbcType=BIGINT}
+      </if>
+      <if test="memberAccount != null and memberAccount != ''">
+        and member_account = #{memberAccount,jdbcType=VARCHAR}
+      </if>
+      <if test="tenantId != null">
+        and tenant_id = #{tenantId,jdbcType=BIGINT}
+      </if>
+      <if test="tenantCode != null and tenantCode != ''">
+        and tenant_code = #{tenantCode,jdbcType=VARCHAR}
+      </if>
+      <if test="startTime != null">
+        <![CDATA[ and create_time >= #{startTime,jdbcType=TIMESTAMP} ]]>
+      </if>
+      <if test="endTime != null">
+        <![CDATA[ and create_time <= #{endTime,jdbcType=TIMESTAMP} ]]>
+      </if>
+    </where>
+    order by create_time desc
+  </select>
+</mapper>

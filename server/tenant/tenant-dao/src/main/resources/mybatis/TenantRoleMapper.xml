@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.TenantRoleMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.TenantRole">
+    <!-- 主键 -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <!-- 租户id -->
+    <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+    <!-- 角色名称 -->
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+    <!-- 角色代码 -->
+    <result column="role_code" jdbcType="VARCHAR" property="roleCode" />
+    <!-- 角色描述 -->
+    <result column="role_desc" jdbcType="VARCHAR" property="roleDesc" />
+    <!-- 角色类型2B用途有效  0-组织角色，1-组织成员角色 -->
+    <result column="role_type" jdbcType="INTEGER" property="roleType" />
+    <!-- 数据权限 0-所有数据，1-所属及下级机构数据，2-所属机构数据，3-用户自己的数据 -->
+    <result column="data_power" jdbcType="TINYINT" property="dataPower" />
+    <!-- 状态 -1-已删除，0-正常，1-禁用 -->
+    <result column="role_state" jdbcType="INTEGER" property="roleState" />
+    <!-- 创建人 -->
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <!-- 创建时间 -->
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <!-- 修改人 -->
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <!-- 修改时间 -->
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, tenant_id, role_name, role_code, role_desc, role_type, data_power, role_state, 
+    create_user, create_time, update_user, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_role
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_role
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" keyProperty="id" parameterType="com.nodecollege.cloud.common.model.po.TenantRole" useGeneratedKeys="true">
+    insert into t_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="tenantId != null">
+        tenant_id,
+      </if>
+      <if test="roleName != null">
+        role_name,
+      </if>
+      <if test="roleCode != null">
+        role_code,
+      </if>
+      <if test="roleDesc != null">
+        role_desc,
+      </if>
+      <if test="roleType != null">
+        role_type,
+      </if>
+      <if test="dataPower != null">
+        data_power,
+      </if>
+      <if test="roleState != null">
+        role_state,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="tenantId != null">
+        #{tenantId,jdbcType=BIGINT},
+      </if>
+      <if test="roleName != null">
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleCode != null">
+        #{roleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="roleDesc != null">
+        #{roleDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="roleType != null">
+        #{roleType,jdbcType=INTEGER},
+      </if>
+      <if test="dataPower != null">
+        #{dataPower,jdbcType=TINYINT},
+      </if>
+      <if test="roleState != null">
+        #{roleState,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update t_role
+    <set>
+      <if test="roleName != null">
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleDesc != null">
+        role_desc = #{roleDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="dataPower != null">
+        data_power = #{dataPower,jdbcType=TINYINT},
+      </if>
+      <if test="roleState != null">
+        role_state = #{roleState,jdbcType=INTEGER},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-10-16 16:02:21 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  <select id="selectListByMap" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from t_role
+    <where>
+      <if test="roleName != null and roleName != ''">
+        and role_name = #{roleName,jdbcType=VARCHAR}
+      </if>
+      <if test="roleCode != null and roleCode != ''">
+        and role_code = #{roleCode,jdbcType=VARCHAR}
+      </if>
+      <if test="roleDesc != null and roleDesc != ''">
+        and role_desc = #{roleDesc,jdbcType=VARCHAR}
+      </if>
+      <if test="roleType != null">
+        and role_type = #{roleType,jdbcType=INTEGER}
+      </if>
+      <if test="dataPower != null">
+        and data_power = #{dataPower,jdbcType=TINYINT}
+      </if>
+      <if test="roleState != null">
+        and role_state = #{roleState,jdbcType=INTEGER}
+      </if>
+      <if test="tenantId != null">
+        and tenant_id = #{tenantId,jdbcType=BIGINT}
+      </if>
+    </where>
+    order by role_name, role_code
+  </select>
+  
+</mapper>

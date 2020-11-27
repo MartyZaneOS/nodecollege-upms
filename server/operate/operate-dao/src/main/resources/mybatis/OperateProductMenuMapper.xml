@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.OperateProductMenuMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.OperateProductMenu">
+    <!-- 主键 -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <!-- 产品代码 -->
+    <result column="product_code" jdbcType="VARCHAR" property="productCode" />
+    <!-- 菜单代码 -->
+    <result column="menu_code" jdbcType="VARCHAR" property="menuCode" />
+    <!-- 菜单类型：0-分类导航，1-菜单页面 -->
+    <result column="menu_type" jdbcType="TINYINT" property="menuType" />
+    <!-- 菜单名称 -->
+    <result column="menu_name" jdbcType="VARCHAR" property="menuName" />
+    <!-- 菜单图标 -->
+    <result column="menu_icon" jdbcType="VARCHAR" property="menuIcon" />
+    <!-- 父级代码 -->
+    <result column="parent_code" jdbcType="VARCHAR" property="parentCode" />
+    <!-- 父级代码 -->
+    <result column="num" jdbcType="INTEGER" property="num" />
+  </resultMap>
+  <resultMap id="ProductMenuPageButtonResultMap" type="com.nodecollege.cloud.common.model.MenuVO" extends="BaseResultMap">
+    <!-- 页面代码 -->
+    <result column="page_code" jdbcType="VARCHAR" property="pageCode" />
+    <!-- 页面代码 -->
+    <result column="page_path" jdbcType="VARCHAR" property="pagePath" />
+    <!-- 接口服务名称 -->
+    <result column="app_name" jdbcType="VARCHAR" property="appName" />
+    <!-- 接口地址 -->
+    <result column="api_url" jdbcType="VARCHAR" property="apiUrl" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, product_code, menu_code, menu_type, menu_name, menu_icon, parent_code, num
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from o_product_menu
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from o_product_menu
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" keyProperty="id" parameterType="com.nodecollege.cloud.common.model.po.OperateProductMenu" useGeneratedKeys="true">
+    insert into o_product_menu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="productCode != null">
+        product_code,
+      </if>
+      <if test="menuCode != null">
+        menu_code,
+      </if>
+      <if test="menuType != null">
+        menu_type,
+      </if>
+      <if test="menuName != null">
+        menu_name,
+      </if>
+      <if test="menuIcon != null">
+        menu_icon,
+      </if>
+      <if test="parentCode != null">
+        parent_code,
+      </if>
+      <if test="num != null">
+        num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="productCode != null">
+        #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="menuCode != null">
+        #{menuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="menuType != null">
+        #{menuType,jdbcType=TINYINT},
+      </if>
+      <if test="menuName != null">
+        #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuIcon != null">
+        #{menuIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="parentCode != null">
+        #{parentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null">
+        #{num,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update o_product_menu
+    <set>
+      <if test="productCode != null">
+        product_code = #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="menuCode != null">
+        menu_code = #{menuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="menuType != null">
+        menu_type = #{menuType,jdbcType=TINYINT},
+      </if>
+      <if test="menuName != null">
+        menu_name = #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuIcon != null">
+        menu_icon = #{menuIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="parentCode != null">
+        parent_code = #{parentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null">
+        num = #{num,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-08-17 18:06:58 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  <select id="selectMenuList" parameterType="com.nodecollege.cloud.common.model.po.OperateProductMenu" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from o_product_menu
+    <where>
+      <if test="productCode != null">
+        and product_code = #{productCode,jdbcType=VARCHAR}
+      </if>
+      <if test="menuCode != null">
+        and menu_code = #{menuCode,jdbcType=VARCHAR}
+      </if>
+      <if test="menuType != null">
+        and menu_type = #{menuType,jdbcType=TINYINT}
+      </if>
+      <if test="menuName != null">
+        and menu_name = #{menuName,jdbcType=VARCHAR}
+      </if>
+      <if test="parentCode != null">
+        and parent_code = #{parentCode,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectProductMenuList" parameterType="com.nodecollege.cloud.common.model.po.OperateProductMenu" resultMap="ProductMenuPageButtonResultMap">
+    select
+    id, product_code, menu_code, menu_type, menu_name, menu_icon, parent_code, num, null page_code, null page_path,
+    null app_name, null api_url
+    from o_product_menu
+    <where> menu_type = 0 and product_code = #{productCode,jdbcType=VARCHAR}
+      <if test="menuCode != null">
+        and menu_code = #{menuCode,jdbcType=VARCHAR}
+      </if>
+      <if test="menuType != null">
+        and menu_type = #{menuType,jdbcType=TINYINT}
+      </if>
+      <if test="menuName != null">
+        and menu_name = #{menuName,jdbcType=VARCHAR}
+      </if>
+      <if test="parentCode != null">
+        and parent_code = #{parentCode,jdbcType=VARCHAR}
+      </if>
+    </where>
+    union
+    select
+    m.id, m.product_code, m.menu_code, 1 menu_type, p.page_name menu_name, p.page_icon menu_icon, m.parent_code, m.num,
+    p.page_code, p.page_path, null app_name, null api_url
+    from o_product_menu m
+    inner join o_ui_page p on m.menu_code = p.page_code
+    <where> m.menu_type = 1 and m.product_code = #{productCode,jdbcType=VARCHAR}
+      <if test="menuCode != null">
+        and m.menu_code = #{menuCode,jdbcType=VARCHAR}
+      </if>
+      <if test="menuType != null">
+        and m.menu_type = #{menuType,jdbcType=TINYINT}
+      </if>
+      <if test="menuName != null">
+        and p.page_name = #{menuName,jdbcType=VARCHAR}
+      </if>
+      <if test="parentCode != null">
+        and m.parent_code = #{parentCode,jdbcType=VARCHAR}
+      </if>
+    </where>
+    union
+    select
+    b.id, m.product_code, b.button_code menu_code, b.button_type menu_type, b.button_name menu_name,
+    b.button_icon menu_icon, case when b.parent_code = '0' then b.page_code else b.parent_code end parent_code,
+    b.num, b.page_code, null page_path, b.app_name, b.api_url
+    from o_product_menu m
+    inner join o_ui_page_button b on m.menu_code = b.page_code
+    <where> b.button_type in (2, 3) and m.product_code = #{productCode,jdbcType=VARCHAR}
+      <if test="menuCode != null">
+        and b.button_code = #{menuCode,jdbcType=VARCHAR}
+      </if>
+      <if test="menuType != null">
+        and b.button_type = #{menuType,jdbcType=TINYINT}
+      </if>
+      <if test="menuName != null">
+        and b.button_name = #{menuName,jdbcType=VARCHAR}
+      </if>
+      <if test="parentCode != null">
+        and b.parent_code = #{parentCode,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+
+
+  <select id="selectProductMenuListByRelation" parameterType="com.nodecollege.cloud.common.model.po.OperateProductMenu" resultMap="ProductMenuPageButtonResultMap">
+    select
+    m.id, m.product_code, m.menu_code, m.menu_type, m.menu_name, m.menu_icon, m.parent_code, m.num,
+     null page_code, null page_path, null app_name, null api_url
+    from o_product_menu m
+    left join o_product_menu_relation r on m.menu_code = r.menu_code
+    <where> m.menu_type = 0 and r.product_code = #{productCode,jdbcType=VARCHAR}
+      <if test="menuCode != null">
+        and m.menu_code = #{menuCode,jdbcType=VARCHAR}
+      </if>
+      <if test="menuType != null">
+        and m.menu_type = #{menuType,jdbcType=TINYINT}
+      </if>
+      <if test="menuName != null">
+        and m.menu_name = #{menuName,jdbcType=VARCHAR}
+      </if>
+      <if test="parentCode != null">
+        and m.parent_code = #{parentCode,jdbcType=VARCHAR}
+      </if>
+    </where>
+    union
+    select
+    r.id, r.product_code, p.page_code menu_code, 1 menu_type, p.page_name menu_name, p.page_icon menu_icon,
+    m.parent_code, m.num, p.page_code, p.page_path, null app_name, null api_url
+    from o_product_menu m
+    left join o_ui_page p on m.menu_code = p.page_code
+    left join o_product_menu_relation r on p.page_code = r.menu_code and r.belong_code = m.product_code
+    <where> m.menu_type = 1 and r.product_code = #{productCode,jdbcType=VARCHAR}
+      <if test="menuCode != null">
+        and m.menu_code = #{menuCode,jdbcType=VARCHAR}
+      </if>
+      <if test="menuType != null">
+        and m.menu_type = #{menuType,jdbcType=TINYINT}
+      </if>
+      <if test="menuName != null">
+        and p.page_name = #{menuName,jdbcType=VARCHAR}
+      </if>
+      <if test="parentCode != null">
+        and m.parent_code = #{parentCode,jdbcType=VARCHAR}
+      </if>
+    </where>
+    union
+    select
+    b.id, r.product_code, r.menu_code, b.button_type menu_type, b.button_name menu_name, b.button_icon menu_icon,
+    case when b.parent_code = '0' then b.page_code else b.parent_code end parent_code, b.num,
+    b.page_code, null page_path, b.app_name, b.api_url
+    from o_ui_page_button b
+    left join o_product_menu_relation r on b.button_code = r.menu_code
+    <where> b.button_type in (2, 3) and r.product_code = #{productCode,jdbcType=VARCHAR}
+      <if test="menuCode != null">
+        and b.button_code = #{menuCode,jdbcType=VARCHAR}
+      </if>
+      <if test="menuType != null">
+        and b.button_type = #{menuType,jdbcType=TINYINT}
+      </if>
+      <if test="menuName != null">
+        and b.button_name = #{menuName,jdbcType=VARCHAR}
+      </if>
+      <if test="parentCode != null">
+        and b.parent_code = #{parentCode,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+  
+</mapper>

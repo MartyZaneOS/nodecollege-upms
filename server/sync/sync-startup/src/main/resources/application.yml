@@ -1,0 +1,113 @@
+# 端口设置
+server:
+  port: 1083
+  servlet:
+    context-path: /
+    session:
+      # 超时时间配置，多长时间需要重新登陆
+      timeout: 3600s
+
+#########  sqlite  ##########
+spring:
+  application:
+    name: sync
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  profiles:
+    active: dev
+  session:
+    store-type: redis
+    timeout: 3600s
+    redis:
+      flush-mode: on_save
+      namespace: spring:session
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver  # 数据库驱动
+    username: root                            # 用户名
+    password: ***                  # 密码
+    url: jdbc:mysql://120.79.216.173:3306/***?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+  druid:
+    # 指明是否在从池中取出连接前进行检验,如果检验失败, 则从池中去除连接并尝试取出另一个，
+    #注意: 设置为true后如果要生效,validationQuery参数必须设置为非空字符串
+    test-on-borrow: false
+    # 指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除.
+    #注意: 设置为true后如果要生效,validationQuery参数必须设置为非空字符串
+    test-while-idle: true
+    # 指明是否在归还到池中前进行检验，注意: 设置为true后如果要生效,
+    #validationQuery参数必须设置为非空字符串
+    test-on-return: false
+    # SQL查询,用来验证从连接池取出的连接,在将连接返回给调用者之前.
+    #如果指定,则查询必须是一个SQL SELECT并且必须返回至少一行记录
+    validation-query: select 1
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect  #InnoDB才能支持事务
+    hibernate:
+      ddl-auto: update  # 自动生成表结构
+    show-sql: false
+  # redis配置开始
+  # Redis数据库索引（默认为0）
+  redis:
+    database: 0
+    # Redis服务器地址
+    host: 127.0.0.1
+    # Redis服务器连接端口
+    port: 6379
+    # Redis服务器连接密码（默认为空）
+    password: 123456
+    # 连接池最大连接数（使用负值表示没有限制）
+    jedis:
+      pool:
+        max-active: 1024
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: 10000
+        # 连接池中的最大空闲连接
+        max-idle: 200
+        # 连接池中的最小空闲连接
+        min-idle: 0
+    # 连接超时时间（毫秒）
+    timeout: 10000
+    # redis配置结束
+    block-when-exhausted: true
+
+# mybatis
+mybatis:
+  mapper-locations: classpath*:mybatis/*Mapper.xml
+  configuration:
+    cache-enabled: false
+    use-generated-keys: true
+management:
+  health:
+    rabbit:
+      enabled: true
+
+feign:
+  hystrix:
+    enabled: true
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+ribbon:
+  ConnectTimeout: 60000
+  ReadTimeout: 60000
+
+# 日志配置
+log:
+  # 日志是否上传
+  posh: true
+  # 日志存放目录 默认 /mnt/log
+  path: d:/logs/
+  # 日志打印级别  默认 info
+  level: info
+  # 是否控制台输出，默认true
+  stdout: true
+
+# 打印sql语句
+#logging:
+#  level:
+#    com.nodecollege.cloud.dao: DEBUG

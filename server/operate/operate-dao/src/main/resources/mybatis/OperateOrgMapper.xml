@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.OperateOrgMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.OperateOrg">
+    <!-- 主键 -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <!-- 机构用途 0-运维/运营，1-2C -->
+    <result column="org_usage" jdbcType="INTEGER" property="orgUsage" />
+    <!-- 机构代码 -->
+    <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
+    <!-- 机构名称 -->
+    <result column="org_name" jdbcType="VARCHAR" property="orgName" />
+    <!-- 上级机构代码 -->
+    <result column="parent_code" jdbcType="VARCHAR" property="parentCode" />
+    <!-- 排序 -->
+    <result column="num" jdbcType="INTEGER" property="num" />
+    <!-- 创建时间 -->
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, org_usage, org_code, org_name, parent_code, num, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from o_org
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from o_org
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" keyProperty="id" parameterType="com.nodecollege.cloud.common.model.po.OperateOrg" useGeneratedKeys="true">
+    insert into o_org
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="orgUsage != null">
+        org_usage,
+      </if>
+      <if test="orgCode != null">
+        org_code,
+      </if>
+      <if test="orgName != null">
+        org_name,
+      </if>
+      <if test="parentCode != null">
+        parent_code,
+      </if>
+      <if test="num != null">
+        num,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="orgUsage != null">
+        #{orgUsage,jdbcType=INTEGER},
+      </if>
+      <if test="orgCode != null">
+        #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null">
+        #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentCode != null">
+        #{parentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null">
+        #{num,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update o_org
+    <set>
+      <if test="orgUsage != null">
+        org_usage = #{orgUsage,jdbcType=INTEGER},
+      </if>
+      <if test="orgCode != null and orgCode != ''">
+        org_code = #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null and orgName != ''">
+        org_name = #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentCode != null and parentCode != ''">
+        parent_code = #{parentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null">
+        num = #{num,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-09-08 20:08:02 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  <select id="selectListByMap" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from o_org
+    <where>
+      <if test="orgUsage != null">
+        and org_usage = #{orgUsage,jdbcType=INTEGER}
+      </if>
+      <if test="orgCode != null and orgCode != ''">
+        and org_code = #{orgCode,jdbcType=VARCHAR}
+      </if>
+      <if test="orgName != null and orgName != ''">
+        and org_name = #{orgName,jdbcType=VARCHAR}
+      </if>
+      <if test="parentCode != null and parentCode != ''">
+        and parent_code = #{parentCode,jdbcType=VARCHAR}
+      </if>
+      <if test="num != null">
+        and num = #{num,jdbcType=INTEGER}
+      </if>
+      <if test="startTime != null">
+        <![CDATA[ and create_time >= #{startTime,jdbcType=TIMESTAMP} ]]>
+      </if>
+      <if test="endTime != null">
+        <![CDATA[ and create_time <= #{endTime,jdbcType=TIMESTAMP} ]]>
+      </if>
+    </where>
+    order by create_time desc
+  </select>
+
+  <select id="selectListByRole" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select
+    distinct o.id, o.org_usage, o.org_code, o.org_name, o.parent_code, o.num, o.create_time
+    from o_org o left join o_role_org r on o.org_code = r.org_code and o.org_usage = r.role_org_usage
+    <where>
+        r.role_org_usage = #{roleOrgUsage,jdbcType=INTEGER}
+      <if test="roleCode != null and roleCode != ''">
+        and r.role_code = #{roleCode,jdbcType=VARCHAR}
+      </if>
+      <choose>
+        <when test="stringList!=null and stringList.size>0">
+          and r.role_code in
+          <foreach item="_item" collection="stringList" open="(" separator="," close=")">
+            #{_item,jdbcType=VARCHAR}
+          </foreach>
+        </when>
+      </choose>
+    </where>
+    order by create_time desc
+  </select>
+
+  <select id="selectListByAdmin" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select
+    distinct o.id, o.org_usage, o.org_code, o.org_name, o.parent_code, o.num, o.create_time
+    from o_org o left join o_admin_org a on o.org_code = a.org_code and o.org_usage = 0
+    <where>
+      <if test="adminId != null">
+        and a.admin_id = #{adminId,jdbcType=BIGINT}
+      </if>
+      <choose>
+        <when test="longList!=null and longList.size>0">
+          and a.admin_id in
+          <foreach item="_item" collection="longList" open="(" separator="," close=")">
+            #{_item,jdbcType=BIGINT}
+          </foreach>
+        </when>
+      </choose>
+    </where>
+    order by o.create_time desc
+  </select>
+
+  <select id="selectListByUser" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select
+    distinct o.id, o.org_usage, o.org_code, o.org_name, o.parent_code, o.num, o.create_time
+    from o_org o left join o_user_org uo on o.org_code = uo.org_code and o.org_usage = 1
+    <where>
+      <if test="userId != null">
+        and uo.user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <choose>
+        <when test="longList!=null and longList.size>0">
+          and uo.user_id in
+          <foreach item="_item" collection="longList" open="(" separator="," close=")">
+            #{_item,jdbcType=BIGINT}
+          </foreach>
+        </when>
+      </choose>
+    </where>
+    order by o.create_time desc
+  </select>
+</mapper>

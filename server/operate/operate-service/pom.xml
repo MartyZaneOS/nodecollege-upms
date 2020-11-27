@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>operate</artifactId>
+        <groupId>com.nodecollege.cloud</groupId>
+        <version>1.0.2-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>operate-service</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.nodecollege.cloud</groupId>
+            <artifactId>operate-dao</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.nodecollege.cloud</groupId>
+            <artifactId>base-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-crypto</artifactId>
+        </dependency>
+
+        <!-- 高性能分布式文件服务器 -->
+        <dependency>
+            <groupId>com.github.tobato</groupId>
+            <artifactId>fastdfs-client</artifactId>
+        </dependency>
+    </dependencies>
+</project>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.ChatDebateRelationMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.ChatDebateRelation">
+    <id column="debate_relation_id" jdbcType="BIGINT" property="debateRelationId" />
+    <result column="debate_id" jdbcType="BIGINT" property="debateId" />
+    <result column="node_id" jdbcType="BIGINT" property="nodeId" />
+    <result column="debate_type" jdbcType="INTEGER" property="debateType" />
+    <result column="master" jdbcType="INTEGER" property="master" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="finish" jdbcType="INTEGER" property="finish" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    debate_relation_id, debate_id, node_id, debate_type, master, title, finish, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from chat_debate_relation
+    where debate_relation_id = #{debateRelationId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from chat_debate_relation
+    where debate_relation_id = #{debateRelationId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyProperty="debateRelationId" parameterType="com.nodecollege.cloud.common.model.po.ChatDebateRelation" useGeneratedKeys="true">
+    insert into chat_debate_relation (debate_relation_id, debate_id, node_id, 
+      debate_type, master, title, 
+      finish, create_time)
+    values (#{debateRelationId,jdbcType=BIGINT}, #{debateId,jdbcType=BIGINT}, #{nodeId,jdbcType=BIGINT},
+      #{debateType,jdbcType=INTEGER}, #{master,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, 
+      #{finish,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update chat_debate_relation
+    <set>
+      <if test="finish != null">
+        finish = #{finish,jdbcType=INTEGER},
+      </if>
+    </set>
+    where debate_relation_id = #{debateRelationId,jdbcType=BIGINT}
+  </update>
+
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-04-19 13:59:28 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  <select id="selectListByMap" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from chat_debate_relation
+    <where>
+      <if test="debateId != null">
+        and debate_id = #{debateId,jdbcType=INTEGER}
+      </if>
+      <if test="nodeId != null">
+        and node_id = #{nodeId,jdbcType=INTEGER}
+      </if>
+      <if test="debateType != null">
+        and debate_type = #{debateType,jdbcType=INTEGER}
+      </if>
+      <if test="finish != null">
+        and finish = #{finish,jdbcType=INTEGER}
+      </if>
+    </where>
+    order by create_time desc
+  </select>
+
+  <update id="updateFinish">
+    update chat_debate_relation
+    <set>
+        finish = 0
+    </set>
+    where debate_id = #{debateId,jdbcType=BIGINT}
+  </update>
+</mapper>

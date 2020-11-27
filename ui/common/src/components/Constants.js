@@ -1,0 +1,6 @@
+export const ACCESS_TOKEN = 'upms-access-token'
+export const USER_INFO = 'user-info'
+export const ADMIN_ACCESS_TOKEN = 'admin-access-token'
+export const ADMIN_INFO = 'admin-info'
+export const MEMBER_INFO = 'member-info'
+export const WEB_MENU_TREE = 'web-menu-tree'
