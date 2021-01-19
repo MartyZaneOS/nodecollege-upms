@@ -25,7 +25,7 @@ public class QueueUtils {
     /**
      * 添加到队列
      */
-    public void poshTask(String key, Object object) {
+    public void pushTask(String key, Object object) {
         if (object != null) {
             String objects = JSONObject.toJSONString(object);
             redisTemplate.opsForList().leftPush(key, objects);

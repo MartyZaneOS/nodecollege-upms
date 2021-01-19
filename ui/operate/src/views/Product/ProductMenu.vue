@@ -3,6 +3,10 @@
     <a-card title="产品菜单信息" size="small">
       <a-row>
         <a-col span="8">
+          <a-tabs v-model="navSelect" @change="navChange">
+            <a-tab-pane :key="1" tab="PC端"></a-tab-pane>
+            <a-tab-pane :key="0" tab="其他"></a-tab-pane>
+          </a-tabs>
           <a-form layout="inline">
             <a-form-item v-if="productData">
               <a-button type="primary" v-if="productData.productType !== 1 && (!treeSelectData.menuType || treeSelectData.menuType < 2)" @click="addModal">添加菜单</a-button>
@@ -75,6 +79,10 @@
     </a-modal>
 
     <a-modal v-model="bindModal.visible" title="绑定菜单">
+      <a-tabs @change="modelNavChange">
+        <a-tab-pane :key="1" tab="PC端"></a-tab-pane>
+        <a-tab-pane :key="0" tab="其他"></a-tab-pane>
+      </a-tabs>
       <a-tree
           :replace-fields="{children:'children', title:'menuName', key: 'menuCode'}"
           :tree-data="bindModal.bindTreeData"
@@ -108,16 +116,19 @@
     },
     data () {
       return {
+        loading: false,
+        pageObj: {total: 10, pageSize: 10, pageNum: 1},
+        pagination: false,
+        navSelect: 1,
+        sourceData: [],
+        data: [],
+        sourceTreeData: [],
         treeData: [],
         treeSelectData: {},
         selectedKeys: [],
         treeExpandedKeys: [],
         menuTypeSelectData: '0',
         uiPageTreeData: [],
-        loading: false,
-        pageObj: {total: 10, pageSize: 10, pageNum: 1},
-        pagination: false,
-        data: [],
         rowSelection: {
           selectedRowKeys: [],
           type: 'radio',
@@ -147,9 +158,11 @@
         bindModal: {
           loading: false,
           visible: false,
+          navSelect: 1,
+          sourceData: [],
           bindTreeData: [],
-          bindTreeExpandedKeys: [],
-          checkedKeys: []
+          checkedKeys: [],
+          bindTreeExpandedKeys: []
         }
       }
     },
@@ -171,15 +184,26 @@
         this.treeExpandedKeys = []
         this.treeSelectData = {}
         this.selectedKeys = []
+        this.navSelect = 1
+        this.sourceData = []
         this.data = []
+        this.sourceTreeData = []
         this.treeData = []
         if (!this.productData || !this.productData.productCode) {
           return
         }
         operateApi.getProductMenuTree({productCode: this.productData.productCode}).then(res => {
-          this.data = res.rows
-          this.treeData = res.rows
-          this.handleTree(res.rows)
+          this.sourceData = res.rows
+          this.sourceTreeData = res.rows
+          this.data = []
+          this.treeData = []
+          for (let i = 0; i < this.sourceData.length; i++) {
+            if (this.sourceData[i].navPlatform === this.navSelect) {
+              this.data.push(this.sourceData[i])
+              this.treeData.push(this.sourceData[i])
+            }
+          }
+          this.handleTree(this.data)
         })
       },
       handleTree (treeList) {
@@ -201,6 +225,23 @@
       },
       menuTypeChange (value) {
         this.menuTypeSelectData = value
+      },
+      navChange (value) {
+        console.log('navChange', value)
+        this.navSelect = value
+        this.menuTypeSelectData = '0'
+        this.treeExpandedKeys = []
+        this.treeSelectData = {}
+        this.selectedKeys = []
+        this.data = []
+        this.treeData = []
+        for (let i = 0; i < this.sourceData.length; i++) {
+          if (this.sourceData[i].navPlatform === this.navSelect) {
+            this.data.push(this.sourceData[i])
+            this.treeData.push(this.sourceData[i])
+          }
+        }
+        this.handleTree(this.data)
       },
       addModal () {
         this.menuTypeSelectData = '0'
@@ -230,7 +271,7 @@
           title: '删除产品菜单?',
           onOk () {
             return new Promise((resolve, reject) => {
-              operateApi.delProductMenu({productCode: that.productData.productCode, menuCode: that.treeSelectData.menuCode}).then((res) => {
+              operateApi.delProductMenu({productCode: that.productData.productCode, menuCode: that.treeSelectData.menuCode, navPlatform: that.navSelect}).then((res) => {
                 if (res.success) {
                   that.$message.info(res.message)
                   that.init()
@@ -263,6 +304,7 @@
                 parm = {
                   ...values,
                   menuCode: page.menuCode,
+                  navPlatform: this.navSelect,
                   productCode: this.productData.productCode,
                   parentCode: this.treeSelectData ? this.treeSelectData.menuCode : undefined
                 }
@@ -270,6 +312,7 @@
                 parm = {
                   ...values,
                   productCode: this.productData.productCode,
+                  navPlatform: this.navSelect,
                   parentCode: this.treeSelectData ? this.treeSelectData.menuCode : undefined
                 }
               }
@@ -282,7 +325,7 @@
                 this.addOrUpdateModal.loading = false
               })
             } else {
-              operateApi.editProductMenu({...values, menuCode: this.addOrUpdateModal.data.menuCode}).then(res => {
+              operateApi.editProductMenu({...values, menuCode: this.addOrUpdateModal.data.menuCode, navPlatform: this.navSelect}).then(res => {
                 if (res.success) {
                   this.$message.info('修改成功！')
                   this.init()
@@ -316,15 +359,48 @@
         }
       },
       showBindModal () {
+        this.bindModal.navSelect = 1
+        this.bindModal.sourceData = []
         this.bindModal.bindTreeData = []
         this.bindModal.bindTreeExpandedKeys = []
         this.bindModal.checkedKeys = []
         operateApi.getProductMenuTree({productCode: this.productData.parentCode}).then(res => {
-          this.bindModal.bindTreeData = res.rows
-          this.handleBindTree(res.rows, this.bindModal.bindTreeExpandedKeys)
-          this.handleBindTree(this.data, this.bindModal.checkedKeys)
+          this.bindModal.sourceData = res.rows
+          for (let i = 0; i < this.bindModal.sourceData.length; i++) {
+            if (this.bindModal.sourceData[i].navPlatform === this.bindModal.navSelect) {
+              this.bindModal.bindTreeData.push(this.bindModal.sourceData[i])
+            }
+          }
+          this.handleBindTree(this.bindModal.bindTreeData, this.bindModal.bindTreeExpandedKeys)
+          let parentData = []
+          for (let i = 0; i < this.sourceData.length; i++) {
+            if (this.sourceData[i].navPlatform === this.bindModal.navSelect) {
+              parentData.push(this.sourceData[i])
+            }
+          }
+          this.handleBindTree(parentData, this.bindModal.checkedKeys)
           this.bindModal.visible = true
         })
+      },
+      modelNavChange (value) {
+        console.log('navChange', value)
+        this.bindModal.navSelect = value
+        this.bindModal.bindTreeData = []
+        this.bindModal.bindTreeExpandedKeys = []
+        this.bindModal.checkedKeys = []
+        for (let i = 0; i < this.bindModal.sourceData.length; i++) {
+          if (this.bindModal.sourceData[i].navPlatform === this.bindModal.navSelect) {
+            this.bindModal.bindTreeData.push(this.bindModal.sourceData[i])
+          }
+        }
+        this.handleBindTree(this.bindModal.bindTreeData, this.bindModal.bindTreeExpandedKeys)
+        let parentData = []
+        for (let i = 0; i < this.sourceData.length; i++) {
+          if (this.sourceData[i].navPlatform === this.bindModal.navSelect) {
+            parentData.push(this.sourceData[i])
+          }
+        }
+        this.handleBindTree(parentData, this.bindModal.checkedKeys)
       },
       handleBindTree (treeList, selectKeys) {
         if (!treeList) {
@@ -350,7 +426,7 @@
         this.bindModal.bindTreeExpandedKeys = expandedKeys
       },
       bindOk () {
-        operateApi.bindProductMenu({sourceCodes: [this.productData.productCode], targetCodes: this.bindModal.checkedKeys}).then(res => {
+        operateApi.bindProductMenu({sourceCodes: [this.productData.productCode], targetCodes: this.bindModal.checkedKeys, navPlatform: this.bindModal.navSelect}).then(res => {
           this.init()
           this.bindModal.visible = false
         })

@@ -14,7 +14,7 @@ public enum ErrorEnum implements CodeMessage {
     OPT_DATA_BASE_ERROR("99999998", "数据库异常"),
     UNKNOWN_ERROR("99999999", "系统异常，请稍后再试"),
     LOGIN_TIME_OUT("80000000", "登录超时，请重新登录"),
-    VISIT_ERROR("80000001", "访问不正确"),
+    VISIT_ERROR("80000001", "无权访问！"),
     ILLEGAL_OPERATION("80000002", "非法操作"),
     FEIGN_SERVICE_ERROR("80000003", "请求服务不可用"),
     REQUEST_PARAM_EMPTY("80000004", "请求参数为空"),

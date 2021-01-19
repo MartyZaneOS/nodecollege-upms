@@ -49,6 +49,7 @@ public class TenantServiceImpl implements TenantService {
         member.setUserId(user.getUserId());
         member.setTelephone(user.getTelephone());
         member.setAccount(user.getTelephone());
+        member.setState(0);
         member = memberService.addMember(member);
 
         // 2. 添加机构

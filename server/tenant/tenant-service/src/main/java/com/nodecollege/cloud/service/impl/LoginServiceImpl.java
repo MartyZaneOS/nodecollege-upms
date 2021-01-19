@@ -56,7 +56,7 @@ public class LoginServiceImpl implements LoginService {
         List<TenantMember> result = memberService.list(new QueryVO<>(query));
         if (result.isEmpty()) {
             query.setAccount(null);
-            query.setTelephone(loginVO.getTelephone());
+            query.setTelephone(loginVO.getAccount());
             result = memberService.list(new QueryVO<>(query));
             NCUtils.nullOrEmptyThrow(result, new NCException("-1", "根据账号或者电话未获取到成员信息"));
         }

@@ -1,5 +1,3 @@
-create schema nodeCollegeTenant collate utf8_general_ci;
-
 create table t_member
 (
 	member_id bigint auto_increment comment '成员主键'

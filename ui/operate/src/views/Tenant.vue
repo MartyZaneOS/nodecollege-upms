@@ -19,7 +19,7 @@
         <template slot="operation" slot-scope="text, record, index">
           <div>
             <span>
-              <a v-if="record.state === 1 || record.state === 0" @click="() => tenantProduct(record)">应用信息</a>
+              <a v-if="record.state === 1 || record.state === 0" @click="() => tenantProduct(record)">应用开通/关闭</a>
               <a v-if="record.state === 1 || record.state === 0" @click="() => updateTenant(record)">编辑</a>
             </span>
           </div>

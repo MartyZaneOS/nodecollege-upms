@@ -1,9 +1,10 @@
 package com.nodecollege.cloud.filterFactory;
 
-import com.nodecollege.cloud.common.constants.HeaderConstants;
+import com.alibaba.fastjson.JSONObject;
 import com.nodecollege.cloud.common.constants.RedisConstants;
 import com.nodecollege.cloud.common.model.MenuVO;
 import com.nodecollege.cloud.common.model.NCLoginUserVO;
+import com.nodecollege.cloud.common.model.NCResult;
 import com.nodecollege.cloud.common.model.po.OperateAppApi;
 import com.nodecollege.cloud.common.utils.NCLoginUtils;
 import com.nodecollege.cloud.common.utils.RedisUtils;
@@ -15,13 +16,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -125,19 +132,23 @@ public class NCGatewayFilterFactory extends AbstractGatewayFilterFactory<NCGatew
             // 只能内部调用，返回无权限访问
             if (accessAuth.indexOf("inner") >= 0) {
                 logger.info("只能内部调用！");
-                response.setStatusCode(HttpStatus.UNAUTHORIZED);
-                return response.setComplete();
+                return responseFailRs(exchange, NCResult.error("-1", "只能内部调用！"));
             }
 
             // 页面路径
-            String pagePath = referer.substring(origin.length());
+            String pagePath = "";
+            if (referer != null && origin != null) {
+                referer = referer.split("\\?")[0];
+                pagePath = referer.substring(origin.length());
+            }
             // 需要管理员登录或者授权
+            NCLoginUserVO loginAdmin = null;
             if (accessAuth.indexOf("admin") >= 0) {
-                NCLoginUserVO loginInfo = NCLoginUtils.getAdminLoginInfo();
-                if (loginInfo != null) {
+                loginAdmin = NCLoginUtils.getAdminLoginInfo();
+                if (loginAdmin != null) {
                     // todo 延长登录有效期
                     if (accessAuth.indexOf("adminLogin") >= 0 ||
-                            (accessAuth.indexOf("adminAuth") >= 0 && checkApiPower(loginInfo.getMenuTree(), pagePath, config.getAppName(), apiUrl))) {
+                            (accessAuth.indexOf("adminAuth") >= 0 && checkApiPower(loginAdmin.getMenuTree(), pagePath, config.getAppName(), apiUrl))) {
                         logger.info("管理员授权校验通过！");
                         return chain.filter(exchange.mutate().build());
                     }
@@ -145,35 +156,41 @@ public class NCGatewayFilterFactory extends AbstractGatewayFilterFactory<NCGatew
             }
 
             // 需要用户登录或者授权
+            NCLoginUserVO loginUser = null;
             if (accessAuth.indexOf("user") >= 0) {
-                NCLoginUserVO loginInfo = NCLoginUtils.getUserLoginInfo();
-                if (loginInfo != null) {
+                loginUser = NCLoginUtils.getUserLoginInfo();
+                if (loginUser != null) {
                     // todo 延迟登录有效期
                     if (accessAuth.indexOf("userLogin") >= 0 ||
-                            (accessAuth.indexOf("userAuth") >= 0 && checkApiPower(loginInfo.getMenuTree(), pagePath, config.getAppName(), apiUrl))) {
+                            (accessAuth.indexOf("userAuth") >= 0 && checkApiPower(loginUser.getMenuTree(), pagePath, config.getAppName(), apiUrl))) {
                         logger.info("用户授权校验通过！");
                         return chain.filter(exchange.mutate().build());
                     }
+                    return responseFailRs(exchange, NCResult.error("80000000", "登录超时，请重新登录！"));
                 }
             }
 
             // 需要租户成员登录或者授权
+            NCLoginUserVO loginMember = null;
             if (accessAuth.indexOf("member") >= 0) {
-                NCLoginUserVO loginInfo = NCLoginUtils.getMemberLoginInfo();
-                if (loginInfo != null) {
+                loginMember = NCLoginUtils.getMemberLoginInfo();
+                if (loginMember != null) {
                     // todo 延迟登录有效期
                     if (accessAuth.indexOf("memberLogin") >= 0 ||
-                            (accessAuth.indexOf("memberAuth") >= 0 && checkApiPower(loginInfo.getMenuTree(), pagePath, config.getAppName(), apiUrl))) {
+                            (accessAuth.indexOf("memberAuth") >= 0 && checkApiPower(loginMember.getMenuTree(), pagePath, config.getAppName(), apiUrl))) {
                         logger.info("租户成员授权校验通过！");
                         return chain.filter(exchange.mutate().build());
                     }
                 }
             }
 
+            if (loginAdmin == null && loginUser == null && loginMember == null) {
+                return responseFailRs(exchange, NCResult.error("80000000", "登录超时，请重新登录！"));
+            }
+
             // 返回无授权信息
             logger.info("无授权信息！");
-            response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            return response.setComplete();
+            return responseFailRs(exchange, NCResult.error("80000001", "无权访问！"));
         };
     }
 
@@ -201,5 +218,15 @@ public class NCGatewayFilterFactory extends AbstractGatewayFilterFactory<NCGatew
             if (checkApiUrl(button.getChildren(), appName, apiUrl)) return true;
         }
         return false;
+    }
+
+
+    private Mono<Void> responseFailRs(ServerWebExchange exchange, NCResult result) {
+        ServerHttpResponse serverHttpResponse = exchange.getResponse();
+        serverHttpResponse.setStatusCode(HttpStatus.OK);
+        serverHttpResponse.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
+        byte[] bytes = JSONObject.toJSONString(result).getBytes(StandardCharsets.UTF_8);
+        DataBuffer buffer = exchange.getResponse().bufferFactory().wrap(bytes);
+        return serverHttpResponse.writeWith(Flux.just(buffer));
     }
 }

@@ -79,7 +79,7 @@ ribbon:
 # 日志配置
 log:
   # 日志是否上传
-  posh: true
+  push: true
 # 打印sql语句
 logging:
   level:

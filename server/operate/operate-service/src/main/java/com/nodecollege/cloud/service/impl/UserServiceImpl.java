@@ -2,6 +2,7 @@ package com.nodecollege.cloud.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.nodecollege.cloud.cache.ConfigCache;
 import com.nodecollege.cloud.common.constants.NCConstants;
 import com.nodecollege.cloud.common.constants.RedisConstants;
 import com.nodecollege.cloud.common.exception.NCException;
@@ -12,7 +13,6 @@ import com.nodecollege.cloud.common.utils.NCUtils;
 import com.nodecollege.cloud.common.utils.PasswordUtil;
 import com.nodecollege.cloud.common.utils.RedisUtils;
 import com.nodecollege.cloud.common.utils.RegularExpUtils;
-import com.nodecollege.cloud.cache.ConfigCache;
 import com.nodecollege.cloud.dao.mapper.*;
 import com.nodecollege.cloud.feign.TenantClient;
 import com.nodecollege.cloud.service.FileService;
@@ -329,7 +329,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updatePwd(Long userId, String oldPassword, String newPassword, ApiDataPower apiDataPower) {
+    public void updatePwd(Long userId, String oldPassword, String newPassword) {
         OperateUser user = getUserByUserId(userId);
         NCUtils.nullOrEmptyThrow(user, "-1", "修改密码失败，根据用户id未获取到用户信息！");
         oldPassword = PasswordUtil.md5(oldPassword, user.getSalt());
@@ -693,7 +693,7 @@ public class UserServiceImpl implements UserService {
      * showAllOrg=true、showAllRole=true
      */
     private void getPowerMenuTree(Integer usage, PowerVO powerVO, Map<String, OperateRole> roleMap) {
-        Map<String, MenuVO> menuMap = new HashMap<>();
+        Map<Integer, Map<String, MenuVO>> topMenuMap = new HashMap<>();
         for (Map.Entry<String, Set<PowerVO.CodeName>> entry : powerVO.getOrgRoleMap().entrySet()) {
             Set<PowerVO.CodeName> roleList = entry.getValue();
             // 角色授权菜单树
@@ -707,14 +707,18 @@ public class UserServiceImpl implements UserService {
                 queryRoleMenu.getData().setRoleCode(codeName.getCode());
                 authMenuList = roleMenuMapper.selectListByMap(queryRoleMenu.toMap());
                 menuRoleMap.clear();
-                authMenuList.forEach(item -> menuRoleMap.put(item.getMenuCode(), item));
+                authMenuList.forEach(item -> menuRoleMap.put(item.getMenuCode() + "_" + item.getNavPlatform(), item));
                 // 角色对应产品菜单树
                 OperateRole role = roleMap.get(codeName.getCode());
 
                 queryMenu.setProductCode(role.getProductCode());
                 List<MenuVO> tempList = productMenuService.getProductMenuList(queryMenu);
                 tempList.forEach(item -> {
-                    if (menuRoleMap.containsKey(item.getMenuCode())) {
+                    if (menuRoleMap.containsKey(item.getMenuCode() + "_" + item.getNavPlatform())) {
+                        if (!topMenuMap.containsKey(item.getNavPlatform())) {
+                            topMenuMap.put(item.getNavPlatform(), new HashMap<String, MenuVO>());
+                        }
+                        Map<String, MenuVO> menuMap = topMenuMap.get(item.getNavPlatform());
                         if (!menuMap.containsKey(item.getMenuCode())) {
                             menuMap.put(item.getMenuCode(), item);
                         }
@@ -731,7 +735,11 @@ public class UserServiceImpl implements UserService {
                 });
             }
         }
-        powerVO.setMenuTree(new ArrayList<>(menuMap.values()));
+        List<MenuVO> menuTree = new ArrayList<>();
+        for (Map<String, MenuVO> menuMap : topMenuMap.values()) {
+            menuTree.addAll(menuMap.values());
+        }
+        powerVO.setMenuTree(menuTree);
     }
 
     /**
@@ -747,19 +755,23 @@ public class UserServiceImpl implements UserService {
         List<OperateRoleMenu> authMenuList = new ArrayList<>();
         Map<String, OperateRoleMenu> menuRoleMap = new HashMap<>();
 
-        Map<String, MenuVO> menuMap = new HashMap<>();
+        Map<Integer, Map<String, MenuVO>> topMenuMap = new HashMap<>();
         OperateProductMenu queryMenu = new OperateProductMenu();
         for (PowerVO.CodeName codeName : roleList) {
             queryRoleMenu.getData().setRoleCode(codeName.getCode());
             authMenuList = roleMenuMapper.selectListByMap(queryRoleMenu.toMap());
             menuRoleMap.clear();
-            authMenuList.forEach(item -> menuRoleMap.put(item.getMenuCode(), item));
+            authMenuList.forEach(item -> menuRoleMap.put(item.getMenuCode() + "_" + item.getNavPlatform(), item));
 
             OperateRole role = roleMap.get(codeName.getCode());
             queryMenu.setProductCode(role.getProductCode());
             List<MenuVO> tempList = productMenuService.getProductMenuList(queryMenu);
             tempList.forEach(item -> {
-                if (menuRoleMap.containsKey(item.getMenuCode())) {
+                if (menuRoleMap.containsKey(item.getMenuCode() + "_" + item.getNavPlatform())) {
+                    if (!topMenuMap.containsKey(item.getNavPlatform())) {
+                        topMenuMap.put(item.getNavPlatform(), new HashMap<String, MenuVO>());
+                    }
+                    Map<String, MenuVO> menuMap = topMenuMap.get(item.getNavPlatform());
                     if (!menuMap.containsKey(item.getMenuCode())) {
                         menuMap.put(item.getMenuCode(), item);
                     }
@@ -772,7 +784,11 @@ public class UserServiceImpl implements UserService {
                 }
             });
         }
-        powerVO.setMenuTree(new ArrayList<>(menuMap.values()));
+        List<MenuVO> menuTree = new ArrayList<>();
+        for (Map<String, MenuVO> menuMap : topMenuMap.values()) {
+            menuTree.addAll(menuMap.values());
+        }
+        powerVO.setMenuTree(menuTree);
     }
 
     /**
@@ -780,7 +796,7 @@ public class UserServiceImpl implements UserService {
      * showAllOrg=true、showAllRole=false
      */
     private void getTFPowerMenuTree(Integer usage, PowerVO powerVO, Map<String, OperateRole> roleMap) {
-        Map<String, MenuVO> menuMap = new HashMap<>();
+        Map<Integer, Map<String, MenuVO>> topMenuMap = new HashMap<>();
 
         // 角色授权菜单树
         QueryVO<OperateRoleMenu> queryRoleMenu = new QueryVO<>(new OperateRoleMenu());
@@ -789,14 +805,18 @@ public class UserServiceImpl implements UserService {
         List<OperateRoleMenu> authMenuList = roleMenuMapper.selectListByMap(queryRoleMenu.toMap());
 
         Map<String, OperateRoleMenu> menuRoleMap = new HashMap<>();
-        authMenuList.forEach(item -> menuRoleMap.put(item.getMenuCode(), item));
+        authMenuList.forEach(item -> menuRoleMap.put(item.getMenuCode() + "_" + item.getNavPlatform(), item));
 
         OperateProductMenu queryMenu = new OperateProductMenu();
         OperateRole role = roleMap.get(powerVO.getDefaultRoleCode());
         queryMenu.setProductCode(role.getProductCode());
         List<MenuVO> tempList = productMenuService.getProductMenuList(queryMenu);
         tempList.forEach(item -> {
-            if (menuRoleMap.containsKey(item.getMenuCode())) {
+            if (menuRoleMap.containsKey(item.getMenuCode() + "_" + item.getNavPlatform())) {
+                if (!topMenuMap.containsKey(item.getNavPlatform())) {
+                    topMenuMap.put(item.getNavPlatform(), new HashMap<String, MenuVO>());
+                }
+                Map<String, MenuVO> menuMap = topMenuMap.get(item.getNavPlatform());
                 if (!menuMap.containsKey(item.getMenuCode())) {
                     menuMap.put(item.getMenuCode(), item);
                 }
@@ -811,7 +831,11 @@ public class UserServiceImpl implements UserService {
                 }
             }
         });
-        powerVO.setMenuTree(new ArrayList<>(menuMap.values()));
+        List<MenuVO> menuTree = new ArrayList<>();
+        for (Map<String, MenuVO> menuMap : topMenuMap.values()) {
+            menuTree.addAll(menuMap.values());
+        }
+        powerVO.setMenuTree(menuTree);
     }
 
     /**
@@ -819,7 +843,7 @@ public class UserServiceImpl implements UserService {
      * showAllOrg=false、showAllRole=false
      */
     private void getFFPowerMenuTree(Integer usage, PowerVO powerVO, Map<String, OperateRole> roleMap) {
-        Map<String, MenuVO> menuMap = new HashMap<>();
+        Map<Integer, Map<String, MenuVO>> topMenuMap = new HashMap<>();
 
         Set<PowerVO.CodeName> orgList = powerVO.getRoleOrgMap().get(powerVO.getDefaultRoleCode());
         boolean flag = false;
@@ -840,14 +864,18 @@ public class UserServiceImpl implements UserService {
         List<OperateRoleMenu> authMenuList = roleMenuMapper.selectListByMap(queryRoleMenu.toMap());
 
         Map<String, OperateRoleMenu> menuRoleMap = new HashMap<>();
-        authMenuList.forEach(item -> menuRoleMap.put(item.getMenuCode(), item));
+        authMenuList.forEach(item -> menuRoleMap.put(item.getMenuCode() + "_" + item.getNavPlatform(), item));
 
         OperateProductMenu queryMenu = new OperateProductMenu();
         OperateRole role = roleMap.get(powerVO.getDefaultRoleCode());
         queryMenu.setProductCode(role.getProductCode());
         List<MenuVO> tempList = productMenuService.getProductMenuList(queryMenu);
         tempList.forEach(item -> {
-            if (menuRoleMap.containsKey(item.getMenuCode())) {
+            if (menuRoleMap.containsKey(item.getMenuCode() + "_" + item.getNavPlatform())) {
+                if (!topMenuMap.containsKey(item.getNavPlatform())) {
+                    topMenuMap.put(item.getNavPlatform(), new HashMap<String, MenuVO>());
+                }
+                Map<String, MenuVO> menuMap = topMenuMap.get(item.getNavPlatform());
                 if (!menuMap.containsKey(item.getMenuCode())) {
                     menuMap.put(item.getMenuCode(), item);
                 }
@@ -859,7 +887,11 @@ public class UserServiceImpl implements UserService {
                 }
             }
         });
-        powerVO.setMenuTree(new ArrayList<>(menuMap.values()));
+        List<MenuVO> menuTree = new ArrayList<>();
+        for (Map<String, MenuVO> menuMap : topMenuMap.values()) {
+            menuTree.addAll(menuMap.values());
+        }
+        powerVO.setMenuTree(menuTree);
     }
 
     private void handelDataPower(Integer usage, List<MenuVO> menuList) {
@@ -874,7 +906,7 @@ public class UserServiceImpl implements UserService {
             }
             if (menu.getDataPower() == 0) {
                 // 0-所有数据
-                allOrgList.forEach(item -> menu.getOrgCodeList().add(item.getOrgCode()));
+                menu.setOrgCodeList(new HashSet<>());
                 continue;
             }
             if (menu.getDataPower() == 1) {

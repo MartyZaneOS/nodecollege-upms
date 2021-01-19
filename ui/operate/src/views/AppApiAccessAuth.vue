@@ -50,6 +50,7 @@
         <template slot="operation" slot-scope="text, record, index">
           <a @click="() => editModal(record)">访问授权</a>
           <a v-if="record.state == -1" @click="() => delApi(record)">删除</a>
+          <a @click="() => visit(record)">访问统计</a>
         </template>
       </a-table>
       <NCPagination :page="pageObj" @changePage="(page)=>{this.pageObj = page}" @searchList="searchList"/>
@@ -401,6 +402,9 @@
             })
           }
         })
+      },
+      visit (record) {
+        document.location.href = '/operate/visitCount?appName=' + record.applicationName + '&controllerName=' + record.controllerName + '&apiUrl=' + record.apiUrl
       }
     }
   }

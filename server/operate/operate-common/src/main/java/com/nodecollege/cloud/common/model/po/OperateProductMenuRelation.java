@@ -21,6 +21,9 @@ public class OperateProductMenuRelation {
      */
     private String productCode;
 
+    // 导航平台 0-不生成导航菜单，1-pc端导航，2-移动端导航
+    private Integer navPlatform;
+
     /**
      * 菜单代码
      */

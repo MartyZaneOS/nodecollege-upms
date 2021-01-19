@@ -116,7 +116,7 @@ ribbon:
 # 日志配置
 log:
   # 日志是否上传
-  posh: true
+  push: false
   # 日志存放目录 默认 /mnt/log
   path: /logs/
   # 日志打印级别  默认 info

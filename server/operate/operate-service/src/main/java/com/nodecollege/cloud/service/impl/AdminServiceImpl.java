@@ -702,7 +702,7 @@ public class AdminServiceImpl implements AdminService {
             }
             if (menu.getDataPower() == 0) {
                 // 0-所有数据
-                allOrgList.forEach(item -> menu.getOrgCodeList().add(item.getOrgCode()));
+                menu.setOrgCodeList(new HashSet<>());
                 continue;
             }
             if (menu.getDataPower() == 1) {

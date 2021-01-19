@@ -72,7 +72,7 @@
             <a-form-item label="显示所有角色菜单">
               <a-switch v-model="adminInfo.showAllRole"></a-switch >
             </a-form-item>
-            <a-form-item label="显示所有机构菜单">
+            <a-form-item label="操作所有机构数据">
               <a-switch v-model="adminInfo.showAllOrg"></a-switch >
             </a-form-item>
             <a-form-item label="默认角色" v-if="!adminInfo.showAllRole">
@@ -81,7 +81,7 @@
               </a-select>
             </a-form-item>
             <a-form-item label="默认机构" v-if="!adminInfo.showAllOrg">
-              <a-select placeholder="请选择默认角色！" v-model="adminInfo.defaultOrgCode" @change="orgChange" style="width: 200px" key="selectOrg">
+              <a-select placeholder="请选择默认机构！" v-model="adminInfo.defaultOrgCode" @change="orgChange" style="width: 200px" key="selectOrg">
                 <a-select-option v-for="org in adminInfo.orgList" :value="org.code" :key="org.code">{{org.name}}</a-select-option>
               </a-select>
             </a-form-item>
@@ -301,7 +301,12 @@
           this.powerModal.visible = false
           this.selectOrgModal.visible = false
           this.selectRoleModal.visible = false
-          let menuList = res.rows[0].menuTree
+          let menuList = []
+          for (let i = 0; i < res.rows[0].menuTree.length; i++) {
+            if (res.rows[0].menuTree[i].navPlatform === 1) {
+              menuList.push(res.rows[0].menuTree[i])
+            }
+          }
           let menuCode = MenuUtils.getTopMenuCode(menuList, this.$route.path)
           if (menuCode) {
             window.location.reload()

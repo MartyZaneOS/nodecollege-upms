@@ -17,11 +17,6 @@ public interface SysLogService {
     List<SysLog> getSysLogList(QueryVO<SysLog> queryVO);
 
     /**
-     * 处理系统日志
-     */
-    Map<String, Integer> sysLogStorage();
-
-    /**
      * 删除系统日志
      */
     Map<String, Integer> delSysLog(Map<String, Integer> map);

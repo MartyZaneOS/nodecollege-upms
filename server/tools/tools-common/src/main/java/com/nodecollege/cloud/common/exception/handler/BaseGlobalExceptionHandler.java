@@ -28,8 +28,7 @@ public class BaseGlobalExceptionHandler {
     /**
      * 异常处理方法
      */
-    protected NCResult handleError(HttpServletRequest req, Exception e)
-            throws Exception {
+    protected NCResult handleError(HttpServletRequest req, Exception e) throws Exception {
         NCResult result = null;
         if (AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class) != null) {
             throw e;

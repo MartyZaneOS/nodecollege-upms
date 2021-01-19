@@ -1,6 +1,8 @@
 package com.nodecollege.cloud.controller;
 
+import com.nodecollege.cloud.client.utils.NCLoginUtils;
 import com.nodecollege.cloud.common.annotation.ApiAnnotation;
+import com.nodecollege.cloud.common.exception.NCException;
 import com.nodecollege.cloud.common.model.NCResult;
 import com.nodecollege.cloud.common.model.QueryVO;
 import com.nodecollege.cloud.common.model.po.OperateAdminOrg;
@@ -32,10 +34,18 @@ public class AdminOrgController {
     @Autowired
     private RoleOrgService roleOrgService;
 
+    @Autowired
+    private NCLoginUtils loginUtils;
+
     @ApiAnnotation(modularName = "组织机构信息", description = "查询组织机构列表")
     @PostMapping("/getOrgTree")
     public NCResult<NCTreeVO<OperateOrg>> getOrgTree(@RequestBody QueryVO<OperateOrg> queryVO) {
         queryVO.getData().setOrgUsage(0);
+        List<String> authOrg = loginUtils.getPowerAdminOrgCodeList();
+        if (authOrg == null) {
+            throw new NCException("", "无权操作！");
+        }
+        queryVO.setStringList(authOrg);
         List<OperateOrg> list = orgService.getOrgList(queryVO);
         List<NCTreeVO<OperateOrg>> treeVOList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {

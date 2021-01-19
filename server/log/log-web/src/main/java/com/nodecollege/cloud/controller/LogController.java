@@ -29,12 +29,6 @@ public class LogController {
     @Autowired
     private SysLogService sysLogService;
 
-    @ApiAnnotation(modularName = "系统日志管理", description = "系统日志入库")
-    @PostMapping("/sysLogStorage")
-    public NCResult sysLogStorage() {
-        return NCResult.ok(sysLogService.sysLogStorage());
-    }
-
     @ApiAnnotation(modularName = "系统日志管理", description = "删除系统日志")
     @PostMapping("/delSysLog")
     public NCResult<Map<String, Integer>> delSysLog(@RequestBody Map<String, Integer> map) {

@@ -139,7 +139,13 @@
           }).then((res) => {
             if (res.success) {
               sessionStorage.setItem(ADMIN_INFO, JSON.stringify(res.rows[0]))
-              let path = MenuUtils.getLeftMenuFirstPath(res.rows[0].menuTree)
+              let pcMenu = []
+              for (let i = 0; i < res.rows[0].menuTree.length; i++) {
+                if (res.rows[0].menuTree[i].navPlatform === 1) {
+                  pcMenu.push(res.rows[0].menuTree[i])
+                }
+              }
+              let path = MenuUtils.getLeftMenuFirstPath(pcMenu)
               console.log('登录成功，跳转路径 ', path)
               that.$router.push({path: path})
             } else {

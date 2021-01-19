@@ -1,6 +1,7 @@
 package com.nodecollege.cloud.service.impl;
 
 import com.nodecollege.cloud.common.exception.NCException;
+import com.nodecollege.cloud.common.model.QueryVO;
 import com.nodecollege.cloud.common.model.po.OperateUi;
 import com.nodecollege.cloud.common.model.po.OperateUiPage;
 import com.nodecollege.cloud.common.utils.NCUtils;
@@ -26,8 +27,8 @@ public class UiServiceImpl implements UiService {
     private OperateUiPageMapper uiPageMapper;
 
     @Override
-    public List<OperateUi> getUiList() {
-        return uiMapper.selectUiList(new OperateUi());
+    public List<OperateUi> getUiList(QueryVO<OperateUi> queryVO) {
+        return uiMapper.selectListByMap(queryVO.toMap());
     }
 
     @Override

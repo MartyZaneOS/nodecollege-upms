@@ -152,6 +152,7 @@ public class RoleServiceImpl implements RoleService {
                 add.setMenuCode(menu.getMenuCode());
                 add.setRoleSource(0);
                 add.setTenantId(queryVO.getData().getTenantId());
+                add.setNavPlatform(menu.getNavPlatform());
                 list.add(add);
             }
         } else {
@@ -163,9 +164,11 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void bindRoleMenu(BindVO bindVO) {
         NCUtils.nullOrEmptyThrow(bindVO.getSourceCodes());
+        NCUtils.nullOrEmptyThrow(bindVO.getNavPlatform());
         QueryVO<TenantRoleMenu> querySource = new QueryVO<>(new TenantRoleMenu());
         querySource.getData().setRoleCode(bindVO.getSourceCodes().get(0));
         querySource.getData().setTenantId(bindVO.getTenantId());
+        querySource.getData().setNavPlatform(bindVO.getNavPlatform());
         List<TenantRoleMenu> exList = roleMenuMapper.selectListByMap(querySource.toMap());
 
         List<String> exCodeList = new ArrayList<>();
@@ -185,6 +188,7 @@ public class RoleServiceImpl implements RoleService {
                 add.setTenantId(bindVO.getTenantId());
                 add.setRoleCode(bindVO.getSourceCodes().get(0));
                 add.setMenuCode(item);
+                add.setNavPlatform(bindVO.getNavPlatform());
                 roleMenuMapper.insert(add);
             }
         });

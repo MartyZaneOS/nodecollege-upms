@@ -318,7 +318,12 @@
           this.powerModal.visible = false
           this.selectOrgModal.visible = false
           this.selectRoleModal.visible = false
-          let menuList = res.rows[0].menuTree
+          let menuList = []
+          for (let i = 0; i < res.rows[0].menuTree.length; i++) {
+            if (res.rows[0].menuTree[i].navPlatform === 1) {
+              menuList.push(res.rows[0].menuTree[i])
+            }
+          }
           let menuCode = MenuUtils.getTopMenuCode(menuList, this.$route.path)
           if (menuCode) {
             window.location.reload()

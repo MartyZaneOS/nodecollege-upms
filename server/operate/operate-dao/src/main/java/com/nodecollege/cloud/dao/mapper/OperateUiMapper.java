@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 版权：节点学院
@@ -41,4 +42,6 @@ public interface OperateUiMapper {
      * 查询前端工程列表
      */
     List<OperateUi> selectUiList(OperateUi record);
+
+    List<OperateUi> selectListByMap(Map<String, Object> queryMap);
 }

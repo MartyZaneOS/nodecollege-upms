@@ -55,8 +55,8 @@ public class NCGlobalFilter implements GlobalFilter, Ordered {
     @Value("${spring.application.name:default}")
     private String applicationName;
 
-    @Value("${log.posh:false}")
-    private Boolean logPosh;
+    @Value("${log.push:false}")
+    private Boolean logPush;
 
     @Autowired
     private RedisUtils redisUtils;
@@ -79,6 +79,9 @@ public class NCGlobalFilter implements GlobalFilter, Ordered {
         sysLog.setRequestIp(getIpAddress(request));
         sysLog.setAccessSource(request.getHeaders().getFirst(HeaderConstants.ACCESS_SOURCE));
         sysLog.setRequestUri(request.getPath().toString());
+        if (sysLog.getRequestUri().lastIndexOf("/") == sysLog.getRequestUri().length() - 1){
+            sysLog.setRequestUri(sysLog.getRequestUri().substring(0, sysLog.getRequestUri().length() - 1));
+        }
         sysLog.setReferer(request.getHeaders().getFirst("Referer"));
 
         // 获取访问请求id 用于链路追踪
@@ -163,8 +166,8 @@ public class NCGlobalFilter implements GlobalFilter, Ordered {
                         DataBufferUtils.release(dataBuffer);
                         String s = new String(content, Charset.forName("UTF-8"));
                         responseStr.append(s);
-                        byte[] uppedContent = new String(content, Charset.forName("UTF-8")).getBytes();
-                        return bufferFactory.wrap(uppedContent);
+//                        byte[] uppedContent = new String(content, Charset.forName("UTF-8")).getBytes();
+                        return bufferFactory.wrap(content);
                     }));
                 }
                 return super.writeWith(body);
@@ -280,9 +283,9 @@ public class NCGlobalFilter implements GlobalFilter, Ordered {
         NCLoginUtils.reset();
         sysLog.setLostTime(System.currentTimeMillis() - startTime);
         logger.info("花费:{}ms", sysLog.getLostTime());
-        if (logPosh) {
+        if (logPush) {
             try {
-                queueUtils.poshTask(QueueConstants.SYS_LOG, sysLog);
+                queueUtils.pushTask(QueueConstants.SYS_LOG, sysLog);
             } catch (Exception e) {
                 logger.error("保存日志到队列中失败！ {}", JSONObject.toJSONString(sysLog), e);
             }

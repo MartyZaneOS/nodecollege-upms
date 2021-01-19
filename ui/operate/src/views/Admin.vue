@@ -24,7 +24,7 @@
             <span>
               <a @click="() => showOrg(record)">机构信息</a>
               <a @click="() => showRole(record)">角色信息</a>
-              <a @click="() => showPower(record)">授权信息</a>
+              <a @click="() => showPower(record)">授权菜单</a>
               <a @click="() => resetPwd(record)">重置密码</a>
               <a v-if="record.state == 1 || record.state == 2" @click="() => updateAdmin(index)">编辑</a>
               <a v-if="record.state == 1" @click="() => lockAdmin(index)">锁定</a>
@@ -79,7 +79,7 @@
         <a-button key="back" @click="bindOrgModal.visible = false">取消</a-button>
       </template>
     </a-modal>
-    <a-modal v-model="powerModal.visible" title="授权信息" width="1200px">
+    <a-modal v-model="powerModal.visible" title="授权菜单" width="1200px">
       <a-row>
         <a-col span="24">
           <a-form layout="inline">
@@ -105,6 +105,10 @@
           </a-form>
         </a-col>
         <a-col span="12">
+          <a-tabs v-model="powerModal.navSelect" @change="modelNavChange">
+            <a-tab-pane :key="1" tab="PC端"></a-tab-pane>
+            <a-tab-pane :key="0" tab="其他"></a-tab-pane>
+          </a-tabs>
           <a-tree
               :replace-fields="{children:'children', title:'menuName', key: 'menuCode'}"
               :tree-data="powerModal.treeData"
@@ -249,6 +253,8 @@
           visible: false,
           powerData: {},
           adminData: {},
+          navSelect: 1,
+          sourceData: [],
           treeData: [],
           treeExpandedKeys: [],
           selectedKeys: [],
@@ -457,6 +463,8 @@
       // 显示授权信息
       showPower (record) {
         this.powerModal.adminData = record
+        this.powerModal.navSelect = 1
+        this.powerModal.sourceData = []
         this.powerModal.treeData = []
         this.powerModal.treeExpandedKeys = []
         this.powerModal.search = {
@@ -483,10 +491,28 @@
         }
         operateApi.getAdminPower({...this.powerModal.search}).then(res => {
           this.powerModal.powerData = res.rows[0]
-          this.powerModal.treeData = res.rows[0].menuTree
-          this.handleMenuTree(res.rows[0].menuTree, this.powerModal.treeExpandedKeys)
+          this.powerModal.sourceData = res.rows[0].menuTree
+          this.powerModal.treeData = []
+          for (let i = 0; i < this.powerModal.sourceData.length; i++) {
+            if (this.powerModal.sourceData[i].navPlatform === 1) {
+              this.powerModal.treeData.push(this.powerModal.sourceData[i])
+            }
+          }
+          this.handleMenuTree(this.powerModal.treeData, this.powerModal.treeExpandedKeys)
           this.powerModal.visible = true
         })
+      },
+      modelNavChange (value) {
+        console.log('navChange', value)
+        this.powerModal.navSelect = value
+        this.powerModal.treeData = []
+        this.powerModal.treeExpandedKeys = []
+        for (let i = 0; i < this.powerModal.sourceData.length; i++) {
+          if (this.powerModal.sourceData[i].navPlatform === value) {
+            this.powerModal.treeData.push(this.powerModal.sourceData[i])
+          }
+        }
+        this.handleMenuTree(this.powerModal.treeData, this.powerModal.treeExpandedKeys)
       },
       handleMenuTree (treeList, selectKeys) {
         if (!treeList) {

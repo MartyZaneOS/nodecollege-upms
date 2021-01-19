@@ -31,8 +31,8 @@ public class SysLogFilter {
     @Value("${spring.application.name:default}")
     private String applicationName;
 
-    @Value("${log.posh:false}")
-    private Boolean logPosh;
+    @Value("${log.push:false}")
+    private Boolean logPush;
 
     @Value("${log.exclude.urls:[/article-static]}")
     private List<String> logExcludeUrls;
@@ -54,6 +54,9 @@ public class SysLogFilter {
             sysLog.setRequestIp(NCUtils.getRequestIp(req));
             sysLog.setAccessSource(req.getHeader(HeaderConstants.ACCESS_SOURCE));
             sysLog.setRequestUri(req.getRequestURI());
+            if (sysLog.getRequestUri().lastIndexOf("/") == sysLog.getRequestUri().length() - 1){
+                sysLog.setRequestUri(sysLog.getRequestUri().substring(0, sysLog.getRequestUri().length() - 1));
+            }
             sysLog.setReferer(req.getHeader("Referer"));
 
             // 获取访问请求id 用于链路追踪
@@ -73,7 +76,7 @@ public class SysLogFilter {
             log.info("requestIp:{}, url:{}",sysLog.getRequestIp(), sysLog.getRequestUri());
             // todo
             // 开启日志上传功能
-            if (logPosh && !checkLogExcludeUrls(sysLog.getRequestUri())) {
+            if (logPush && !checkLogExcludeUrls(sysLog.getRequestUri())) {
                 ResponseWrapper wrapperResponse = new ResponseWrapper((HttpServletResponse) response);//转换成代理类
 
                 if ("POST".equals(req.getMethod())) {
@@ -114,7 +117,7 @@ public class SysLogFilter {
                 sysLog.setLostTime(System.currentTimeMillis() - startTime);
                 log.info("花费:{}ms", sysLog.getLostTime());
                 try {
-                    queueUtils.poshTask(QueueConstants.SYS_LOG, sysLog);
+                    queueUtils.pushTask(QueueConstants.SYS_LOG, sysLog);
                 } catch (Exception e) {
                     log.error("保存日志到队列中失败！ {}", JSONObject.toJSONString(sysLog), e);
                 }

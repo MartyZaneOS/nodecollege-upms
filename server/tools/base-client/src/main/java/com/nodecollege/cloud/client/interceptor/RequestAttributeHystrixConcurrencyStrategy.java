@@ -37,25 +37,18 @@ public class RequestAttributeHystrixConcurrencyStrategy extends HystrixConcurren
                 // Welcome to singleton hell...
                 return;
             }
-            HystrixCommandExecutionHook commandExecutionHook = HystrixPlugins
-                    .getInstance().getCommandExecutionHook();
-            HystrixEventNotifier eventNotifier = HystrixPlugins.getInstance()
-                    .getEventNotifier();
-            HystrixMetricsPublisher metricsPublisher = HystrixPlugins.getInstance()
-                    .getMetricsPublisher();
-            HystrixPropertiesStrategy propertiesStrategy = HystrixPlugins.getInstance()
-                    .getPropertiesStrategy();
-            this.logCurrentStateOfHystrixPlugins(eventNotifier, metricsPublisher,
-                    propertiesStrategy);
+            HystrixCommandExecutionHook commandExecutionHook = HystrixPlugins.getInstance().getCommandExecutionHook();
+            HystrixEventNotifier eventNotifier = HystrixPlugins.getInstance().getEventNotifier();
+            HystrixMetricsPublisher metricsPublisher = HystrixPlugins.getInstance().getMetricsPublisher();
+            HystrixPropertiesStrategy propertiesStrategy = HystrixPlugins.getInstance().getPropertiesStrategy();
+            this.logCurrentStateOfHystrixPlugins(eventNotifier, metricsPublisher, propertiesStrategy);
             HystrixPlugins.reset();
             HystrixPlugins.getInstance().registerConcurrencyStrategy(this);
-            HystrixPlugins.getInstance()
-                    .registerCommandExecutionHook(commandExecutionHook);
+            HystrixPlugins.getInstance().registerCommandExecutionHook(commandExecutionHook);
             HystrixPlugins.getInstance().registerEventNotifier(eventNotifier);
             HystrixPlugins.getInstance().registerMetricsPublisher(metricsPublisher);
             HystrixPlugins.getInstance().registerPropertiesStrategy(propertiesStrategy);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("Failed to register Sleuth Hystrix Concurrency Strategy", e);
         }
     }
@@ -84,13 +77,11 @@ public class RequestAttributeHystrixConcurrencyStrategy extends HystrixConcurren
                                             HystrixProperty<Integer> maximumPoolSize,
                                             HystrixProperty<Integer> keepAliveTime, TimeUnit unit,
                                             BlockingQueue<Runnable> workQueue) {
-        return this.delegate.getThreadPool(threadPoolKey, corePoolSize, maximumPoolSize,
-                keepAliveTime, unit, workQueue);
+        return this.delegate.getThreadPool(threadPoolKey, corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
     }
 
     @Override
-    public ThreadPoolExecutor getThreadPool(HystrixThreadPoolKey threadPoolKey,
-            HystrixThreadPoolProperties threadPoolProperties) {
+    public ThreadPoolExecutor getThreadPool(HystrixThreadPoolKey threadPoolKey, HystrixThreadPoolProperties threadPoolProperties) {
         return this.delegate.getThreadPool(threadPoolKey, threadPoolProperties);
     }
 
@@ -100,8 +91,7 @@ public class RequestAttributeHystrixConcurrencyStrategy extends HystrixConcurren
     }
 
     @Override
-    public <T> HystrixRequestVariable<T> getRequestVariable(
-            HystrixRequestVariableLifecycle<T> rv) {
+    public <T> HystrixRequestVariable<T> getRequestVariable(HystrixRequestVariableLifecycle<T> rv) {
         return this.delegate.getRequestVariable(rv);
     }
 
@@ -127,8 +117,7 @@ public class RequestAttributeHystrixConcurrencyStrategy extends HystrixConcurren
                     MDC.clear();
                 }
                 return target.call();
-            }
-            finally {
+            } finally {
                 RequestContextHolder.resetRequestAttributes();
             }
         }

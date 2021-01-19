@@ -1,17 +1,17 @@
 <template>
   <a-row style="padding: 10px;">
     <a-col span="24" style="margin: 10px 0">
-      <a-button type="primary" @click="addSync">新增任务</a-button>
+      <a-button type="primary" @click="addSync">复制任务</a-button>
     </a-col>
     <a-col span="24">
       <a-table :dataSource="data" :columns="columns" :pagination="pagination" :loading="loading" size="small" bordered
-               :rowKey="record => record.jobId" :scroll="{ x: 2100 }">
+               :rowKey="record => record.jobId" :scroll="{ x: 2500 }">
         <template slot="operation" slot-scope="text, record, index">
           <div>
             <span>
               <a @click="() => updateSync(record)">编辑</a>
-              <a v-if="record.jobStatus == 0" @click="() => lockSync(record)">启动</a>
-              <a v-if="record.jobStatus == 1" @click="() => lockSync(record)">暂停</a>
+              <a v-if="record.jobStatus === 0" @click="() => lockSync(record)">启动</a>
+              <a v-if="record.jobStatus === 1" @click="() => lockSync(record)">暂停</a>
               <a @click="() => showLog(record)">执行日志</a>
               <a v-if="record.jobType == 1" @click="() => delSync(record)">删除</a>
             </span>
@@ -32,7 +32,7 @@
           <a-input placeholder="请输入任务组名！" v-decorator="['jobGroup', {rules: [{ required: true, message: '请输入任务组名！'}]}]"/>
         </a-form-item>
         <a-form-item label="任务描述">
-          <a-input placeholder="请输入任务描述！" v-decorator="['description']"/>
+          <a-textarea :rows="4" placeholder="请输入任务描述！" v-decorator="['description']"/>
         </a-form-item>
         <a-form-item label="任务类" v-if="model.title === '添加任务'">
           <a-select placeholder="请选择任务类！" v-decorator="['jobClass', {rules: [{ required: true, message: '请选择任务类！'}]}]" style="width: 500px">
@@ -101,17 +101,17 @@
         pagination: false,
         columns: [
           {title: '任务名称', dataIndex: 'jobName', width: 150, fixed: 'left'},
-          {title: '任务组名', dataIndex: 'jobGroup'},
+          {title: '任务组名', dataIndex: 'jobGroup', width: 150},
           {title: '任务类', dataIndex: 'jobClass'},
           {title: '任务参数', dataIndex: 'jobParam', scopedSlots: {customRender: 'name'}},
-          {title: 'cron', dataIndex: 'cronExpression'},
-          {title: '任务状态', dataIndex: 'jobStatus', customRender: (text, record, index) => { return text === 0 ? '暂停' : text === 1 ? '启动' : '无法执行' }},
-          {title: '计划策略', dataIndex: 'misfirePolicy', customRender: (text, record, index) => { return text === 0 ? '默认' : text === 1 ? '立即触发执行' : text === 2 ? '触发一次执行' : '不触发立即执行' }},
-          {title: '更新用户', dataIndex: 'updateUser'},
-          {title: '更新时间', dataIndex: 'updateTime'},
-          {title: '创建时间', dataIndex: 'createTime'},
+          {title: 'cron', dataIndex: 'cronExpression', width: 150},
+          {title: '任务状态', dataIndex: 'jobStatus', width: 150, customRender: (text, record, index) => { return text === 0 ? '暂停' : text === 1 ? '启动' : '无法执行' }},
+          // {title: '计划策略', dataIndex: 'misfirePolicy', customRender: (text, record, index) => { return text === 0 ? '默认' : text === 1 ? '立即触发执行' : text === 2 ? '触发一次执行' : '不触发立即执行' }},
+          {title: '更新用户', dataIndex: 'updateUser', width: 150},
+          {title: '更新时间', dataIndex: 'updateTime', width: 150},
+          {title: '创建时间', dataIndex: 'createTime', width: 150},
           {title: '任务描述', dataIndex: 'description'},
-          {title: '任务类型', dataIndex: 'jobType', customRender: (text, record, index) => { return text === 0 ? '原始任务（不可删除）' : '手动新增任务' }},
+          {title: '任务类型', dataIndex: 'jobType', width: 200, customRender: (text, record, index) => { return text === 0 ? '原始任务（不可删除）' : '复制任务' }},
           {title: '操作', fixed: 'right', width: 150, scopedSlots: {customRender: 'operation'}}
         ],
         model: {
@@ -120,7 +120,7 @@
           loading: false,
           jobClassList: [],
           visible: false,
-          title: '添加任务',
+          title: '复制任务',
           form: this.$form.createForm(this),
           data: {}
         },
@@ -164,9 +164,9 @@
           this.loading = false
         })
       },
-      // 添加任务
+      // 复制任务
       addSync () {
-        this.model.title = '添加任务'
+        this.model.title = '复制任务'
         this.model.data = {}
         this.model.form.resetFields()
         if (this.model.jobClassList.length === 0) {
@@ -225,7 +225,7 @@
         console.log('锁定任务', record)
         const that = this
         this.$confirm({
-          title: record.jobState === 0 ? '暂停任务！?' : '启动任务！',
+          title: record.jobStatus === 0 ? '暂停任务！?' : '启动任务！',
           onOk () {
             return new Promise((resolve, reject) => {
               operateApi.pauseJob({
@@ -244,14 +244,14 @@
           }
         })
       },
-      // 添加或者更新任务
+      // 复制或者更新任务
       addOrUpdateSyncOk (e) {
         e.preventDefault()
         this.model.form.validateFields((err, values) => {
           if (!err) {
             console.log('Received values of form: ', values)
             this.model.loading = true
-            if (this.model.title === '添加任务') {
+            if (this.model.title === '复制任务') {
               operateApi.addJob({
                 ...values
               }).then((res) => {

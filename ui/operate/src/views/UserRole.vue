@@ -72,6 +72,10 @@
       </template>
     </a-modal>
     <a-modal v-model="bindModal.visible" title="绑定菜单">
+      <a-tabs v-model="bindModal.navSelect" @change="modelNavChange">
+        <a-tab-pane :key="1" tab="PC端"></a-tab-pane>
+        <a-tab-pane :key="0" tab="其他"></a-tab-pane>
+      </a-tabs>
       <a-tree
           :replace-fields="{children:'children', title:'menuName', key: 'menuCode'}"
           :tree-data="bindModal.bindTreeData"
@@ -208,6 +212,8 @@
           loading: false,
           visible: false,
           roleData: {},
+          navSelect: 1,
+          sourceData: [],
           bindTreeData: [],
           bindTreeExpandedKeys: [],
           checkedKeys: []
@@ -362,17 +368,52 @@
       },
       showMenu (record) {
         this.bindModal.roleData = record
+        this.bindModal.navSelect = 1
+        this.bindModal.sourceData = []
         this.bindModal.bindTreeData = []
         this.bindModal.bindTreeExpandedKeys = []
+        this.bindModal.sourceCheckedKeys = []
         this.bindModal.checkedKeys = []
         operateApi.getProductMenuTree({productCode: record.productCode}).then(res => {
-          this.bindModal.bindTreeData = res.rows
-          this.handleBindTree(res.rows, this.bindModal.bindTreeExpandedKeys)
+          this.bindModal.sourceData = res.rows
+          for (let i = 0; i < this.bindModal.sourceData.length; i++) {
+            if (this.bindModal.sourceData[i].navPlatform === this.bindModal.navSelect) {
+              this.bindModal.bindTreeData.push(this.bindModal.sourceData[i])
+            }
+          }
+          this.handleBindTree(this.bindModal.bindTreeData, this.bindModal.bindTreeExpandedKeys)
           operateApi.getUserRoleMenuList({pageSize: -1, data: {roleCode: record.roleCode}}).then(res => {
-            this.handleBindTree(res.rows, this.bindModal.checkedKeys)
+            this.bindModal.sourceCheckedKeys = res.rows
+            let check = []
+            for (let i = 0; i < this.bindModal.sourceCheckedKeys.length; i++) {
+              if (this.bindModal.sourceCheckedKeys[i].navPlatform === this.bindModal.navSelect) {
+                check.push(this.bindModal.sourceCheckedKeys[i])
+              }
+            }
+            this.handleBindTree(check, this.bindModal.checkedKeys)
             this.bindModal.visible = true
           })
         })
+      },
+      modelNavChange (value) {
+        console.log('navChange', value)
+        this.bindModal.navSelect = value
+        this.bindModal.bindTreeData = []
+        this.bindModal.bindTreeExpandedKeys = []
+        this.bindModal.checkedKeys = []
+        for (let i = 0; i < this.bindModal.sourceData.length; i++) {
+          if (this.bindModal.sourceData[i].navPlatform === this.bindModal.navSelect) {
+            this.bindModal.bindTreeData.push(this.bindModal.sourceData[i])
+          }
+        }
+        this.handleBindTree(this.bindModal.bindTreeData, this.bindModal.bindTreeExpandedKeys)
+        let check = []
+        for (let i = 0; i < this.bindModal.sourceCheckedKeys.length; i++) {
+          if (this.bindModal.sourceCheckedKeys[i].navPlatform === this.bindModal.navSelect) {
+            check.push(this.bindModal.sourceCheckedKeys[i])
+          }
+        }
+        this.handleBindTree(check, this.bindModal.checkedKeys)
       },
       handleBindTree (treeList, selectKeys) {
         if (!treeList) {
@@ -415,7 +456,7 @@
         return res
       },
       bindOk () {
-        operateApi.bindUserRoleMenu({sourceCodes: [this.bindModal.roleData.roleCode], targetCodes: this.bindModal.checkedKeys}).then(res => {
+        operateApi.bindUserRoleMenu({sourceCodes: [this.bindModal.roleData.roleCode], targetCodes: this.bindModal.checkedKeys, navPlatform: this.bindModal.navSelect}).then(res => {
           this.searchList()
           this.bindModal.visible = false
         })

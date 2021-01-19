@@ -25,6 +25,8 @@ import Config from '../views/Config'
 import SysConfig from '../views/SysConfig'
 import PreConfig from '../views/PreConfig'
 import File from '../views/File'
+import DataPower from '../views/DataPower/index'
+import Visit from '../views/Visit'
 
 // hack router push callback
 const originalPush = Router.prototype.push
@@ -76,7 +78,9 @@ const routes = [
       {path: '/operate/config', name: 'config', component: Config, meta: {title: '配置信息查询'}},
       {path: '/operate/sysConfig', name: 'sysConfig', component: SysConfig, meta: {title: '系统配置管理'}},
       {path: '/operate/preConfig', name: 'preConfig', component: PreConfig, meta: {title: '预制配置管理'}},
-      {path: '/operate/file', name: 'file', component: File, meta: {title: '文件管理'}}
+      {path: '/operate/file', name: 'file', component: File, meta: {title: '文件管理'}},
+      {path: '/operate/dataPower', name: 'dataPower', component: DataPower, meta: {title: '数据权限管理'}},
+      {path: '/operate/visitCount', name: 'visitCount', component: Visit, meta: {title: '访问统计'}}
     ]
   },
   {path: '/admin/login', name: 'login', component: AdminLogin},

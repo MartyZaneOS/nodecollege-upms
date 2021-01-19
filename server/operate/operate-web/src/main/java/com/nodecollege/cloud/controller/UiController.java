@@ -2,8 +2,10 @@ package com.nodecollege.cloud.controller;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.nodecollege.cloud.client.utils.NCLoginUtils;
 import com.nodecollege.cloud.common.annotation.ApiAnnotation;
 import com.nodecollege.cloud.common.constants.NCConstants;
+import com.nodecollege.cloud.common.exception.NCException;
 import com.nodecollege.cloud.common.model.MenuVO;
 import com.nodecollege.cloud.common.model.NCResult;
 import com.nodecollege.cloud.common.model.QueryVO;
@@ -11,6 +13,8 @@ import com.nodecollege.cloud.common.model.po.OperateUi;
 import com.nodecollege.cloud.common.model.po.OperateUiPage;
 import com.nodecollege.cloud.common.model.po.OperateUiPageButton;
 import com.nodecollege.cloud.common.model.vo.ButtonTreeVO;
+import com.nodecollege.cloud.common.model.vo.DataPowerVO;
+import com.nodecollege.cloud.service.DataPowerService;
 import com.nodecollege.cloud.service.UiPageButtonService;
 import com.nodecollege.cloud.service.UiPageService;
 import com.nodecollege.cloud.service.UiService;
@@ -39,11 +43,22 @@ public class UiController {
     @Autowired
     private UiPageButtonService uiPageButtonService;
 
+    @Autowired
+    private NCLoginUtils loginUtils;
+
+    @Autowired
+    private DataPowerService dataPowerService;
+
     @ApiAnnotation(modularName = "前端工程", description = "查询前端列表")
     @PostMapping("/getUiList")
-    public NCResult<OperateUi> getUiList(@RequestBody QueryVO queryVO) {
+    public NCResult<OperateUi> getUiList(@RequestBody QueryVO<OperateUi> queryVO) {
+        List<String> authList = getAdminAuth("uiDataPower");
+        if (authList == null) {
+            throw new NCException("", "数据权限不足！");
+        }
+        queryVO.setStringList(authList);
         Page page = PageHelper.startPage(queryVO.getPageNum(), queryVO.getPageSize());
-        List<OperateUi> list = uiService.getUiList();
+        List<OperateUi> list = uiService.getUiList(queryVO);
         return NCResult.ok(list, page.getTotal());
     }
 
@@ -133,5 +148,14 @@ public class UiController {
     public NCResult editUiPageButton(@RequestBody OperateUiPageButton ui) {
         uiPageButtonService.editUiPageButton(ui);
         return NCResult.ok();
+    }
+
+    private List<String> getAdminAuth(String dataPowerCode) {
+        DataPowerVO query = new DataPowerVO();
+        query.setOrgCode(loginUtils.getPowerAdminOrgCodeList());
+        query.setUserId(loginUtils.getAdminLoginInfo().getLoginId());
+        query.setDataPowerCode(dataPowerCode);
+        query.setDataPowerUsage(0);
+        return dataPowerService.getUserAuth(query);
     }
 }

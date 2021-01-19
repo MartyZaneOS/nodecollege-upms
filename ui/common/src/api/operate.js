@@ -1,15 +1,15 @@
 import http from '../utils/request'
 
-// 查询角色列表根据管理员信息
+// 查询公钥
 export function getPublicKey (data) {
   return http.post('operateApi', '/common/getPublicKey', data)
 }
 
-// 查询角色列表根据管理员信息
+// 管理员登录
 export function adminLogin (data) {
   return http.post('operateApi', '/admin/login', data)
 }
-// 查询管理员授权信息
+// 管理员登出
 export function adminLogout (data) {
   return http.post('operateApi', '/admin/logout', data)
 }
@@ -26,15 +26,15 @@ export function changeDefaultOption (data) {
   return http.post('operateApi', '/admin/centre/changeDefaultOption', data)
 }
 
-// 查询角色列表根据管理员信息
+// 用户注册
 export function register (data) {
   return http.post('operateApi', '/user/register', data)
 }
-// 查询角色列表根据管理员信息
+// 用户登录
 export function userLogin (data) {
   return http.post('operateApi', '/user/login', data)
 }
-// 查询管理员授权信息
+// 用户登出
 export function userLogout (data) {
   return http.post('operateApi', '/user/logout', data)
 }

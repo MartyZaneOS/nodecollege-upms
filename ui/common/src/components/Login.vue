@@ -7,44 +7,21 @@
       <a-form class="login-form">
         <div style="height: 50px; line-height: 50px; font-size: 24px; text-align: center;">用户登陆</div>
         <a-form-item class="form-item">
-          <a-input
-              size="large"
-              type="text"
-              placeholder="账户或电话"
-              v-model="loginParm.username"
-              v-decorator="[
-                'username',
-                {rules: [{ required: true, message: '请输入帐户名或电话' }, { validator: handleUsernameOrEmail }], validateTrigger: 'change'}
-              ]">
+          <a-input size="large" type="text" placeholder="账户或电话" v-model="loginParm.username"
+              v-decorator="[ 'username', {rules: [{ required: true, message: '请输入帐户名或电话' }, { validator: handleUsernameOrEmail }], validateTrigger: 'change'} ]">
             <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
           </a-input>
         </a-form-item>
         <a-form-item class="form-item">
-          <a-input
-              size="large"
-              type="password"
-              autocomplete="false"
-              placeholder="密码"
-              v-model="loginParm.password"
-              v-decorator="[
-                'password',
-                {rules: [{ required: true, message: '请输入密码' }], validateTrigger: 'blur'}
-              ]"
-          >
+          <a-input size="large" type="password" autocomplete="false" placeholder="密码" v-model="loginParm.password"
+              v-decorator="[ 'password', {rules: [{ required: true, message: '请输入密码' }], validateTrigger: 'blur'} ]">
             <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
           </a-input>
         </a-form-item>
         <a-form-item class="form-item">
-          <a-button
-              style="width: 100%"
-              size="large"
-              type="primary"
-              htmlType="submit"
-              class="login-button"
-              :loading="loginBtn"
-              :disabled="loginBtn"
-              @click="login"
-          >登陆
+          <a-button style="width: 100%" size="large" type="primary"
+                    htmlType="submit" class="login-button" :loading="loginBtn" :disabled="loginBtn" @click="login">
+            登陆
           </a-button>
         </a-form-item>
         <a-form-item class="form-item">
@@ -182,7 +159,13 @@
               if (webMenuTree && webMenuTree.length > 0) {
                 path = MenuUtils.getLeftMenuFirstPath(webMenuTree)
               } else {
-                path = MenuUtils.getLeftMenuFirstPath(res.rows[0].menuTree)
+                let menuTree = []
+                for (let i = 0; i < res.rows[0].menuTree.length; i++) {
+                  if (res.rows[0].menuTree[i].navPlatform === 1) {
+                    menuTree.push(res.rows[0].menuTree[i])
+                  }
+                }
+                path = MenuUtils.getLeftMenuFirstPath(menuTree)
                 this.$store.state.chatData.ChatData.initWebsocket()
               }
               that.$router.push({path: path})
@@ -247,14 +230,22 @@
       registerOk () {
         this.register.form.validateFields((err, values) => {
           if (!err) {
-            operateApi.register({
-              telephone: values.telephone,
-              password: values.password
-            }).then((res) => {
-              if (res.success) {
-                this.$message.info('注册成功，请登陆！')
-                this.register.visible = false
-              }
+            operateApi.getPublicKey({}).then((pubRes) => {
+              const pki = Forge.pki
+              // 规定格式：publicKey之前需要加'-----BEGIN PUBLIC KEY-----\n'，之后需要加'\n-----END PUBLIC KEY-----'
+              const publicK = pki.publicKeyFromPem('-----BEGIN PUBLIC KEY-----\n' + pubRes.rows[0] + '\n-----END PUBLIC KEY-----');
+              // forge通过公钥加密后一般会是乱码格式，可进行base64编码操作再进行传输，相应的，后台获取到密文的密码后需要先进行base64解码操作再进行解密
+              const password =  Forge.util.encode64(publicK.encrypt(values.password))
+              operateApi.register({
+                telephone: values.telephone,
+                password: password,
+                rsaTag: MenuUtils.getCookie('RSA-TAG')
+              }).then((res) => {
+                if (res.success) {
+                  this.$message.info('注册成功，请登陆！')
+                  this.register.visible = false
+                }
+              })
             })
           }
         })

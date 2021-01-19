@@ -32,7 +32,7 @@ public class HeartBeatHandler extends ChannelInboundHandlerAdapter {
             }
             if (event.state() == IdleState.ALL_IDLE) {
                 String key = ChatConstants.CHAT_HEART_BEAT + ctx.channel().id().asShortText();
-                redisUtils.increment(key, 1);
+                redisUtils.increment(key, 1L);
                 Long time = redisUtils.get(key, Long.class);
                 log.info("客户-{}，无连接 {} 分钟了", ctx.channel().id().asShortText(), time);
                 log.info("users的数量为：" + ChatHandler.GLOBAL_USERS.size());

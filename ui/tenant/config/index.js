@@ -6,7 +6,7 @@ const path = require('path')
 
 function onProxyReq (proxyReq, req, res) {
   // 本地开发时，只能使用 如下设置的 B端租户代码 对应的B端账号进行登录
-  proxyReq.setHeader('LOGIN-TENANT-CODE', 'applyTenantTest13');
+  proxyReq.setHeader('LOGIN-TENANT-CODE', 'test01');
   proxyReq.setHeader('ACCESS-SOURCE', 'nc-nginx');
 }
 module.exports = {

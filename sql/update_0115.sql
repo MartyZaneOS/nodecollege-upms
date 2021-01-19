@@ -1,0 +1,11 @@
+-- operate库
+alter table o_product_menu
+    add nav_platform int default 1 null comment '导航平台 0-不生成导航，1-pc端导航，2-移动端导航' after product_code;
+alter table o_product_menu_relation
+    add nav_platform int default 1 null comment '导航平台 0-不生成导航，1-pc端导航，2-移动端导航' after product_code;
+alter table o_role_menu
+    add nav_platform int default 1 null comment '导航平台 0-不生成导航，1-pc端导航，2-移动端导航';
+
+-- tenant库
+alter table t_role_menu
+    add nav_platform int default 1 null comment '导航平台 0-不生成导航，1-pc端导航，2-移动端导航';

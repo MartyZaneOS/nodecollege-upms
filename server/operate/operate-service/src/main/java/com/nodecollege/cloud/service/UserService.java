@@ -1,7 +1,10 @@
 package com.nodecollege.cloud.service;
 
 import com.nodecollege.cloud.common.model.*;
-import com.nodecollege.cloud.common.model.po.*;
+import com.nodecollege.cloud.common.model.po.OperateUser;
+import com.nodecollege.cloud.common.model.po.OperateUserOrg;
+import com.nodecollege.cloud.common.model.po.OperateUserOrgRole;
+import com.nodecollege.cloud.common.model.po.OperateUserTenant;
 import com.nodecollege.cloud.common.model.vo.LoginVO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,7 +51,7 @@ public interface UserService {
     /**
      * 修改密码，只能当前登陆人修改自己的密码
      */
-    void updatePwd(Long userId, String oldPassword, String newPassword, ApiDataPower apiDataPower);
+    void updatePwd(Long userId, String oldPassword, String newPassword);
 
     /**
      * 切换默认租户

@@ -20,6 +20,8 @@ public class MenuVO implements Comparable<MenuVO> {
     private String menuCode;
     // 菜单名称
     private String menuName;
+    // 导航平台 0-不生成导航菜单，1-pc端导航，2-移动端导航
+    private Integer navPlatform;
     // 菜单类型 0-分类导航，1-菜单页面，2-查询类按钮，3-操作类按钮
     private Integer menuType;
     // 菜单图标
@@ -47,21 +49,32 @@ public class MenuVO implements Comparable<MenuVO> {
     }
 
     public static List<MenuVO> getMenuTree(List<MenuVO> menuList) {
-        Set<String> allCode = new HashSet<>();
-        menuList.forEach(item -> allCode.add(item.getMenuCode()));
-
-        Set<String> topParent = new HashSet<>();
-        for (int i = 0; i < menuList.size(); i++) {
-            String parentCode = menuList.get(i).getParentCode();
-            if (!topParent.contains(parentCode) && !allCode.contains(parentCode)) {
-                topParent.add(parentCode);
+        Map<Integer, List<MenuVO>> navMap = new HashMap<>();
+        for (MenuVO menuVO : menuList) {
+            if (!navMap.containsKey(menuVO.getNavPlatform())) {
+                navMap.put(menuVO.getNavPlatform(), new ArrayList<>());
             }
+            navMap.get(menuVO.getNavPlatform()).add(menuVO);
         }
-        List<MenuVO> orgTreeList = new ArrayList<>();
-        for (String parentCode : topParent) {
-            orgTreeList.addAll(getMenuTree(menuList, parentCode));
+        List<MenuVO> res = new ArrayList<>();
+        for (List<MenuVO> navList : navMap.values()) {
+            Set<String> allCode = new HashSet<>();
+            navList.forEach(item -> allCode.add(item.getMenuCode()));
+
+            Set<String> topParent = new HashSet<>();
+            for (int i = 0; i < navList.size(); i++) {
+                String parentCode = navList.get(i).getParentCode();
+                if (!topParent.contains(parentCode) && !allCode.contains(parentCode)) {
+                    topParent.add(parentCode);
+                }
+            }
+            List<MenuVO> orgTreeList = new ArrayList<>();
+            for (String parentCode : topParent) {
+                orgTreeList.addAll(getMenuTree(navList, parentCode));
+            }
+            res.addAll(orgTreeList);
         }
-        return orgTreeList;
+        return res;
     }
 
     /**

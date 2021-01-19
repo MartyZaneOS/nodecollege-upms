@@ -94,6 +94,12 @@
       <if test="state !=null">
         and state = #{state,jdbcType=INTEGER}
       </if>
+      <if test="stringList!=null and stringList.size>0">
+        and application_name in
+        <foreach item="_itemType" collection="stringList" open="(" separator="," close=")">
+          #{_itemType,jdbcType=VARCHAR}
+        </foreach>
+      </if>
     </where>
     order by application_name,controller_name,api_url
   </select>

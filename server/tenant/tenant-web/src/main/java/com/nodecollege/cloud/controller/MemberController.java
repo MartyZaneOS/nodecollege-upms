@@ -65,6 +65,7 @@ public class MemberController {
         NCUtils.nullOrEmptyThrow(loginMember, ErrorEnum.LOGIN_TIME_OUT);
         member.setCreateUser(loginMember.getAccount());
         member.setTenantId(loginMember.getTenantId());
+        member.setState(1);
         member = memberService.inviteMember(member);
         if (member != null) {
             return NCResult.ok("成员邀请成功！");
@@ -101,7 +102,7 @@ public class MemberController {
         return NCResult.ok();
     }
 
-    @ApiAnnotation(modularName = "成员管理", description = "删除成员信息")
+    @ApiAnnotation(modularName = "成员管理", description = "重置密码")
     @PostMapping("/resetPwd")
     public NCResult resetPwd(@RequestBody TenantMember user) {
         NCLoginUserVO loginMember = loginUtils.getMemberLoginInfo();

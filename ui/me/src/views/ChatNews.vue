@@ -595,7 +595,7 @@
       },
       searchMyFriendList () {
         this.addUserModal.allFriendList = []
-        this.http.post('upmsApi', '/myFriend/getMyFriendList', {
+        this.http.post('operateApi', '/myFriend/getMyFriendList', {
           nickname: this.addUserModal.nickname
         }).then((res) => {
           if (res.success) {

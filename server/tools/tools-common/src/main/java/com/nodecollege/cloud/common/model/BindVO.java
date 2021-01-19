@@ -22,6 +22,9 @@ public class BindVO extends AbstractBaseModel{
      * 绑定用途 0-运营/运维，1-2C
      */
     private Integer bindUsage;
+
+    // 导航平台 0-不生成导航菜单，1-pc端导航，2-移动端导航
+    private Integer navPlatform;
     /**
      * 源主键列表
      */

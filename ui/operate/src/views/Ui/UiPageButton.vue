@@ -228,10 +228,10 @@
       addOrUpdateUiOk (e) {
         this.addOrUpdateModal.form.validateFields((err, values) => {
           if (!err) {
-            if ((!this.rowSelectData || !this.rowSelectData.buttonCode) && values.buttonType === '1') {
-              this.$message.error('顶级按钮只能是查询类型！')
-              return
-            }
+            // if ((!this.rowSelectData || !this.rowSelectData.buttonCode) && values.buttonType === '1') {
+            //   this.$message.error('顶级按钮只能是查询类型！')
+            //   return
+            // }
             this.addOrUpdateModal.loading = true
             if (this.addOrUpdateModal.title === '添加按钮') {
               if (this.rowSelectData.buttonType === 1) {

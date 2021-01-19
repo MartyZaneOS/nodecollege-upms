@@ -1,10 +1,12 @@
 package com.nodecollege.cloud.client.utils;
 
+import com.nodecollege.cloud.client.feign.SyncApiClient;
 import com.nodecollege.cloud.common.constants.HeaderConstants;
 import com.nodecollege.cloud.common.constants.RedisConstants;
 import com.nodecollege.cloud.common.exception.NCException;
 import com.nodecollege.cloud.common.model.MenuVO;
 import com.nodecollege.cloud.common.model.NCLoginUserVO;
+import com.nodecollege.cloud.common.model.vo.DataPowerVO;
 import com.nodecollege.cloud.common.utils.RedisUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -14,9 +16,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 登录工具类
@@ -36,6 +36,9 @@ public class NCLoginUtils {
 
     @Autowired
     private RedisUtils redisUtils;
+
+    @Autowired
+    private SyncApiClient syncApiClient;
 
     private NCLoginUtils() {
     }
@@ -149,6 +152,44 @@ public class NCLoginUtils {
             return null;
         }
         return new ArrayList<>(orgCodeSet);
+    }
+
+    /**
+     * 获取管理员数据权限授权信息
+     */
+    public List<String> getAdminAuth(String dataPowerCode) {
+        DataPowerVO query = new DataPowerVO();
+        query.setOrgCode(getPowerAdminOrgCodeList());
+        query.setUserId(getAdminLoginInfo().getLoginId());
+        query.setDataPowerCode(dataPowerCode);
+        query.setDataPowerUsage(0);
+        String key = "dataPowerAuth:admin:" + dataPowerCode + ":" + query.getUserId();
+        List<String> auth = redisUtils.getList(key, String.class);
+        if (auth == null) {
+            auth = syncApiClient.getUserAuth(query).getRows();
+            if (auth == null) return null;
+            redisUtils.set(key, auth, 30 * 60);
+        }
+        return auth;
+    }
+
+    /**
+     * 获取用户数据权限授权信息
+     */
+    public List<String> getUserAuth(String dataPowerCode) {
+        DataPowerVO query = new DataPowerVO();
+        query.setOrgCode(getPowerUserOrgCodeList());
+        query.setUserId(getUserLoginInfo().getLoginId());
+        query.setDataPowerCode(dataPowerCode);
+        query.setDataPowerUsage(1);
+        String key = "dataPowerAuth:user:" + dataPowerCode + ":" + query.getUserId();
+        List<String> auth = redisUtils.getList(key, String.class);
+        if (auth == null) {
+            auth = syncApiClient.getUserAuth(query).getRows();
+            if (auth == null) return null;
+            redisUtils.set(key, auth, 30 * 60);
+        }
+        return auth;
     }
 
     /**

@@ -65,13 +65,13 @@ public class RoleOrgServiceImpl implements RoleOrgService {
                         queryAdmin.setRoleCode(bindVO.getSourceCodes().get(0));
                         queryAdmin.setOrgCode(item.getOrgCode());
                         List<OperateAdminOrgRole> adminList = adminOrgRoleMapper.selectList(queryAdmin);
-                        NCUtils.nullOrEmptyThrow(adminList, "", item.getOrgCode() + "机构下有绑定管理员信息！不能解绑！");
+                        NCUtils.notNullOrNotEmptyThrow(adminList, "", item.getOrgCode() + "机构下有绑定管理员信息！不能解绑！");
                     } else {
                         OperateUserOrgRole queryUser = new OperateUserOrgRole();
                         queryUser.setRoleCode(bindVO.getSourceCodes().get(0));
                         queryUser.setOrgCode(item.getOrgCode());
                         List<OperateUserOrgRole> userList = userOrgRoleMapper.selectList(queryUser);
-                        NCUtils.nullOrEmptyThrow(userList, "", item.getOrgCode() + "机构下有绑定用户信息！不能解绑！");
+                        NCUtils.notNullOrNotEmptyThrow(userList, "", item.getOrgCode() + "机构下有绑定用户信息！不能解绑！");
                     }
                 }
                 orgRoleMapper.deleteByPrimaryKey(item.getId());

@@ -69,9 +69,9 @@ public class UiPageButtonServiceImpl implements UiPageButtonService {
 
         if (NCUtils.isNullOrEmpty(item.getParentCode())){
             item.setParentCode("0");
-            if (item.getButtonType() != 2){
-                throw new NCException("", "顶级按钮必须是查询类按钮！");
-            }
+//            if (item.getButtonType() != 2){
+//                throw new NCException("", "顶级按钮必须是查询类按钮！");
+//            }
         } else {
             query.setPageCode(item.getPageCode());
             query.setButtonCode(item.getParentCode());

@@ -16,7 +16,7 @@ const MenuUtils = {
         }
       }
       if (menuTree[i].menuType === 0 && menuTree[i].children) {
-        let res = MenuUtils.getTopMenuCode(menuTree[i].children, path)
+        const res = MenuUtils.getTopMenuCode(menuTree[i].children, path)
         if (res) {
           return menuTree[i].menuCode
         }
@@ -36,7 +36,7 @@ const MenuUtils = {
         break
       }
       if (menuTree[i].menuType === 0 && menuTree[i].children) {
-        let res = MenuUtils.getLeftMenuFirstPath(menuTree[i].children)
+        const res = MenuUtils.getLeftMenuFirstPath(menuTree[i].children)
         if (res) {
           path = res
           break
@@ -47,14 +47,14 @@ const MenuUtils = {
   },
   // 获取打开菜单页面的分类导航代码列表
   getOpenKeys (tree, current) {
-    let path = []
+    const path = []
     for (let i = 0; i < tree.length; i++) {
       if (tree[i].pagePath === current) {
         path.push(tree[i].pagePath)
         return path
       }
       if (tree[i].children) {
-        let res = this.getOpenKeys(tree[i].children, current)
+        const res = this.getOpenKeys(tree[i].children, current)
         if (res && res.indexOf(current) > -1) {
           path.push(tree[i].menuCode)
           path.push(...res)

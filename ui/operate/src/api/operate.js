@@ -453,3 +453,42 @@ export function getTenantRoleMenuList (data) {
 export function bindTenantRoleMenu (data) {
   return http.post('operateApi', '/tenant/role/bindTenantRoleMenu', data)
 }
+
+// 查询当天访问情况
+export function getCurrentVisitData (data) {
+  return http.post('logApi', '/sysVisit/getCurrentVisitData', data)
+}
+
+// 查询历史访问情况
+export function getHistoryVisitData (data) {
+  return http.post('logApi', '/sysVisit/getHistoryVisitData', data)
+}
+
+// 获取数据权限列表
+export function getDataPowerList (data) {
+  return http.post('operateApi', '/dataPower/getList', data)
+}
+// 添加数据权限
+export function addDataPower (data) {
+  return http.post('operateApi', '/dataPower/addDataPower', data)
+}
+// 编辑数据权限
+export function editDataPower (data) {
+  return http.post('operateApi', '/dataPower/editDataPower', data)
+}
+// 查询数据授权
+export function getAuthList (data) {
+  return http.post('operateApi', '/dataPower/getAuthList', data)
+}
+// 添加数据授权
+export function addAuth (data) {
+  return http.post('operateApi', '/dataPower/addAuth', data)
+}
+// 编辑数据授权
+export function editAuth (data) {
+  return http.post('operateApi', '/dataPower/editAuth', data)
+}
+// 删除数据授权
+export function delAuth (data) {
+  return http.post('operateApi', '/dataPower/delAuth', data)
+}

@@ -90,15 +90,15 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 60000
+            timeoutInMilliseconds: 1200000
 ribbon:
-  ConnectTimeout: 60000
-  ReadTimeout: 60000
+  ConnectTimeout: 1200000
+  ReadTimeout: 1200000
 
 # 日志配置
 log:
   # 日志是否上传
-  posh: true
+  push: true
   # 日志存放目录 默认 /mnt/log
   path: d:/logs/
   # 日志打印级别  默认 info

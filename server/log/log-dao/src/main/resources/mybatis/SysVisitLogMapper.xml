@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.SysVisitLogMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.SysVisitLog">
+    <!-- id -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <!-- 访问类型 0-微服务接口访问量，1-微服务访问量, 2-ip接口访问量，3-ip访问量 -->
+    <result column="visit_type" jdbcType="TINYINT" property="visitType" />
+    <!-- 时间维度 0-分钟，1-小时，2-天 -->
+    <result column="time_dimension" jdbcType="TINYINT" property="timeDimension" />
+    <!-- 访问天 yyyyMMdd -->
+    <result column="visit_day" jdbcType="INTEGER" property="visitDay" />
+    <!-- 访问小时 HH -->
+    <result column="visit_hour" jdbcType="VARCHAR" property="visitHour" />
+    <!-- 访问分钟HHmm -->
+    <result column="visit_minute" jdbcType="VARCHAR" property="visitMinute" />
+    <!-- 访问微服务名称 -->
+    <result column="visit_app_name" jdbcType="VARCHAR" property="visitAppName" />
+    <!-- 访问地址 -->
+    <result column="visit_url" jdbcType="VARCHAR" property="visitUrl" />
+    <!-- 访问地址 -->
+    <result column="visit_ip" jdbcType="VARCHAR" property="visitIp" />
+    <!-- 访问总数 -->
+    <result column="visit_count" jdbcType="BIGINT" property="visitCount" />
+    <!-- 访问ip数 -->
+    <result column="visit_ip_count" jdbcType="BIGINT" property="visitIpCount" />
+    <!-- 创建时间 -->
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, visit_type, time_dimension, visit_day, visit_hour, visit_minute,
+    visit_app_name, visit_url, visit_ip, visit_count, visit_ip_count, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_visit_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sys_visit_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" keyProperty="id" parameterType="com.nodecollege.cloud.common.model.po.SysVisitLog" useGeneratedKeys="true">
+    insert into sys_visit_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="visitType != null">
+        visit_type,
+      </if>
+      <if test="timeDimension != null">
+        time_dimension,
+      </if>
+      <if test="visitDay != null">
+        visit_day,
+      </if>
+      <if test="visitHour != null">
+        visit_hour,
+      </if>
+      <if test="visitMinute != null">
+        visit_minute,
+      </if>
+      <if test="visitAppName != null">
+        visit_app_name,
+      </if>
+      <if test="visitUrl != null">
+        visit_url,
+      </if>
+      <if test="visitIp != null">
+        visit_ip,
+      </if>
+      <if test="visitCount != null">
+        visit_count,
+      </if>
+      <if test="visitIpCount != null">
+        visit_ip_count,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="visitType != null">
+        #{visitType,jdbcType=TINYINT},
+      </if>
+      <if test="timeDimension != null">
+        #{timeDimension,jdbcType=TINYINT},
+      </if>
+      <if test="visitDay != null">
+        #{visitDay,jdbcType=INTEGER},
+      </if>
+      <if test="visitHour != null">
+        #{visitHour,jdbcType=VARCHAR},
+      </if>
+      <if test="visitMinute != null">
+        #{visitMinute,jdbcType=VARCHAR},
+      </if>
+      <if test="visitAppName != null">
+        #{visitAppName,jdbcType=VARCHAR},
+      </if>
+      <if test="visitUrl != null">
+        #{visitUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="visitIp != null">
+        #{visitIp,jdbcType=VARCHAR},
+      </if>
+      <if test="visitCount != null">
+        #{visitCount,jdbcType=BIGINT},
+      </if>
+      <if test="visitIpCount != null">
+        #{visitIpCount,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update sys_visit_log
+    <set>
+      <if test="visitType != null">
+        visit_type = #{visitType,jdbcType=TINYINT},
+      </if>
+      <if test="timeDimension != null">
+        time_dimension = #{timeDimension,jdbcType=TINYINT},
+      </if>
+      <if test="visitDay != null">
+        visit_day = #{visitDay,jdbcType=INTEGER},
+      </if>
+      <if test="visitHour != null">
+        visit_hour = #{visitHour,jdbcType=VARCHAR},
+      </if>
+      <if test="visitMinute != null">
+        visit_minute = #{visitMinute,jdbcType=VARCHAR},
+      </if>
+      <if test="visitAppName != null">
+        visit_app_name = #{visitAppName,jdbcType=VARCHAR},
+      </if>
+      <if test="visitUrl != null">
+        visit_url = #{visitUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="visitIp != null">
+        visit_ip = #{visitIp,jdbcType=VARCHAR},
+      </if>
+      <if test="visitCount != null">
+        visit_count = #{visitCount,jdbcType=BIGINT},
+      </if>
+      <if test="visitIpCount != null">
+        visit_ip_count = #{visitIpCount,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-11-30 11:25:31 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  <select id="countAppUrlMinuteVisit" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select 0 as visit_type,
+    0 as time_dimension,
+    date_format(create_time, '%H%i') visit_minute,
+    date_format(create_time, '%Y%m%d') visit_day,
+    app_name visit_app_name, request_uri visit_url, count(id) visit_count, count(distinct request_ip) visit_ip_count
+    from sys_log
+    where create_time between #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+    <if test="visitAppName != null">
+      and app_name = #{visitAppName,jdbcType=VARCHAR}
+    </if>
+    <if test="visitUrl != null">
+      and request_uri = #{visitUrl,jdbcType=VARCHAR}
+    </if>
+    group by date_format(create_time, '%Y-%m-%d %H:%i'), app_name, request_uri
+  </select>
+
+  <select id="countAppUrlHourVisit" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select 0 as visit_type,
+    1 as time_dimension,
+    date_format(create_time, '%H') visit_hour,
+    date_format(create_time, '%Y%m%d') visit_day,
+    app_name visit_app_name, request_uri visit_url, count(id) visit_count, count(distinct request_ip) visit_ip_count
+    from sys_log
+    where create_time between #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+    <if test="visitAppName != null">
+      and app_name = #{visitAppName,jdbcType=VARCHAR}
+    </if>
+    <if test="visitUrl != null">
+      and request_uri = #{visitUrl,jdbcType=VARCHAR}
+    </if>
+    group by date_format(create_time, '%Y-%m-%d %H'), app_name, request_uri
+  </select>
+
+  <select id="countAppUrlDayVisit" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select 0 as visit_type,
+    2 as time_dimension,
+    date_format(create_time, '%Y%m%d') visit_day,
+    app_name visit_app_name, request_uri visit_url, count(id) visit_count, count(distinct request_ip) visit_ip_count
+    from sys_log
+    where create_time between #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+    <if test="visitAppName != null">
+      and app_name = #{visitAppName,jdbcType=VARCHAR}
+    </if>
+    <if test="visitUrl != null">
+      and request_uri = #{visitUrl,jdbcType=VARCHAR}
+    </if>
+    group by date_format(create_time, '%Y-%m-%d'), app_name, request_uri
+  </select>
+
+
+  <select id="countAppMinuteVisit" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select 1 as visit_type,
+    0 as time_dimension,
+    date_format(create_time, '%H%i') visit_minute,
+    date_format(create_time, '%Y%m%d') visit_day,
+    app_name visit_app_name, count(id) visit_count, count(distinct request_ip) visit_ip_count
+    from sys_log
+    where create_time between #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+    <if test="visitAppName != null">
+      and app_name = #{visitAppName,jdbcType=VARCHAR}
+    </if>
+    group by date_format(create_time, '%Y-%m-%d %H:%i'), app_name
+  </select>
+
+  <select id="countAppHourVisit" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select 1 as visit_type,
+    1 as time_dimension,
+    date_format(create_time, '%H') visit_hour,
+    date_format(create_time, '%Y%m%d') visit_day,
+    app_name visit_app_name, count(id) visit_count, count(distinct request_ip) visit_ip_count
+    from sys_log
+    where create_time between #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+    <if test="visitAppName != null">
+      and app_name = #{visitAppName,jdbcType=VARCHAR}
+    </if>
+    group by date_format(create_time, '%Y-%m-%d %H'), app_name
+  </select>
+
+  <select id="countAppDayVisit" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select 1 as visit_type,
+    2 as time_dimension,
+    date_format(create_time, '%Y%m%d') visit_day,
+    app_name visit_app_name, count(id) visit_count, count(distinct request_ip) visit_ip_count
+    from sys_log
+    where create_time between #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+    <if test="visitAppName != null">
+      and app_name = #{visitAppName,jdbcType=VARCHAR}
+    </if>
+    group by date_format(create_time, '%Y-%m-%d'), app_name
+  </select>
+
+
+  <select id="countIpUrlMinuteVisit" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select 2 as visit_type,
+    0 as time_dimension,
+    date_format(create_time, '%H%i') visit_minute,
+    date_format(create_time, '%Y%m%d') visit_day,
+    request_ip visit_ip, request_uri visit_url, count(id) visit_count
+    from sys_log
+    where create_time between #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+    <if test="visitIp != null">
+      and request_ip = #{visitIp,jdbcType=VARCHAR}
+    </if>
+    <if test="visitUrl != null">
+      and request_uri = #{visitUrl,jdbcType=VARCHAR}
+    </if>
+    group by date_format(create_time, '%Y-%m-%d %H:%i'), request_ip, request_uri
+  </select>
+
+  <select id="countIpUrlHourVisit" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select 2 as visit_type,
+    1 as time_dimension,
+    date_format(create_time, '%H') visit_hour,
+    date_format(create_time, '%Y%m%d') visit_day,
+    request_ip visit_ip, request_uri visit_url, count(id) visit_count
+    from sys_log
+    where create_time between #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+    <if test="visitIp != null">
+      and request_ip = #{visitIp,jdbcType=VARCHAR}
+    </if>
+    <if test="visitUrl != null">
+      and request_uri = #{visitUrl,jdbcType=VARCHAR}
+    </if>
+    group by date_format(create_time, '%Y-%m-%d %H'), request_ip, request_uri
+  </select>
+
+  <select id="countIpUrlDayVisit" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select 0 as visit_type,
+    2 as time_dimension,
+    date_format(create_time, '%Y%m%d') visit_day,
+    request_ip visit_ip, request_uri visit_url, count(id) visit_count
+    from sys_log
+    where create_time between #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+    <if test="visitIp != null">
+      and request_ip = #{visitIp,jdbcType=VARCHAR}
+    </if>
+    <if test="visitUrl != null">
+      and request_uri = #{visitUrl,jdbcType=VARCHAR}
+    </if>
+    group by date_format(create_time, '%Y-%m-%d'), app_name, request_uri
+  </select>
+
+
+  <select id="countIpMinuteVisit" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select 3 as visit_type,
+    0 as time_dimension,
+    date_format(create_time, '%H%i') visit_minute,
+    date_format(create_time, '%Y%m%d') visit_day,
+    request_ip visit_ip, count(id) visit_count
+    from sys_log
+    where create_time between #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+    <if test="visitIp != null">
+      and request_ip = #{visitIp,jdbcType=VARCHAR}
+    </if>
+    group by date_format(create_time, '%Y-%m-%d %H:%i'), request_ip
+  </select>
+
+  <select id="countIpHourVisit" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select 3 as visit_type,
+    1 as time_dimension,
+    date_format(create_time, '%H') visit_hour,
+    date_format(create_time, '%Y%m%d') visit_day,
+    request_ip visit_ip, count(id) visit_count
+    from sys_log
+    where create_time between #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+    <if test="visitIp != null">
+      and request_ip = #{visitIp,jdbcType=VARCHAR}
+    </if>
+    group by date_format(create_time, '%Y-%m-%d %H'), request_ip
+  </select>
+
+  <select id="countIpDayVisit" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select 3 as visit_type,
+    2 as time_dimension,
+    date_format(create_time, '%Y%m%d') visit_day,
+    request_ip visit_ip, count(id) visit_count
+    from sys_log
+    where create_time between #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+    <if test="visitIp != null">
+      and request_ip = #{visitIp,jdbcType=VARCHAR}
+    </if>
+    group by date_format(create_time, '%Y-%m-%d'), request_ip
+  </select>
+
+  <select id="countArticleHourVisit" parameterType="java.util.HashMap"
+          resultMap="BaseResultMap">
+    select 4 as visit_type,
+    1 as time_dimension,
+    date_format(create_time, '%H') visit_hour,
+    date_format(create_time, '%Y%m%d') visit_day,
+    app_name visit_app_name,
+    case when in_param is not null and substring_index(in_param, '=', 1) = 'version' then concat(request_uri, '_', substring_index(in_param, '=', -1)) else request_uri end visit_url,
+    count(id) visit_count, count(distinct request_ip) visit_ip_count
+    from sys_log
+    where create_time between #{startTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP} and app_name = 'article' and request_uri like '/article/info/%'
+    <if test="visitUrl != null">
+      and request_uri = #{visitUrl,jdbcType=VARCHAR}
+    </if>
+    group by date_format(create_time, '%Y-%m-%d %H'), case when in_param is not null and substring_index(in_param, '=', 1) = 'version' then concat(request_uri, '_', substring_index(in_param, '=', -1)) else request_uri end
+  </select>
+
+  <delete id="deleteByParam" parameterType="com.nodecollege.cloud.common.model.po.SysVisitLog">
+    delete from sys_visit_log
+    <where>
+        visit_day = #{visitDay,jdbcType=INTEGER}
+      <if test="visitType != null">
+        and visit_type = #{visitType,jdbcType=TINYINT},
+      </if>
+      <if test="timeDimension != null">
+        and time_dimension = #{timeDimension,jdbcType=TINYINT}
+      </if>
+      <if test="visitHour != null">
+        and visit_hour = #{visitHour,jdbcType=VARCHAR}
+      </if>
+      <if test="visitMinute != null">
+        and visit_minute = #{visitMinute,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </delete>
+
+  <select id="selectListByMap" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select
+    <if test="groupByKey ==null or groupByKey ==''">
+      <include refid="Base_Column_List" />
+    </if>
+    <if test="groupByKey !=null and groupByKey !=''">
+      ${groupByKey}, sum(visit_count) visit_count, sum(visit_ip_count) visit_ip_count
+    </if>
+    from sys_visit_log
+    <where>
+      visit_type = #{visitType,jdbcType=TINYINT}
+      and time_dimension = #{timeDimension,jdbcType=TINYINT}
+      <if test="visitAppName != null">
+        and visit_app_name = #{visitAppName,jdbcType=VARCHAR}
+      </if>
+      <if test="visitUrl != null">
+        and visit_url = #{visitUrl,jdbcType=VARCHAR}
+      </if>
+      <if test="visitIp != null">
+        and visit_ip = #{visitIp,jdbcType=VARCHAR}
+      </if>
+      <if test="visitDay != null">
+        and visit_day = #{visitDay,jdbcType=INTEGER}
+      </if>
+      <if test="visitHour != null">
+        and visit_hour = #{visitHour,jdbcType=VARCHAR}
+      </if>
+      <if test="visitMinute != null">
+        and visit_minute = #{visitMinute,jdbcType=VARCHAR}
+      </if>
+      <if test="startDate != null">
+        <![CDATA[ and visit_day >= CONVERT(date_format(#{startDate,jdbcType=TIMESTAMP}, '%Y%m%d'), SIGNED) ]]>
+      </if>
+      <if test="endDate != null">
+        <![CDATA[ and visit_day <= CONVERT(date_format(#{endDate,jdbcType=TIMESTAMP}, '%Y%m%d'), SIGNED) ]]>
+      </if>
+    </where>
+    <if test="groupByKey !=null and groupByKey !=''">
+      group by ${groupByKey}
+    </if>
+  </select>
+
+</mapper>

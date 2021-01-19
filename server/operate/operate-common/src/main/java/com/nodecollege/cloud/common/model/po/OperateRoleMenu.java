@@ -21,6 +21,9 @@ public class OperateRoleMenu {
      */
     private Integer roleMenuUsage;
 
+    // 导航平台 0-不生成导航菜单，1-pc端导航，2-移动端导航
+    private Integer navPlatform;
+
     /**
      * 角色代码
      */

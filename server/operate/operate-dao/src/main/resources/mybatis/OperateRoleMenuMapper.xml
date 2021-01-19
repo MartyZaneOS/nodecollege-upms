@@ -6,13 +6,15 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <!-- 用途 0-运营/运维，1-2C，2-2B -->
     <result column="role_menu_usage" jdbcType="INTEGER" property="roleMenuUsage" />
+    <!-- 菜单类型：0-不生成导航菜单，1-pc端导航，2-移动端导航 -->
+    <result column="nav_platform" jdbcType="TINYINT" property="navPlatform" />
     <!-- 角色代码 -->
     <result column="role_code" jdbcType="VARCHAR" property="roleCode" />
     <!-- 菜单代码 -->
     <result column="menu_code" jdbcType="VARCHAR" property="menuCode" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, role_menu_usage, role_code, menu_code
+    id, role_menu_usage, nav_platform, role_code, menu_code
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -25,14 +27,13 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" keyProperty="id" parameterType="com.nodecollege.cloud.common.model.po.OperateRoleMenu" useGeneratedKeys="true">
-    insert into o_role_menu (id, role_menu_usage, role_code, menu_code
-      )
-    values (#{id,jdbcType=BIGINT}, #{roleMenuUsage,jdbcType=INTEGER}, #{roleCode,jdbcType=VARCHAR}, #{menuCode,jdbcType=VARCHAR}
-      )
+    insert into o_role_menu (id, role_menu_usage, nav_platform, role_code, menu_code)
+    values (#{id,jdbcType=BIGINT}, #{roleMenuUsage,jdbcType=INTEGER}, #{navPlatform,jdbcType=INTEGER}, #{roleCode,jdbcType=VARCHAR}, #{menuCode,jdbcType=VARCHAR})
   </insert>
   <update id="updateByPrimaryKey">
     update o_role_menu
     set role_menu_usage = #{roleMenuUsage,jdbcType=INTEGER},
+      nav_platform = #{navPlatform,jdbcType=INTEGER},
       role_code = #{roleCode,jdbcType=VARCHAR},
       menu_code = #{menuCode,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
@@ -50,6 +51,9 @@
     from o_role_menu
     <where>
         role_menu_usage = #{roleMenuUsage,jdbcType=INTEGER}
+      <if test="navPlatform != null">
+        and nav_platform = #{navPlatform,jdbcType=INTEGER}
+      </if>
       <if test="roleCode != null and roleCode != ''">
         and role_code = #{roleCode,jdbcType=VARCHAR}
       </if>

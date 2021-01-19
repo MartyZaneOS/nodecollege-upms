@@ -1,5 +1,5 @@
 <template>
-  <div class="upms-footer">@2019-2020 NodeCollege <a href="http://www.beian.miit.gov.cn" target="_blank">京ICP备19026532号</a></div>
+  <div class="upms-footer">@2019-2021 NodeCollege <a href="http://www.beian.miit.gov.cn" target="_blank">京ICP备19026532号</a></div>
 </template>
 
 <script>

@@ -82,7 +82,7 @@ public class MemberServiceImpl implements MemberService {
         NCResult<OperateUser> userResult = tenantClient.inviteUser(invite);
         if (!userResult.getSuccess()) {
             throw new NCException("", "系统异常！");
-        } else if (userResult.getRows() == null || userResult.getRows().isEmpty()) {
+        } else if (userResult.getRows() == null || userResult.getRows().isEmpty() || userResult.getRows().get(0) == null) {
             return null;
         } else {
             OperateUser user = userResult.getRows().get(0);
@@ -105,6 +105,7 @@ public class MemberServiceImpl implements MemberService {
         member.setAccount(user.getTelephone());
         member.setTelephone(user.getTelephone());
         member.setNickname(user.getNickname());
+        member.setState(1);
         addMember(member);
     }
 
@@ -144,7 +145,6 @@ public class MemberServiceImpl implements MemberService {
         member.setSalt(salt);
         member.setPassword(password);
         member.setCreateTime(new Date());
-        member.setState(1);
         member.setFirstLogin(1);
         member.setShowAllOrg(true);
         member.setShowAllRole(true);
@@ -562,7 +562,7 @@ public class MemberServiceImpl implements MemberService {
      * showAllOrg=true、showAllRole=true
      */
     private void getPowerMenuTree(Long tenantId, PowerVO powerVO, Map<String, TenantRole> roleMap, List<MenuVO> menuList) {
-        Map<String, MenuVO> menuMap = new HashMap<>();
+        Map<Integer, Map<String, MenuVO>> topMenuMap = new HashMap<>();
         for (Map.Entry<String, Set<PowerVO.CodeName>> entry : powerVO.getOrgRoleMap().entrySet()) {
             Set<PowerVO.CodeName> roleList = entry.getValue();
             // 角色授权菜单树
@@ -577,11 +577,15 @@ public class MemberServiceImpl implements MemberService {
                 // todo 查询角色菜单树
                 authMenuList = roleService.getRoleMenuList(queryRoleMenu);
                 menuRoleMap.clear();
-                authMenuList.forEach(item -> menuRoleMap.put(item.getMenuCode(), item));
+                authMenuList.forEach(item -> menuRoleMap.put(item.getMenuCode() + "_" + item.getNavPlatform(), item));
                 // 角色对应产品菜单树
                 TenantRole role = roleMap.get(codeName.getCode());
                 menuList.forEach(item -> {
-                    if (menuRoleMap.containsKey(item.getMenuCode())) {
+                    if (menuRoleMap.containsKey(item.getMenuCode() + "_" + item.getNavPlatform())) {
+                        if (!topMenuMap.containsKey(item.getNavPlatform())) {
+                            topMenuMap.put(item.getNavPlatform(), new HashMap<String, MenuVO>());
+                        }
+                        Map<String, MenuVO> menuMap = topMenuMap.get(item.getNavPlatform());
                         if (!menuMap.containsKey(item.getMenuCode())) {
                             menuMap.put(item.getMenuCode(), item);
                         }
@@ -598,7 +602,11 @@ public class MemberServiceImpl implements MemberService {
                 });
             }
         }
-        powerVO.setMenuTree(new ArrayList<>(menuMap.values()));
+        List<MenuVO> menuTree = new ArrayList<>();
+        for (Map<String, MenuVO> menuMap : topMenuMap.values()) {
+            menuTree.addAll(menuMap.values());
+        }
+        powerVO.setMenuTree(menuTree);
     }
 
     /**
@@ -614,16 +622,20 @@ public class MemberServiceImpl implements MemberService {
         List<TenantRoleMenu> authMenuList = new ArrayList<>();
         Map<String, TenantRoleMenu> menuRoleMap = new HashMap<>();
 
-        Map<String, MenuVO> menuMap = new HashMap<>();
+        Map<Integer, Map<String, MenuVO>> topMenuMap = new HashMap<>();
         for (PowerVO.CodeName codeName : roleList) {
             queryRoleMenu.getData().setRoleCode(codeName.getCode());
             authMenuList = roleService.getRoleMenuList(queryRoleMenu);
             menuRoleMap.clear();
-            authMenuList.forEach(item -> menuRoleMap.put(item.getMenuCode(), item));
+            authMenuList.forEach(item -> menuRoleMap.put(item.getMenuCode() + "_" + item.getNavPlatform(), item));
 
             TenantRole role = roleMap.get(codeName.getCode());
             menuList.forEach(item -> {
-                if (menuRoleMap.containsKey(item.getMenuCode())) {
+                if (menuRoleMap.containsKey(item.getMenuCode() + "_" + item.getNavPlatform())) {
+                    if (!topMenuMap.containsKey(item.getNavPlatform())) {
+                        topMenuMap.put(item.getNavPlatform(), new HashMap<String, MenuVO>());
+                    }
+                    Map<String, MenuVO> menuMap = topMenuMap.get(item.getNavPlatform());
                     if (!menuMap.containsKey(item.getMenuCode())) {
                         menuMap.put(item.getMenuCode(), item);
                     }
@@ -636,7 +648,11 @@ public class MemberServiceImpl implements MemberService {
                 }
             });
         }
-        powerVO.setMenuTree(new ArrayList<>(menuMap.values()));
+        List<MenuVO> menuTree = new ArrayList<>();
+        for (Map<String, MenuVO> menuMap : topMenuMap.values()) {
+            menuTree.addAll(menuMap.values());
+        }
+        powerVO.setMenuTree(menuTree);
     }
 
     /**
@@ -644,7 +660,7 @@ public class MemberServiceImpl implements MemberService {
      * showAllOrg=true、showAllRole=false
      */
     private void getTFPowerMenuTree(Long tenantId, PowerVO powerVO, Map<String, TenantRole> roleMap, List<MenuVO> menuList) {
-        Map<String, MenuVO> menuMap = new HashMap<>();
+        Map<Integer, Map<String, MenuVO>> topMenuMap = new HashMap<>();
 
         // 角色授权菜单树
         QueryVO<TenantRoleMenu> queryRoleMenu = new QueryVO<>(new TenantRoleMenu());
@@ -653,11 +669,15 @@ public class MemberServiceImpl implements MemberService {
         List<TenantRoleMenu> authMenuList = roleService.getRoleMenuList(queryRoleMenu);
 
         Map<String, TenantRoleMenu> menuRoleMap = new HashMap<>();
-        authMenuList.forEach(item -> menuRoleMap.put(item.getMenuCode(), item));
+        authMenuList.forEach(item -> menuRoleMap.put(item.getMenuCode() + "_" + item.getNavPlatform(), item));
 
         TenantRole role = roleMap.get(powerVO.getDefaultRoleCode());
         menuList.forEach(item -> {
-            if (menuRoleMap.containsKey(item.getMenuCode())) {
+            if (menuRoleMap.containsKey(item.getMenuCode() + "_" + item.getNavPlatform())) {
+                if (!topMenuMap.containsKey(item.getNavPlatform())) {
+                    topMenuMap.put(item.getNavPlatform(), new HashMap<String, MenuVO>());
+                }
+                Map<String, MenuVO> menuMap = topMenuMap.get(item.getNavPlatform());
                 if (!menuMap.containsKey(item.getMenuCode())) {
                     menuMap.put(item.getMenuCode(), item);
                 }
@@ -672,7 +692,11 @@ public class MemberServiceImpl implements MemberService {
                 }
             }
         });
-        powerVO.setMenuTree(new ArrayList<>(menuMap.values()));
+        List<MenuVO> menuTree = new ArrayList<>();
+        for (Map<String, MenuVO> menuMap : topMenuMap.values()) {
+            menuTree.addAll(menuMap.values());
+        }
+        powerVO.setMenuTree(menuTree);
     }
 
     /**
@@ -680,7 +704,7 @@ public class MemberServiceImpl implements MemberService {
      * showAllOrg=false、showAllRole=false
      */
     private void getFFPowerMenuTree(Long tenantId, PowerVO powerVO, Map<String, TenantRole> roleMap, List<MenuVO> menuList) {
-        Map<String, MenuVO> menuMap = new HashMap<>();
+        Map<Integer, Map<String, MenuVO>> topMenuMap = new HashMap<>();
 
         Set<PowerVO.CodeName> orgList = powerVO.getRoleOrgMap().get(powerVO.getDefaultRoleCode());
         boolean flag = false;
@@ -701,11 +725,15 @@ public class MemberServiceImpl implements MemberService {
         List<TenantRoleMenu> authMenuList = roleService.getRoleMenuList(queryRoleMenu);
 
         Map<String, TenantRoleMenu> menuRoleMap = new HashMap<>();
-        authMenuList.forEach(item -> menuRoleMap.put(item.getMenuCode(), item));
+        authMenuList.forEach(item -> menuRoleMap.put(item.getMenuCode() + "_" + item.getNavPlatform(), item));
 
         TenantRole role = roleMap.get(powerVO.getDefaultRoleCode());
         menuList.forEach(item -> {
-            if (menuRoleMap.containsKey(item.getMenuCode())) {
+            if (menuRoleMap.containsKey(item.getMenuCode() + "_" + item.getNavPlatform())) {
+                if (!topMenuMap.containsKey(item.getNavPlatform())) {
+                    topMenuMap.put(item.getNavPlatform(), new HashMap<String, MenuVO>());
+                }
+                Map<String, MenuVO> menuMap = topMenuMap.get(item.getNavPlatform());
                 if (!menuMap.containsKey(item.getMenuCode())) {
                     menuMap.put(item.getMenuCode(), item);
                 }
@@ -717,7 +745,11 @@ public class MemberServiceImpl implements MemberService {
                 }
             }
         });
-        powerVO.setMenuTree(new ArrayList<>(menuMap.values()));
+        List<MenuVO> menuTree = new ArrayList<>();
+        for (Map<String, MenuVO> menuMap : topMenuMap.values()) {
+            menuTree.addAll(menuMap.values());
+        }
+        powerVO.setMenuTree(menuTree);
     }
 
     private void handelDataPower(Long tenantId, List<MenuVO> menuList) {

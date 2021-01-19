@@ -169,6 +169,6 @@ public class LoginServiceImpl implements LoginService {
         }
 
         // 更新密码
-        userService.updatePwd(user.getUserId(), loginVO.getPassword(), loginVO.getNewPassword(), null);
+        userService.updatePwd(user.getUserId(), loginVO.getPassword(), loginVO.getNewPassword());
     }
 }

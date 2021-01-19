@@ -70,6 +70,7 @@ public class ProductMenuServiceImpl implements ProductMenuService {
     @Override
     public void addProductMenu(OperateProductMenu productMenu) {
         NCUtils.nullOrEmptyThrow(productMenu.getProductCode());
+        NCUtils.nullOrEmptyThrow(productMenu.getNavPlatform());
         NCUtils.nullOrEmptyThrow(productMenu.getMenuCode());
         NCUtils.nullOrEmptyThrow(productMenu.getMenuType());
         NCUtils.nullOrEmptyThrow(productMenu.getNum());
@@ -81,13 +82,11 @@ public class ProductMenuServiceImpl implements ProductMenuService {
 
         if (NCUtils.isNullOrEmpty(productMenu.getParentCode())) {
             productMenu.setParentCode("0");
-//            if (productMenu.getMenuType() == 1) {
-//                throw new NCException("", "顶级菜单必须是分类导航！");
-//            }
         } else {
             OperateProductMenu queryParent = new OperateProductMenu();
             queryParent.setProductCode(productMenu.getProductCode());
             queryParent.setMenuCode(productMenu.getParentCode());
+            queryParent.setNavPlatform(productMenu.getNavPlatform());
             List<MenuVO> exParent = productMenuMapper.selectProductMenuList(queryParent);
             NCUtils.nullOrEmptyThrow(exParent, "", "不存在该父级菜单！");
             if (exParent.get(0).getMenuType() == 1) {
@@ -123,6 +122,7 @@ public class ProductMenuServiceImpl implements ProductMenuService {
             // 一个菜单页面  只能在一个产品中使用一次
             queryMenu.setMenuType(1);
             queryMenu.setProductCode(productMenu.getProductCode());
+            queryMenu.setNavPlatform(productMenu.getNavPlatform());
             exMenu = productMenuMapper.selectProductMenuList(queryMenu);
             NCUtils.notNullOrNotEmptyThrow(exMenu, "", "该产品已经挂接该菜单页面了");
 
@@ -136,6 +136,8 @@ public class ProductMenuServiceImpl implements ProductMenuService {
     @Override
     public void editProductMenu(OperateProductMenu productMenu) {
         NCUtils.nullOrEmptyThrow(productMenu.getMenuCode());
+        NCUtils.nullOrEmptyThrow(productMenu.getProductCode());
+        NCUtils.nullOrEmptyThrow(productMenu.getNavPlatform());
         OperateProductMenu query = new OperateProductMenu();
         query.setMenuCode(productMenu.getMenuCode());
         List<OperateProductMenu> ex = productMenuMapper.selectMenuList(query);
@@ -156,9 +158,11 @@ public class ProductMenuServiceImpl implements ProductMenuService {
     public void delProductMenu(OperateProductMenu productMenu) {
         NCUtils.nullOrEmptyThrow(productMenu.getProductCode());
         NCUtils.nullOrEmptyThrow(productMenu.getMenuCode());
+        NCUtils.nullOrEmptyThrow(productMenu.getNavPlatform());
         OperateProductMenu query = new OperateProductMenu();
         query.setProductCode(productMenu.getProductCode());
         query.setMenuCode(productMenu.getMenuCode());
+        query.setNavPlatform(productMenu.getNavPlatform());
         List<MenuVO> ex = productMenuMapper.selectProductMenuList(query);
         NCUtils.nullOrEmptyThrow(ex, "", "菜单不存在！");
 
@@ -171,6 +175,7 @@ public class ProductMenuServiceImpl implements ProductMenuService {
             OperateProductMenuRelation queryRelation = new OperateProductMenuRelation();
             queryRelation.setProductCode(exProduct.get(i).getProductCode());
             queryRelation.setMenuCode(productMenu.getMenuCode());
+            queryRelation.setNavPlatform(productMenu.getNavPlatform());
             List<OperateProductMenuRelation> exRelationList = productMenuRelationMapper.selectProductMenuRelationList(queryRelation);
             NCUtils.notNullOrNotEmptyThrow(exRelationList, "", "下级共存式产品存在绑定菜单，不能删除！");
         }
@@ -181,6 +186,7 @@ public class ProductMenuServiceImpl implements ProductMenuService {
     @Override
     public void bindProductMenu(BindVO bindVO) {
         NCUtils.nullOrEmptyThrow(bindVO.getSourceCodes());
+        NCUtils.nullOrEmptyThrow(bindVO.getNavPlatform());
 
         OperateProduct queryProduct = new OperateProduct();
         queryProduct.setProductCode(bindVO.getSourceCodes().get(0));
@@ -189,6 +195,7 @@ public class ProductMenuServiceImpl implements ProductMenuService {
 
         OperateProductMenuRelation querySource = new OperateProductMenuRelation();
         querySource.setProductCode(bindVO.getSourceCodes().get(0));
+        querySource.setNavPlatform(bindVO.getNavPlatform());
         querySource.setBelongCode(exProduct.get(0).getBelongCode());
         List<OperateProductMenuRelation> exList = productMenuRelationMapper.selectProductMenuRelationList(querySource);
 
@@ -210,6 +217,7 @@ public class ProductMenuServiceImpl implements ProductMenuService {
                 add.setProductCode(bindVO.getSourceCodes().get(0));
                 add.setMenuCode(item);
                 add.setBelongCode(exProduct.get(0).getBelongCode());
+                add.setNavPlatform(bindVO.getNavPlatform());
                 productMenuRelationMapper.insertSelective(add);
             }
         });

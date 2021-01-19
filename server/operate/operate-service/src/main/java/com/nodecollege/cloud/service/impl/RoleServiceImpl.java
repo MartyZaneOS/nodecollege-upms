@@ -128,9 +128,11 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void bindRoleMenu(BindVO bindVO) {
         NCUtils.nullOrEmptyThrow(bindVO.getSourceCodes());
+        NCUtils.nullOrEmptyThrow(bindVO.getNavPlatform());
         QueryVO<OperateRoleMenu> querySource = new QueryVO<>(new OperateRoleMenu());
         querySource.getData().setRoleCode(bindVO.getSourceCodes().get(0));
         querySource.getData().setRoleMenuUsage(bindVO.getBindUsage());
+        querySource.getData().setNavPlatform(bindVO.getNavPlatform());
         List<OperateRoleMenu> exList = roleMenuMapper.selectListByMap(querySource.toMap());
 
         List<String> exCodeList = new ArrayList<>();
@@ -150,6 +152,7 @@ public class RoleServiceImpl implements RoleService {
                 add.setRoleMenuUsage(bindVO.getBindUsage());
                 add.setRoleCode(bindVO.getSourceCodes().get(0));
                 add.setMenuCode(item);
+                add.setNavPlatform(bindVO.getNavPlatform());
                 roleMenuMapper.insert(add);
             }
         });

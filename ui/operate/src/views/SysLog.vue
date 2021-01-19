@@ -45,7 +45,7 @@
     </a-col>
     <a-col span="24">
       <a-table :dataSource="data" :columns="columns" :pagination="pagination" :loading="loading" size="small" bordered
-               :rowKey="record => record.id" :scroll="{ x: 2000 }">
+               :rowKey="record => record.id" :scroll="{ x: 2500 }">
         <template slot="name" slot-scope="text, record, index">
           <div class="smileDark" :title="text">{{text}}</div>
         </template>
@@ -86,21 +86,21 @@
         pagination: false,
         columns: [
           {title: '请求id', dataIndex: 'requestId', width: 150, fixed: 'left'},
-          {title: '线程id', dataIndex: 'callIds'},
-          {title: '请求时间', dataIndex: 'createTime'},
-          {title: '访问来源', dataIndex: 'accessSource'},
-          {title: '服务名称', dataIndex: 'appName'},
-          {title: '请求地址', dataIndex: 'requestUri'},
-          {title: '请求页面', dataIndex: 'referer'},
-          {title: '请求ip', dataIndex: 'requestIp'},
-          {title: '入参', dataIndex: 'inParam', scopedSlots: {customRender: 'name'}},
-          {title: '出参', dataIndex: 'outParam', scopedSlots: {customRender: 'name'}},
-          {title: '是否成功', dataIndex: 'success', customRender: (text, record, index) => { return text ? '成功' : '失败' }},
-          {title: '耗时', dataIndex: 'lostTime'},
-          {title: '管理员账号', dataIndex: 'adminAccount'},
-          {title: '用户账号', dataIndex: 'userAccount'},
-          {title: '租户成员账号', dataIndex: 'memberAccount'},
-          {title: '租户代码', dataIndex: 'tenantCode'}
+          {title: '链路id', dataIndex: 'callIds', width: 200},
+          {title: '请求时间', dataIndex: 'createTime', width: 150},
+          {title: '访问来源', dataIndex: 'accessSource', width: 120},
+          {title: '服务名称', dataIndex: 'appName', width: 80},
+          {title: '成功', dataIndex: 'success', width: 50, customRender: (text, record, index) => { return text ? '成功' : '失败' }},
+          {title: '耗时(ms)', dataIndex: 'lostTime', width: 80},
+          {title: '请求ip', dataIndex: 'requestIp', width: 130},
+          {title: '请求地址', dataIndex: 'requestUri', width: 250},
+          {title: 'Referer', dataIndex: 'referer'},
+          {title: '入参', dataIndex: 'inParam', width: 120, scopedSlots: {customRender: 'name'}},
+          {title: '出参', dataIndex: 'outParam', width: 120, scopedSlots: {customRender: 'name'}},
+          {title: '管理员账号', dataIndex: 'adminAccount', width: 120},
+          {title: '用户账号', dataIndex: 'userAccount', width: 120},
+          {title: '租户成员账号', dataIndex: 'memberAccount', width: 120},
+          {title: '租户代码', dataIndex: 'tenantCode', width: 120}
         ]
       }
     },

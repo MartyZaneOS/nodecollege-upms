@@ -32,8 +32,7 @@ public class GlobalExceptionHandler extends BaseGlobalExceptionHandler {
     @ExceptionHandler(NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public NCResult handle404Error(HttpServletRequest req, HttpServletResponse rsp, Exception e)
-            throws Exception {
+    public NCResult handle404Error(HttpServletRequest req, HttpServletResponse rsp, Exception e) throws Exception {
         return handleError(req, e);
     }
 
@@ -49,8 +48,7 @@ public class GlobalExceptionHandler extends BaseGlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public NCResult handle500Error(HttpServletRequest req, HttpServletResponse rsp, Exception e)
-            throws Exception {
+    public NCResult handle500Error(HttpServletRequest req, HttpServletResponse rsp, Exception e) throws Exception {
         return handleError(req, e);
     }
 
@@ -66,9 +64,7 @@ public class GlobalExceptionHandler extends BaseGlobalExceptionHandler {
     @ExceptionHandler(BaseException.class)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public NCResult handleMyException(HttpServletRequest req, HttpServletResponse rsp,
-                                      BaseException e)
-            throws Exception {
+    public NCResult handleMyException(HttpServletRequest req, HttpServletResponse rsp, BaseException e) throws Exception {
         return handleMyError(req, e);
     }
 }

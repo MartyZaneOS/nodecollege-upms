@@ -49,7 +49,12 @@
     mounted () {
       sessionStorage.removeItem('notFoundPath')
       let userInfo = JSON.parse(sessionStorage.getItem(MEMBER_INFO))
-      this.menuList = userInfo.menuTree
+      this.menuList = []
+      for (let i = 0; i < userInfo.menuTree.length; i++) {
+        if (userInfo.menuTree[i].navPlatform === 1) {
+          this.menuList.push(userInfo.menuTree[i])
+        }
+      }
       let menuCode = MenuUtils.getTopMenuCode(this.menuList, this.$route.path)
       for (let i = 0; i < this.menuList.length; i++) {
         if (this.menuList[i].menuCode === menuCode) {
@@ -76,7 +81,8 @@
       },
       topCurrentChange (topMenuCode) {
         console.log(topMenuCode)
-        let menuTree = JSON.parse(sessionStorage.getItem(MEMBER_INFO)).menuTree
+        // let menuTree = JSON.parse(sessionStorage.getItem(USER_INFO)).menuTree
+        let menuTree = this.menuList
         for (let i = 0; i < menuTree.length; i++) {
           if (menuTree[i].menuCode === topMenuCode[0]) {
             let path = ''

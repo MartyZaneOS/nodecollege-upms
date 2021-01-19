@@ -6,6 +6,8 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <!-- 产品代码 -->
     <result column="product_code" jdbcType="VARCHAR" property="productCode" />
+    <!-- 菜单类型：0-不生成导航菜单，1-pc端导航，2-移动端导航 -->
+    <result column="nav_platform" jdbcType="TINYINT" property="navPlatform" />
     <!-- 菜单代码 -->
     <result column="menu_code" jdbcType="VARCHAR" property="menuCode" />
     <!-- 所属产品代码 -->
@@ -33,6 +35,9 @@
       <if test="productCode != null">
         product_code,
       </if>
+      <if test="navPlatform != null">
+        nav_platform,
+      </if>
       <if test="menuCode != null">
         menu_code,
       </if>
@@ -47,6 +52,9 @@
       <if test="productCode != null">
         #{productCode,jdbcType=VARCHAR},
       </if>
+      <if test="navPlatform != null">
+        #{navPlatform,jdbcType=VARCHAR},
+      </if>
       <if test="menuCode != null">
         #{menuCode,jdbcType=VARCHAR},
       </if>
@@ -60,6 +68,9 @@
     <set>
       <if test="productCode != null">
         product_code = #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="navPlatform != null">
+        nav_platform = #{navPlatform,jdbcType=VARCHAR},
       </if>
       <if test="menuCode != null">
         menu_code = #{menuCode,jdbcType=VARCHAR},
@@ -83,6 +94,9 @@
     <where>
       <if test="productCode != null">
         and product_code = #{productCode,jdbcType=VARCHAR}
+      </if>
+      <if test="navPlatform != null">
+        and nav_platform = #{navPlatform,jdbcType=VARCHAR}
       </if>
       <if test="menuCode != null">
         and menu_code = #{menuCode,jdbcType=VARCHAR}

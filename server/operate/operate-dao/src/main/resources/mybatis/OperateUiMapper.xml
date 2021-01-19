@@ -89,4 +89,27 @@
       </if>
     </where>
   </select>
+
+  <select id="selectListByMap" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from o_ui
+    <where>
+      <if test="uiCode != null">
+        and ui_code = #{uiCode,jdbcType=VARCHAR}
+      </if>
+      <if test="uiName != null">
+        and ui_name = #{uiName,jdbcType=VARCHAR}
+      </if>
+      <if test="uiDesc != null">
+        and ui_desc = #{uiDesc,jdbcType=VARCHAR}
+      </if>
+      <if test="stringList!=null and stringList.size>0">
+        and ui_code in
+        <foreach item="_itemType" collection="stringList" open="(" separator="," close=")">
+          #{_itemType,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+    </where>
+  </select>
 </mapper>

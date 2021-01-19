@@ -101,6 +101,12 @@
                 <version>${tools.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.nodecollege.cloud</groupId>
+                <artifactId>log-common</artifactId>
+                <version>${tools.version}</version>
+            </dependency>
+
             <!-- 自定义模块 -->
             <dependency>
                 <groupId>com.nodecollege.cloud</groupId>

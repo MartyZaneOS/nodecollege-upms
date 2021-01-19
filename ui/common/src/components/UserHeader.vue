@@ -270,7 +270,13 @@
         tenantApi.loginByUserTenant({tenantId: record.tenantId}).then((res) => {
           if (res.success) {
             sessionStorage.setItem(MEMBER_INFO, JSON.stringify(res.rows[0]))
-            let path = MenuUtils.getLeftMenuFirstPath(res.rows[0].menuTree[0].children)
+            let menuList = []
+            for (let i = 0; i < res.rows[0].menuTree.length; i++) {
+              if (res.rows[0].menuTree[i].navPlatform === 1) {
+                menuList.push(res.rows[0].menuTree[i])
+              }
+            }
+            let path = MenuUtils.getLeftMenuFirstPath(menuList)
             console.log('登录成功，跳转路径 ', path)
             window.location.href = path
           }
@@ -348,7 +354,12 @@
           this.powerModal.visible = false
           this.selectOrgModal.visible = false
           this.selectRoleModal.visible = false
-          let menuList = res.rows[0].menuTree
+          let menuList = []
+          for (let i = 0; i < res.rows[0].menuTree.length; i++) {
+            if (res.rows[0].menuTree[i].navPlatform === 1) {
+              menuList.push(res.rows[0].menuTree[i])
+            }
+          }
           let menuCode = MenuUtils.getTopMenuCode(menuList, this.$route.path)
           if (menuCode) {
             window.location.reload()

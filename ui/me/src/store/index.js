@@ -24,7 +24,7 @@ export default new Vuex.Store({
   actions: {
     getUserInfo () {
       return new Promise((resolve) => {
-        Vue.prototype.http.post('upmsApi', '/user/getUserInfo', {
+        Vue.prototype.http.post('operateApi', '/user/getUserInfo', {
           token: sessionStorage.getItem(ACCESS_TOKEN)
         }).then((res) => {
           if (res.success) {

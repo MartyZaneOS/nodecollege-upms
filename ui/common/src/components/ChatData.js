@@ -1,5 +1,4 @@
 import {USER_INFO} from './Constants'
-import axios from 'axios'
 import notification from 'ant-design-vue/es/notification'
 
 const ChatData = {
@@ -93,20 +92,12 @@ const ChatData = {
   userMap: {},
   // 初始化ws
   async initWebsocket () {
-    let baseConfig = JSON.parse(sessionStorage.getItem('BASE_CONFIG'))
-    let ws = ''
-    if (!baseConfig) {
-      await axios.post('/chatApi/getWebsocketUrl', '{}').then((result) => {
-        sessionStorage.setItem('BASE_CONFIG', JSON.stringify(result.data.rows[0]))
-        baseConfig = result.data.rows[0]
-      }).catch((error) => {
-        console.log('get baseConfig error...' + error)
-      })
-    }
-    ws = baseConfig.chatWs
+    const wsPrefix = (window.location.protocol === 'https:') ? 'wss://' : 'ws://'
+    let ws = wsPrefix + window.location.host + '/ws'
     if (ChatData.mySocket !== null && ChatData.mySocket !== undefined && ChatData.mySocket.readyState === WebSocket.OPEN) {
       return
     }
+    console.log('ws', ws)
     ChatData.mySocket = new WebSocket(ws)
     ChatData.mySocket.onopen = ChatData.ws_onopen
     ChatData.mySocket.onerror = ChatData.ws_onerror

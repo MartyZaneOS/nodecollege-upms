@@ -49,6 +49,14 @@ module.exports = {
         pathRewrite: {
           '^/': '/'
         }
+      },
+      '/ws': {
+        target: 'http://localhost:2080/', // websocket 地址
+        changeOrigin: true,
+        ws: true,
+        pathRewrite: {
+          '^/': '/'
+        }
       }
     },
 

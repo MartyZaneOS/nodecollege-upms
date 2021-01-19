@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nodecollege.cloud.common.constants.NCConstants;
 import com.nodecollege.cloud.common.utils.DateUtils;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.Date;
 
@@ -14,6 +15,7 @@ import java.util.Date;
  * @author LC
  * @date 2020-07-07 20:28:43
  */
+@ToString
 @Data
 public class SysLog {
     // 主键

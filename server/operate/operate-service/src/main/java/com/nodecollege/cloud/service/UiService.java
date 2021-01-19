@@ -1,5 +1,6 @@
 package com.nodecollege.cloud.service;
 
+import com.nodecollege.cloud.common.model.QueryVO;
 import com.nodecollege.cloud.common.model.po.OperateUi;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public interface UiService {
     /**
      * 获取前端列表
      */
-    List<OperateUi> getUiList();
+    List<OperateUi> getUiList(QueryVO<OperateUi> queryVO);
 
     /**
      * 添加前端

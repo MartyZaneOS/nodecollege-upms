@@ -45,7 +45,8 @@ public class UserLoginController {
      */
     @ApiAnnotation(modularName = "用户登陆", description = "用户注册")
     @PostMapping("/register")
-    public NCResult logon(@RequestBody LoginVO loginVO) {
+    public NCResult logon(@RequestBody LoginVO loginVO) {        // 登陆验证
+        loginVO.setPassword(commonService.rsaDecrypt(loginVO.getRsaTag(), loginVO.getPassword()));
         loginService.register(loginVO);
         return NCResult.ok();
     }

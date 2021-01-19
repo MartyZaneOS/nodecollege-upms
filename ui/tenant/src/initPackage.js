@@ -23,6 +23,7 @@ import APagination from 'ant-design-vue/lib/pagination'
 import ADatePicker from 'ant-design-vue/lib/date-picker'
 import ATable from 'ant-design-vue/lib/table'
 import ACard from 'ant-design-vue/lib/card'
+import ATabs from 'ant-design-vue/lib/tabs'
 import AMessage from 'ant-design-vue/lib/message'
 import ANotification from 'ant-design-vue/lib/notification'
 
@@ -49,6 +50,7 @@ import 'ant-design-vue/lib/pagination/style/css'
 import 'ant-design-vue/lib/date-picker/style/css'
 import 'ant-design-vue/lib/table/style/css'
 import 'ant-design-vue/lib/card/style/css'
+import 'ant-design-vue/lib/tabs/style/css'
 import 'ant-design-vue/lib/message/style/css'
 import 'ant-design-vue/lib/notification/style/css'
 
@@ -80,6 +82,7 @@ Vue.use(APagination)
 Vue.use(ADatePicker)
 Vue.use(ATable)
 Vue.use(ACard)
+Vue.use(ATabs)
 Vue.use(AMessage)
 Vue.use(ANotification)
 

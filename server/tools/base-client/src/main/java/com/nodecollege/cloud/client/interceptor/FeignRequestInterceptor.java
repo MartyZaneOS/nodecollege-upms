@@ -2,11 +2,7 @@ package com.nodecollege.cloud.client.interceptor;
 
 import com.nodecollege.cloud.client.utils.NCLoginUtils;
 import com.nodecollege.cloud.common.constants.HeaderConstants;
-import com.nodecollege.cloud.common.model.MemberLoginInfo;
 import com.nodecollege.cloud.common.model.NCLoginUserVO;
-import com.nodecollege.cloud.common.model.UserLoginInfo;
-import com.nodecollege.cloud.common.utils.MemberLoginThreadUtils;
-import com.nodecollege.cloud.common.utils.UserLoginThreadUtils;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +10,6 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 /**
  * @author LC
@@ -33,7 +28,7 @@ public class FeignRequestInterceptor implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate requestTemplate) {
         requestTemplate.header(HeaderConstants.ACCESS_SOURCE, applicationName);
-        String requestId =  MDC.get(HeaderConstants.REQUEST_ID);
+        String requestId = MDC.get(HeaderConstants.REQUEST_ID);
         if (requestId == null) {
             // 服务自启动，或者定时任务运行调用其他服务接口
             return;

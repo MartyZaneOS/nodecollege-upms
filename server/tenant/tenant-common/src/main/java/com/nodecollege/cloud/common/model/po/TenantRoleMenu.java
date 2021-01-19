@@ -35,4 +35,7 @@ public class TenantRoleMenu {
      * 角色来源 0-预制角色，1-自定义角色
      */
     private Integer roleSource;
+
+    // 导航平台 0-不生成导航菜单，1-pc端导航，2-移动端导航
+    private Integer navPlatform;
 }

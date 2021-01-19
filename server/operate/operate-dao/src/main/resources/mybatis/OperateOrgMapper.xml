@@ -134,6 +134,12 @@
       <if test="endTime != null">
         <![CDATA[ and create_time <= #{endTime,jdbcType=TIMESTAMP} ]]>
       </if>
+      <if test="stringList!=null and stringList.size>0">
+        and org_code in
+        <foreach item="_itemType" collection="stringList" open="(" separator="," close=")">
+          #{_itemType,jdbcType=VARCHAR}
+        </foreach>
+      </if>
     </where>
     order by create_time desc
   </select>

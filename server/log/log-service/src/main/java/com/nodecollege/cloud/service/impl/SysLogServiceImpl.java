@@ -1,5 +1,6 @@
 package com.nodecollege.cloud.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.nodecollege.cloud.common.constants.QueueConstants;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 /**
@@ -28,43 +30,12 @@ public class SysLogServiceImpl implements SysLogService {
     @Autowired
     private QueueUtils queueUtils;
 
-    //    @Scheduled(cron = "*/30 * * * * ? ")
-    @Override
-    public Map<String, Integer> sysLogStorage() {
-        long startTime = System.currentTimeMillis();
-        log.info("定时消费日志信息！");
-        long size = 0;
-        int addSize = 0;
-        while ((size = queueUtils.size(QueueConstants.SYS_LOG)) > 0) {
-            log.info("待消费日志数量：{}", size);
-            while (size > 0) {
-                SysLog sysLog = queueUtils.popTask(QueueConstants.SYS_LOG, 500L, SysLog.class);
-                if (sysLog != null) {
-                    addSize++;
-                    if (sysLog.getInParam() != null && sysLog.getInParam().length() > 8000){
-                        sysLog.setInParam(sysLog.getInParam().substring(0, 8000));
-                    }
-
-                    if (sysLog.getOutParam() != null && sysLog.getOutParam().length() > 8000){
-                        sysLog.setOutParam(sysLog.getOutParam().substring(0, 8000));
-                    }
-                    sysLogMapper.insertSelective(sysLog);
-                }
-                size--;
-            }
-        }
-        log.info("入库：{}条，耗时：{}ms", addSize, System.currentTimeMillis() - startTime);
-        Map<String, Integer> result = new HashMap<>();
-        result.put("addSize", addSize);
-        return result;
-    }
-
     @Override
     public Map<String, Integer> delSysLog(Map<String, Integer> map) {
         // 获取保留天数
         Integer retentionDays = map.get("retentionDays");
 
-        if (retentionDays == null){
+        if (retentionDays == null) {
             // 默认30天
             retentionDays = 30;
         }
@@ -91,7 +62,7 @@ public class SysLogServiceImpl implements SysLogService {
         Page page = PageHelper.startPage(queryVO.getPageNum(), queryVO.getPageSize());
         List<SysLog> delList = sysLogMapper.selectListByMap(queryVO.toMap());
 
-        for (SysLog log : delList){
+        for (SysLog log : delList) {
             sysLogMapper.deleteByPrimaryKey(log.getId());
         }
     }
@@ -99,5 +70,30 @@ public class SysLogServiceImpl implements SysLogService {
     @Override
     public List<SysLog> getSysLogList(QueryVO<SysLog> queryVO) {
         return sysLogMapper.selectListByMap(queryVO.toMap());
+    }
+
+    @PostConstruct
+    private void popLogStart() {
+        log.info("消费日志开始！");
+        new Thread(new Runnable() {
+            public void run() {
+                while (true) {
+                    log.info("循环消费日志！");
+                    SysLog sysLog = queueUtils.popTask(QueueConstants.SYS_LOG, 30 * 1000L, SysLog.class);
+                    if (sysLog != null) {
+                        if (sysLog.getInParam() != null && sysLog.getInParam().length() > 8000) {
+                            sysLog.setInParam(sysLog.getInParam().substring(0, 8000));
+                        }
+
+                        if (sysLog.getOutParam() != null && sysLog.getOutParam().length() > 8000) {
+                            sysLog.setOutParam(sysLog.getOutParam().substring(0, 8000));
+                        }
+                        log.info("日志 {}", sysLog.toString());
+                        sysLogMapper.insertSelective(sysLog);
+                    }
+                }
+            }
+        }) {}.start();
+        log.info("消费日志线程启动完毕！");
     }
 }

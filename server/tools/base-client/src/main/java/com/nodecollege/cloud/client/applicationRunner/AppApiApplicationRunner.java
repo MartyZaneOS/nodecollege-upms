@@ -1,9 +1,8 @@
 package com.nodecollege.cloud.client.applicationRunner;
 
-import com.nodecollege.cloud.client.feign.syncApiClient;
+import com.nodecollege.cloud.client.feign.SyncApiClient;
 import com.nodecollege.cloud.common.annotation.ApiAnnotation;
 import com.nodecollege.cloud.common.aop.NCAop;
-import com.nodecollege.cloud.common.model.NCResult;
 import com.nodecollege.cloud.common.model.po.OperateAppApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +35,10 @@ public class AppApiApplicationRunner implements ApplicationRunner {
     private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
     @Autowired
-    private syncApiClient syncApiClient;
+    private SyncApiClient syncApiClient;
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         log.info("初始化查询api信息！");
         if ("operate".equals(applicationName)) {
             return;
@@ -67,7 +66,7 @@ public class AppApiApplicationRunner implements ApplicationRunner {
             api.setAccessAuth("none");
             apis.add(api);
         }
-        NCResult<OperateAppApi> result = syncApiClient.initApiList(apis);
+        syncApiClient.initApiList(apis);
         log.info("同步接口完成");
     }
 }

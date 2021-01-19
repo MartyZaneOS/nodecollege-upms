@@ -41,4 +41,9 @@ public class RedisConstants {
     public static final String RSA_PUBLIC_KEY = "rsa:public:";
     // rsa密钥对私钥
     public static final String RSA_PRIVATE_KEY = "rsa:private:";
+
+    // 文章详情标志 存固定字符f 标识是否过期 有效期是value的一半
+    public static final String ARTICLE_INFO_FLAG = "article:info:flag:";
+    // 文章详情value 存文章信息 有效期是flag的两倍 预防缓存击穿
+    public static final String ARTICLE_INFO_VALUE = "article:info:value:";
 }

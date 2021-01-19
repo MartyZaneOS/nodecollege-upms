@@ -6,13 +6,15 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <!-- 租户id -->
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+    <!-- 菜单类型：0-不生成导航菜单，1-pc端导航，2-移动端导航 -->
+    <result column="nav_platform" jdbcType="TINYINT" property="navPlatform" />
     <!-- 角色代码 -->
     <result column="role_code" jdbcType="VARCHAR" property="roleCode" />
     <!-- 菜单代码 -->
     <result column="menu_code" jdbcType="VARCHAR" property="menuCode" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, role_code, menu_code
+    id, tenant_id, nav_platform, role_code, menu_code
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -25,10 +27,8 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" keyProperty="id" parameterType="com.nodecollege.cloud.common.model.po.TenantRoleMenu" useGeneratedKeys="true">
-    insert into t_role_menu (id, tenant_id, role_code, menu_code
-      )
-    values (#{id,jdbcType=INTEGER}, #{tenantId,jdbcType=BIGINT}, #{roleCode,jdbcType=VARCHAR}, #{menuCode,jdbcType=VARCHAR}
-      )
+    insert into t_role_menu (id, tenant_id, nav_platform, role_code, menu_code)
+    values (#{id,jdbcType=INTEGER}, #{tenantId,jdbcType=BIGINT}, #{navPlatform,jdbcType=TINYINT}, #{roleCode,jdbcType=VARCHAR}, #{menuCode,jdbcType=VARCHAR})
   </insert>
   
   <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-10-15 21:57:03 ### -->
@@ -44,6 +44,9 @@
     <where>
       <if test="tenantId != null">
         and tenant_id = #{tenantId,jdbcType=BIGINT}
+      </if>
+      <if test="navPlatform != null">
+        and nav_platform = #{navPlatform,jdbcType=INTEGER}
       </if>
       <if test="roleCode != null and roleCode != ''">
         and role_code = #{roleCode,jdbcType=VARCHAR}

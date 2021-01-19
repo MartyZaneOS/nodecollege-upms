@@ -24,4 +24,7 @@ public abstract class AbstractBaseModel {
      * 用户id
      */
     private Long userId;
+
+    // 管理员id
+    private Long adminId;
 }
