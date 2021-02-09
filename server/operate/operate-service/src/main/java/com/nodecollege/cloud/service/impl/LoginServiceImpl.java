@@ -12,6 +12,7 @@ import com.nodecollege.cloud.common.utils.PasswordUtil;
 import com.nodecollege.cloud.common.utils.RedisUtils;
 import com.nodecollege.cloud.dao.mapper.OperateUserMapper;
 import com.nodecollege.cloud.service.LoginService;
+import com.nodecollege.cloud.service.SendMailService;
 import com.nodecollege.cloud.service.PasswordPolicyService;
 import com.nodecollege.cloud.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,9 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private PasswordPolicyService passwordPolicyService;
 
+    @Autowired
+    private SendMailService sendMailService;
+
     /**
      * 用户注册
      *
@@ -51,7 +55,13 @@ public class LoginServiceImpl implements LoginService {
      */
     @Override
     public void register(LoginVO loginVO) {
+        NCUtils.nullOrEmptyThrow(loginVO.getImageCert());
+        NCUtils.nullOrEmptyThrow(loginVO.getEmail());
+        if (!sendMailService.checkEmailCert(loginVO.getEmail(), loginVO.getImageCert())) {
+            throw new NCException("", "邮箱验证码不正确！");
+        }
         userService.addUser(loginVO);
+        sendMailService.delEmailCert(loginVO.getEmail());
     }
 
     /**
@@ -62,20 +72,24 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public NCLoginUserVO login(LoginVO loginVO) {
         // 1 登陆前验证密码策略
-        passwordPolicyService.checkUserLoginPolicy(loginVO.getAccount(), loginVO.getPassword(),
-                loginVO.getPassword(), loginVO.getImageCert());
+        passwordPolicyService.checkUserLoginPolicy(loginVO.getAccount(), loginVO.getPassword(), loginVO.getPassword(), loginVO.getImageCert());
 
         // 2 验证密码是否正确
-        OperateUser user = new OperateUser();
-        user.setAccount(loginVO.getAccount());
-        List<OperateUser> result = operateUserMapper.selectUserListByMap(new QueryVO<>(user).toMap());
+        QueryVO<OperateUser> queryLoginUser = new QueryVO<>(new OperateUser());
+        queryLoginUser.getData().setAccount(loginVO.getAccount());
+        List<OperateUser> result = operateUserMapper.selectUserListByMap(queryLoginUser.toMap());
         if (result.isEmpty()) {
-            user.setAccount(null);
-            user.setTelephone(loginVO.getAccount());
-            result = operateUserMapper.selectUserListByMap(new QueryVO<>(user).toMap());
-            NCUtils.nullOrEmptyThrow(result, new NCException("-1", "根据账号或者电话未获取到用户信息"));
+            queryLoginUser.getData().setAccount(null);
+            queryLoginUser.getData().setTelephone(loginVO.getAccount());
+            result = operateUserMapper.selectUserListByMap(queryLoginUser.toMap());
         }
-        user = result.get(0);
+        if (result.isEmpty()) {
+            queryLoginUser.getData().setTelephone(null);
+            queryLoginUser.getData().setEmail(loginVO.getAccount());
+            result = operateUserMapper.selectUserListByMap(queryLoginUser.toMap());
+        }
+        NCUtils.nullOrEmptyThrow(result, new NCException("-1", "未获取到用户信息"));
+        OperateUser user = result.get(0);
         if (!user.getPassword().equals(PasswordUtil.md5(loginVO.getPassword(), user.getSalt()))) {
             Integer loginFileNum = passwordPolicyService.setUserLoginFileNum(loginVO.getAccount());
             throw new NCException("-1", MessageFormat.format("密码错误！请重新输入！(第{0}次)", loginFileNum));

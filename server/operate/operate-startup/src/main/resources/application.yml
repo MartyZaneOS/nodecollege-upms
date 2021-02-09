@@ -6,8 +6,6 @@ server:
     session:
       # 超时时间配置，多长时间需要重新登陆
       timeout: 3600s
-
-#########  sqlite  ##########
 spring:
   application:
     name: operate
@@ -70,6 +68,18 @@ spring:
     timeout: 10000
     # redis配置结束
     block-when-exhausted: true
+  mail:
+    host: smtp.qq.com
+    username: *@qq.com
+    password: *****
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+            port: 465
 
 # mybatis
 mybatis:
@@ -108,7 +118,7 @@ fdfs:
 # 日志配置
 log:
   # 日志是否上传
-#  push: true
+  push: true
   # 日志存放目录 默认 /mnt/log
   path: d:/logs/
   # 日志打印级别  默认 info

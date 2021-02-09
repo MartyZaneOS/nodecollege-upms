@@ -1,4 +1,4 @@
-import {USER_INFO} from './Constants'
+import { USER_INFO } from './Constants'
 import notification from 'ant-design-vue/es/notification'
 
 const ChatData = {
@@ -93,7 +93,7 @@ const ChatData = {
   // 初始化ws
   async initWebsocket () {
     const wsPrefix = (window.location.protocol === 'https:') ? 'wss://' : 'ws://'
-    let ws = wsPrefix + window.location.host + '/ws'
+    const ws = wsPrefix + window.location.host + '/ws'
     if (ChatData.mySocket !== null && ChatData.mySocket !== undefined && ChatData.mySocket.readyState === WebSocket.OPEN) {
       return
     }
@@ -103,10 +103,12 @@ const ChatData = {
     ChatData.mySocket.onerror = ChatData.ws_onerror
     ChatData.mySocket.onmessage = ChatData.ws_onmessage
     ChatData.mySocket.onclose = ChatData.ws_onclose
-    let user = JSON.parse(sessionStorage.getItem(USER_INFO))
-    ChatData.accessToken = user.accessToken
-    ChatData.uuid = user.uuid
-    ChatData.userId = user.loginId
+    const user = JSON.parse(sessionStorage.getItem(USER_INFO))
+    if (user && user.accessToken) {
+      ChatData.accessToken = user.accessToken
+      ChatData.uuid = user.uuid
+      ChatData.userId = user.loginId
+    }
   },
   // 发送消息
   ws_send (path, chatMsg) {
@@ -114,7 +116,11 @@ const ChatData = {
     if (ChatData.mySocket !== null && ChatData.mySocket !== undefined && ChatData.mySocket.readyState === WebSocket.OPEN) {
       ChatData.checkDate()
       console.log('消息路径 ' + path + ' 消息内容 >>>>', chatMsg)
-      let sendContent = {
+      if (!ChatData.accessToken) {
+        console.log('用户未登陆不能发送消息！')
+        return
+      }
+      const sendContent = {
         path: path,
         data: JSON.stringify(chatMsg),
         accessToken: ChatData.accessToken,
@@ -131,10 +137,11 @@ const ChatData = {
   },
   // 接收消息
   ws_onmessage (e) {
-    console.log('接收消息: ' + e.data)
+    const data = JSON.parse(e.data)
+    console.log('接收消息: ', data.path, data)
     // 初次连接返回活跃聊天室列表
-    let res = JSON.parse(e.data)
-    let result = res.data
+    const res = JSON.parse(e.data)
+    const result = res.data
     if (!result.success) {
       notification.error({
         message: result.message
@@ -148,7 +155,7 @@ const ChatData = {
     if (res.path === '/chat/addGroupRecord' || res.path === '/chat/addRecord') {
       // 1 群组消息
       // 2 好友消息
-      let record = result.rows[0]
+      const record = result.rows[0]
       let chatActiveId = ''
       let receiveUserId = ''
       if (record.recordType === 1) {
@@ -164,7 +171,7 @@ const ChatData = {
       }
       if (!ChatData.chatInfoMap[chatActiveId]) {
         // 无数据 去请求历史数据
-        let chatMsg = {
+        const chatMsg = {
           recordType: 6,
           sendTime: '',
           groupId: record.groupId,
@@ -179,13 +186,13 @@ const ChatData = {
     } else if (res.path === '/chat/getGroupUser') {
       // 获取群组用户消息
       if (result.rows) {
-        let groupId = result.rows[0].groupId
+        const groupId = result.rows[0].groupId
         ChatData.groupIdUserMap[groupId] = result.rows
       }
     } else if (res.path === '/chat/signed') {
       // 获取群组用户消息
       if (result.rows) {
-        let groupId = result.rows[0].groupId
+        const groupId = result.rows[0].groupId
         let chatActiveId = 'g' + groupId
         if (!groupId) {
           ChatData.updateChatInfoMap(result.rows[0])
@@ -217,8 +224,8 @@ const ChatData = {
       ChatData.newsNum = ChatData.newsNum + num
     } else if (res.path === '/chat/updateGroupUser') {
       // 群用户更新
-      let groupUser = result.rows[0]
-      let userList = ChatData.groupIdUserMap[groupUser.groupId]
+      const groupUser = result.rows[0]
+      const userList = ChatData.groupIdUserMap[groupUser.groupId]
       if (userList) {
         let has = false
         for (let i = 0; i < userList.length; i++) {
@@ -235,8 +242,8 @@ const ChatData = {
       }
     } else if (res.path === '/chat/updateGroup') {
       // 群用户更新
-      let group = result.rows[0]
-      let chatList = ChatData.activeChatList
+      const group = result.rows[0]
+      const chatList = ChatData.activeChatList
       if (chatList) {
         for (let i = 0; i < chatList.length; i++) {
           if (chatList[i].groupId === group.groupId) {
@@ -252,7 +259,7 @@ const ChatData = {
   ws_onopen () {
     console.log('连接服务器 成功...')
     console.log('发送初始连接信息！')
-    let chatMsg = {
+    const chatMsg = {
       recordType: 3,
       contentType: 1
     }
@@ -278,9 +285,9 @@ const ChatData = {
   },
   // 初始化活跃聊天室
   initActiveChat (activeChatList) {
-    for (let chat of activeChatList) {
+    for (const chat of activeChatList) {
       if (chat.friendId === ChatData.userId) {
-        let user = JSON.parse(sessionStorage.getItem(USER_INFO))
+        const user = JSON.parse(sessionStorage.getItem(USER_INFO))
         if (user.avatar) {
           chat.avatar = user.avatar
           chat.avatarThumb = user.avatarThumb
@@ -292,9 +299,9 @@ const ChatData = {
   },
   // 添加新的活跃聊天室
   setNewActiveChatList (chat) {
-    let chatActiveId = chat.chatActiveId
-    let activeChatList = ChatData.activeChatList
-    let activeList = [{
+    const chatActiveId = chat.chatActiveId
+    const activeChatList = ChatData.activeChatList
+    const activeList = [{
       // 活跃聊天id
       chatActiveId: chat.chatActiveId,
       // 聊天室名称
@@ -345,10 +352,10 @@ const ChatData = {
     // 更新活跃聊天室顺序
     ChatData.updateActiveList(record)
     // 更新消息记录
-    let infoList = ChatData.chatInfoMap[chatActiveId]
+    const infoList = ChatData.chatInfoMap[chatActiveId]
     if (!infoList) {
       // 数据空的时候
-      let list = []
+      const list = []
       list.push(record)
       ChatData.chatInfoMap[chatActiveId] = []
       ChatData.chatInfoMap[chatActiveId] = [...list]
@@ -360,7 +367,7 @@ const ChatData = {
       })
     } else if (record.sendTime > infoList[0].sendTime) {
       // 数据不为空，且是新加数据
-      let list = []
+      const list = []
       list.push(record)
       list.push(...infoList)
       ChatData.chatInfoMap[chatActiveId] = []
@@ -385,10 +392,10 @@ const ChatData = {
   },
   // 更新活跃聊天室顺序
   updateActiveList (record) {
-    let newRecordList = ChatData.chatInfoMap[ChatData.activeChatList[0].chatActiveId]
+    const newRecordList = ChatData.chatInfoMap[ChatData.activeChatList[0].chatActiveId]
     if (newRecordList && newRecordList.length > 0 && newRecordList[0].sendTime < record.sendTime) {
       if (ChatData.activeChatList[0].chatActiveId !== record.chatActiveId) {
-        let tmpList = []
+        const tmpList = []
         tmpList[0] = record
         for (let i = 0; i < ChatData.activeChatList.length; i++) {
           if (ChatData.activeChatList[i].chatActiveId !== record.chatActiveId) {
@@ -409,10 +416,12 @@ const ChatData = {
   // 校验当前用户数据
   checkDate () {
     if (!ChatData.userId) {
-      let user = JSON.parse(sessionStorage.getItem(USER_INFO))
-      ChatData.accessToken = user.accessToken
-      ChatData.uuid = user.uuid
-      ChatData.userId = user.loginId
+      const user = JSON.parse(sessionStorage.getItem(USER_INFO))
+      if (user && user.accessToken) {
+        ChatData.accessToken = user.accessToken
+        ChatData.uuid = user.uuid
+        ChatData.userId = user.loginId
+      }
     }
     if (!ChatData.mySocket) {
       ChatData.initWebsocket()
@@ -420,7 +429,7 @@ const ChatData = {
   },
   // 辩论堂数据处理
   debateOnMessage (res) {
-    let result = res.data
+    const result = res.data
     if (res.path === '/debate/getRecordList') {
       // 获取辩论堂消息
       if (result.rows == null || result.rows.length === 0) {
@@ -430,7 +439,7 @@ const ChatData = {
       if (!ChatData.debateRecordMap[result.rows[0].debateId]) {
         ChatData.debateRecordMap[result.rows[0].debateId] = []
       }
-      let old = [...ChatData.debateRecordMap[result.rows[0].debateId]]
+      const old = [...ChatData.debateRecordMap[result.rows[0].debateId]]
       result.rows.forEach(item => {
         if (old.length === 0 || item.sendTime > old[old.length - 1].sendTime) {
           old.push(item)
@@ -461,7 +470,7 @@ const ChatData = {
       if (!result.rows || result.rows.length === 0) {
         return
       }
-      let old = ChatData.debateRecordMap[result.rows[0].debateId]
+      const old = ChatData.debateRecordMap[result.rows[0].debateId]
       if (!old) {
         return
       }
@@ -481,7 +490,7 @@ const ChatData = {
       ChatData.debateMap[result.rows[0].debateId].result = result.rows[0].result
       ChatData.debateMap[result.rows[0].debateId].resultMsg = result.rows[0].resultMsg
     } else if (res.path === '/debate/recordUp') {
-      let old = ChatData.debateRecordMap[result.rows[0].debateId]
+      const old = ChatData.debateRecordMap[result.rows[0].debateId]
       if (!old) {
         return
       }
@@ -491,6 +500,9 @@ const ChatData = {
             // 更新数据
             old[i].supportNum = old[i].supportNum + 1
             if (item.userId === ChatData.userId) {
+              if (!ChatData.debateRecordMyUpMap[item.debateId]) {
+                ChatData.debateRecordMyUpMap[item.debateId] = []
+              }
               ChatData.debateRecordMyUpMap[item.debateId][item.debateRecordId] = item.debateRecordId
             }
             break
@@ -498,7 +510,7 @@ const ChatData = {
         }
       })
     } else if (res.path === '/debate/delRecordUp') {
-      let old = ChatData.debateRecordMap[result.rows[0].debateId]
+      const old = ChatData.debateRecordMap[result.rows[0].debateId]
       if (!old) {
         return
       }
@@ -518,11 +530,10 @@ const ChatData = {
         }
       })
     } else if (res.path === '/debate/getMyUpList') {
-      let old = ChatData.debateRecordMap[result.rows[0].debateId]
-      if (!old) {
+      if (!result.rows || result.rows.length < 1) {
         return
       }
-      let upList = []
+      const upList = []
       result.rows.forEach(item => {
         upList[item.debateRecordId] = item.debateRecordId
       })
@@ -538,7 +549,7 @@ const ChatData = {
       }
     })
     if (userIds.size > 0) {
-      let msg = {
+      const msg = {
         longList: [...userIds]
       }
       ChatData.ws_send('/debate/getUserInfo', msg)

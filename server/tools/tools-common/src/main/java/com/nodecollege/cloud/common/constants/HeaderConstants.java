@@ -33,4 +33,6 @@ public class HeaderConstants {
     public static final String NC_NGINX = "NC-NGINX";
     // rsa标志
     public static final String RSA_TAG = "RSA-TAG";
+    // 图片验证码sessionId
+    public static final String IMAGE_CERT_SESSION_ID = "imageCertSessionId";
 }

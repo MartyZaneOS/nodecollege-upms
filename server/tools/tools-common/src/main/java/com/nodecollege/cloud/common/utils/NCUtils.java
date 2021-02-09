@@ -1,16 +1,20 @@
 package com.nodecollege.cloud.common.utils;
 
 import com.nodecollege.cloud.common.constants.NCConstants;
-import com.nodecollege.cloud.common.exception.BaseException;
 import com.nodecollege.cloud.common.exception.NCException;
 import com.nodecollege.cloud.common.model.CodeMessage;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * NC工具类
@@ -106,6 +110,7 @@ public class NCUtils {
     public static void nullOrEmptyThrow(Object object) {
         nullOrEmptyThrow(object, "-1", "参数缺失！");
     }
+
     /**
      * 不为空 抛出错误
      *
@@ -132,6 +137,7 @@ public class NCUtils {
             throw new NCException(code, message);
         }
     }
+
     /**
      * 判断是否相等
      * 适用于基本类型和字符串
@@ -222,5 +228,51 @@ public class NCUtils {
             ip = request.getRemoteAddr();
         }
         return ip;
+    }
+
+    public static String getHeaderOrCookieValue(String key, HttpServletRequest request) {
+        String value = request.getHeader(key);
+        if (StringUtils.isBlank(value)) {
+            value = getCookieValue(key, request);
+        }
+        return value;
+    }
+
+    // 获取cookie值
+    public static String getCookieValue(String key, HttpServletRequest request) {
+        String value = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (int i = 0; i < cookies.length; ++i) {
+                Cookie cookie = cookies[i];
+                String cookieName = cookie.getName();
+                if (key.equals(cookieName)) {
+                    value = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        return value;
+    }
+
+    // 校验邮箱是否正确
+    public static boolean checkEmail(String email) {
+        if (StringUtils.isBlank(email)) {
+            return false;
+        }
+        Pattern regex = Pattern.compile("^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$");
+        Matcher matcher = regex.matcher(email);
+        return matcher.matches();
+    }
+
+    // 生成数字验证码
+    public static String getNumberCert(int length) {
+        String sources = "0123456789"; // 加上一些字母，就可以生成pc站的验证码了
+        Random rand = new Random();
+        StringBuilder cert = new StringBuilder();
+        for (int j = 0; j < length; j++) {
+            cert.append(sources.charAt(rand.nextInt(9)) + "");
+        }
+        return cert.toString();
     }
 }

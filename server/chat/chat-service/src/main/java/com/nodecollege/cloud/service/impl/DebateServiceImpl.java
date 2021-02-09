@@ -423,20 +423,25 @@ public class DebateServiceImpl implements DebateService {
                 update.setDebateId(debate.getDebateId());
                 // 支持率大于等于反对率 执行改变
                 if (debate.getSupportNum().compareTo(debate.getRefuseNum()) >= 0) {
-                    NCResult res = worldTreeClient.debateHandle(debate);
-                    if (res.getSuccess()) {
-                        update.setResult(1);
-                        update.setResultMsg("支持数大于反对数，辩论成功！");
-                    } else if ("80000007".equals(res.getCode())) {
-                        logger.info("服务建调用异常直接返回，等待下次处理！");
-                        return;
-                    } else {
-                        update.setResult(-1);
-                        update.setResultMsg(res.getMessage());
-                    }
+                    update.setResult(1);
+                    update.setResultMsg("支持数大于反对数，辩论成功！");
                 } else {
                     update.setResult(0);
                     update.setResultMsg("支持数小于反对数，辩论失败！");
+                }
+
+                debate.setResult(update.getResult());
+                NCResult res = worldTreeClient.debateHandle(debate);
+                if (res.getSuccess()) {
+                    // 成功
+                } else if ("80000003".equals(res.getCode())) {
+                    // 网络问题
+                    logger.info("服务建调用异常直接返回，等待下次处理！");
+                    return;
+                } else {
+                    // 失败
+                    update.setResult(-1);
+                    update.setResultMsg(res.getMessage());
                 }
                 debateMapper.updateByPrimaryKeySelective(update);
                 relationMapper.updateFinish(debate.getDebateId());

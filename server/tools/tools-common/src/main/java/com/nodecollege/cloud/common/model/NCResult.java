@@ -79,13 +79,17 @@ public class NCResult<T> {
 
     public static <T> NCResult ok(T data) {
         List<T> list = new ArrayList<>();
-        list.add(data);
+        if (data != null) {
+            list.add(data);
+        }
         return ok(States.SUCCESS.getMessage(), list);
     }
 
     public static <T> NCResult ok(Iterable<T> data) {
         List<T> results = new ArrayList<>();
-        data.forEach(v -> results.add(v));
+        if (data != null) {
+            data.forEach(v -> results.add(v));
+        }
         return ok(States.SUCCESS.getMessage(), results);
     }
 

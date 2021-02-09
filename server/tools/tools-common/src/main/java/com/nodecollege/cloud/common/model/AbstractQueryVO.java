@@ -30,6 +30,10 @@ public abstract class AbstractQueryVO extends AbstractBaseModel {
      */
     private List<Long> longList;
     /**
+     * 状态list
+     */
+    private List<Long> stateList;
+    /**
      * orgList
      */
     private List<Long> orgList;

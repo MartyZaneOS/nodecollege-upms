@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.OperateSendMailMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.OperateSendMail">
+    <!-- 发送邮件id -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <!-- 邮件类型 0-用户注册邮箱验证码，1-管理员发送邮件 -->
+    <result column="mail_type" jdbcType="TINYINT" property="mailType" />
+    <!-- 收件人，多个用英文格式逗号分隔 -->
+    <result column="to_mail" jdbcType="VARCHAR" property="toMail" />
+    <!-- 抄送人，多个用英文格式逗号分隔 -->
+    <result column="reply_to" jdbcType="VARCHAR" property="replyTo" />
+    <!-- 邮件主题 -->
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <!-- 内容类型 0-文本内容，1-html内容 -->
+    <result column="content_type" jdbcType="TINYINT" property="contentType" />
+    <!-- 邮件附件 json格式存储文件名称和地址 -->
+    <result column="files" jdbcType="VARCHAR" property="files" />
+    <!-- 发送状态 0-发送失败，1-发送成功 -->
+    <result column="state" jdbcType="TINYINT" property="state" />
+    <!-- 发送时间 -->
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.nodecollege.cloud.common.model.po.OperateSendMail">
+    <!-- 邮件内容 -->
+    <result column="content" jdbcType="LONGVARBINARY" property="content" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, mail_type, to_mail, reply_to, title, content_type, files, state, create_time
+  </sql>
+  <sql id="Blob_Column_List">
+    content
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from o_send_mail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from o_send_mail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" keyProperty="id" parameterType="com.nodecollege.cloud.common.model.po.OperateSendMail" useGeneratedKeys="true">
+    insert into o_send_mail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="mailType != null">
+        mail_type,
+      </if>
+      <if test="toMail != null">
+        to_mail,
+      </if>
+      <if test="replyTo != null">
+        reply_to,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="contentType != null">
+        content_type,
+      </if>
+      <if test="files != null">
+        files,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="mailType != null">
+        #{mailType,jdbcType=TINYINT},
+      </if>
+      <if test="toMail != null">
+        #{toMail,jdbcType=VARCHAR},
+      </if>
+      <if test="replyTo != null">
+        #{replyTo,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="contentType != null">
+        #{contentType,jdbcType=TINYINT},
+      </if>
+      <if test="files != null">
+        #{files,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARBINARY},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update o_send_mail
+    <set>
+      <if test="mailType != null">
+        mail_type = #{mailType,jdbcType=TINYINT},
+      </if>
+      <if test="toMail != null">
+        to_mail = #{toMail,jdbcType=VARCHAR},
+      </if>
+      <if test="replyTo != null">
+        reply_to = #{replyTo,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="contentType != null">
+        content_type = #{contentType,jdbcType=TINYINT},
+      </if>
+      <if test="files != null">
+        files = #{files,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2021-02-01 10:26:23 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  <select id="selectList" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from o_send_mail
+    <where>
+      <if test="mailType != null">
+        and mail_type = #{mailType,jdbcType=TINYINT}
+      </if>
+      <if test="toMail != null and toMail != ''">
+        and to_mail = #{toMail,jdbcType=VARCHAR}
+      </if>
+      <if test="replyTo != null and replyTo != ''">
+        and reply_to = #{replyTo,jdbcType=VARCHAR}
+      </if>
+      <if test="title != null and title != ''">
+        and title = #{title,jdbcType=VARCHAR}
+      </if>
+      <if test="contentType != null">
+        and content_type = #{contentType,jdbcType=TINYINT}
+      </if>
+      <if test="files != null and files != ''">
+        and files = #{files,jdbcType=VARCHAR}
+      </if>
+      <if test="state != null">
+        and state = #{state,jdbcType=TINYINT}
+      </if>
+    </where>
+    order by create_time desc
+  </select>
+  
+</mapper>

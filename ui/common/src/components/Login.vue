@@ -19,18 +19,13 @@
           </a-input>
         </a-form-item>
         <a-form-item class="form-item">
-          <a-button style="width: 100%" size="large" type="primary"
-                    htmlType="submit" class="login-button" :loading="loginBtn" :disabled="loginBtn" @click="login">
+          <a-button style="width: 100%" size="large" type="primary" htmlType="submit" class="login-button" :loading="loginBtn" :disabled="loginBtn" @click="login">
             登陆
           </a-button>
         </a-form-item>
         <a-form-item class="form-item">
-          <a-button
-              style="width: 100%"
-              htmlType="submit"
-              class="login-button"
-              @click="register.visible = true"
-          >注册
+          <a-button style="width: 100%" htmlType="submit" class="login-button" @click="register.visible = true">
+            注册
           </a-button>
         </a-form-item>
       </a-form>
@@ -68,7 +63,17 @@
       <a-form :form="register.form">
         <a-form-item label="手机号" :label-col="modal.labelCol" :wrapper-col="modal.wrapperCol">
           <a-input placeholder="请输入手机号！"
-                   v-decorator="['telephone', {rules: [{ required: true, message: '请输入手机号！'}]}]"/>
+                   v-decorator="['telephone']"/>
+        </a-form-item>
+        <a-form-item label="邮箱" :label-col="modal.labelCol" :wrapper-col="modal.wrapperCol">
+          <a-input-search placeholder="请输入邮箱！" @search="sendEmailCert"
+                          v-decorator="['email', {rules: [{ required: true, message: '请输入邮箱！'}]}]">
+            <a-button slot="enterButton" :disabled="register.emailTime !== 0">{{register.sendEmailBtn}}</a-button>
+          </a-input-search>
+        </a-form-item>
+        <a-form-item label="邮箱验证码" :label-col="modal.labelCol" :wrapper-col="modal.wrapperCol">
+          <a-input placeholder="请输入邮箱验证码！"
+                   v-decorator="['imageCert', {rules: [{ required: true, message: '请输入邮箱验证码！'}]}]"/>
         </a-form-item>
         <a-form-item label="密码" :label-col="modal.labelCol" :wrapper-col="modal.wrapperCol">
           <a-input placeholder="请输入密码！" type="password"
@@ -123,7 +128,9 @@
         register: {
           form: this.$form.createForm(this),
           visible: false,
-          loading: false
+          loading: false,
+          sendEmailBtn: '发送',
+          emailTime: 0
         }
       }
     },
@@ -140,6 +147,7 @@
       },
       login () {
         let that = this
+        this.loginBtn = true
         operateApi.getPublicKey({}).then((pubRes) => {
           const pki = Forge.pki
           // 规定格式：publicKey之前需要加'-----BEGIN PUBLIC KEY-----\n'，之后需要加'\n-----END PUBLIC KEY-----'
@@ -180,6 +188,7 @@
                 this.modal.visible = true
               }
             }
+            this.loginBtn = false
           })
         })
       },
@@ -227,6 +236,22 @@
           callback()
         }
       },
+      // 发送邮件验证码
+      sendEmailCert (email) {
+        operateApi.sendEmailCert({email: email}).then((res) => {})
+        this.register.emailTime = 60
+        this.countTime()
+      },
+      // 倒计时
+      countTime () {
+        if (this.register.emailTime > 0) {
+          this.register.emailTime--
+          this.register.sendEmailBtn = this.register.emailTime + 's'
+          setTimeout(this.countTime, 1000)
+        } else {
+          this.register.sendEmailBtn = '发送'
+        }
+      },
       registerOk () {
         this.register.form.validateFields((err, values) => {
           if (!err) {
@@ -237,7 +262,9 @@
               // forge通过公钥加密后一般会是乱码格式，可进行base64编码操作再进行传输，相应的，后台获取到密文的密码后需要先进行base64解码操作再进行解密
               const password =  Forge.util.encode64(publicK.encrypt(values.password))
               operateApi.register({
+                imageCert: values.imageCert,
                 telephone: values.telephone,
+                email: values.email,
                 password: password,
                 rsaTag: MenuUtils.getCookie('RSA-TAG')
               }).then((res) => {

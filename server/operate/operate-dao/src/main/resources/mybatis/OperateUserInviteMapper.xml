@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.OperateUserInvite">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
     <result column="state" jdbcType="INTEGER" property="state" />
@@ -12,7 +13,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, telephone, user_name, tenant_id, state, create_user, create_time, update_time
+    id, telephone, email, user_name, tenant_id, state, create_user, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -32,6 +33,9 @@
       </if>
       <if test="telephone != null">
         telephone,
+      </if>
+      <if test="email !=null">
+        email,
       </if>
       <if test="userName != null">
         user_name,
@@ -55,6 +59,9 @@
       </if>
       <if test="telephone != null">
         #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="email !=null">
+        #{email,jdbcType=VARCHAR},
       </if>
       <if test="userName != null">
         #{userName,jdbcType=VARCHAR},
@@ -98,6 +105,9 @@
     <where>
       <if test="telephone !=null and telephone !=''">
         and telephone = #{telephone,jdbcType=VARCHAR}
+      </if>
+      <if test="email !=null and email !=''">
+        and email = #{email,jdbcType=VARCHAR}
       </if>
       <if test="userName !=null and userName !=''">
         and user_name = #{userName,jdbcType=VARCHAR}

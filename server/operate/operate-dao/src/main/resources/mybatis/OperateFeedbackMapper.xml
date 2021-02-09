@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nodecollege.cloud.dao.mapper.OperateFeedbackMapper">
+  <resultMap id="BaseResultMap" type="com.nodecollege.cloud.common.model.po.OperateFeedback">
+    <!-- 主键 -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <!-- 是否是回复内容 0-不是，1-是 -->
+    <result column="is_reply" jdbcType="TINYINT" property="isReply" />
+    <!-- 回复id -->
+    <result column="reply_id" jdbcType="BIGINT" property="replyId" />
+    <!-- 意见反馈来源 0-首页，1-用户，2-租户 -->
+    <result column="feedback_source" jdbcType="TINYINT" property="feedbackSource" />
+    <!-- 用户名称 -->
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <!-- 用户邮箱，首页来源必填 -->
+    <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
+    <!-- 管理员id，管理员回复必填 -->
+    <result column="admin_id" jdbcType="BIGINT" property="adminId" />
+    <!-- 用户id，用户来源必填 -->
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <!-- 租户代码，租户来源必填 -->
+    <result column="tenant_code" jdbcType="VARCHAR" property="tenantCode" />
+    <!-- 成员id，租户来源必填 -->
+    <result column="member_id" jdbcType="BIGINT" property="memberId" />
+    <!-- 状态 0-未公开，1-公开，2-已删除 -->
+    <result column="state" jdbcType="TINYINT" property="state" />
+    <!-- 回复邮件id -->
+    <result column="reply_email_id" jdbcType="BIGINT" property="replyEmailId" />
+    <!-- 创建时间 -->
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.nodecollege.cloud.common.model.po.OperateFeedback">
+    <!-- 意见反馈内容 -->
+    <result column="content" jdbcType="LONGVARBINARY" property="content" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, is_reply, reply_id, feedback_source, user_name, user_email, admin_id, user_id, tenant_code, member_id, state,
+    reply_email_id, create_time
+  </sql>
+  <sql id="Blob_Column_List">
+    content
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from o_feedback
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from o_feedback
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" keyProperty="id" parameterType="com.nodecollege.cloud.common.model.po.OperateFeedback" useGeneratedKeys="true">
+    insert into o_feedback
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="isReply != null">
+        is_reply,
+      </if>
+      <if test="replyId != null">
+        reply_id,
+      </if>
+      <if test="feedbackSource != null">
+        feedback_source,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="userEmail != null">
+        user_email,
+      </if>
+      <if test="adminId != null">
+        admin_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="tenantCode != null">
+        tenant_code,
+      </if>
+      <if test="memberId != null">
+        member_id,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="replyEmailId != null">
+        reply_email_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="isReply != null">
+        #{isReply,jdbcType=TINYINT},
+      </if>
+      <if test="replyId != null">
+        #{replyId,jdbcType=BIGINT},
+      </if>
+      <if test="feedbackSource != null">
+        #{feedbackSource,jdbcType=TINYINT},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userEmail != null">
+        #{userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="adminId != null">
+        #{adminId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="tenantCode != null">
+        #{tenantCode,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null">
+        #{memberId,jdbcType=BIGINT},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=TINYINT},
+      </if>
+      <if test="replyEmailId != null">
+        #{replyEmailId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARBINARY},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update o_feedback
+    <set>
+      <if test="isReply != null">
+        is_reply = #{isReply,jdbcType=TINYINT},
+      </if>
+      <if test="replyId != null">
+        reply_id = #{replyId,jdbcType=BIGINT},
+      </if>
+      <if test="feedbackSource != null">
+        feedback_source = #{feedbackSource,jdbcType=TINYINT},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userEmail != null">
+        user_email = #{userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="adminId != null">
+        admin_id = #{adminId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="tenantCode != null">
+        tenant_code = #{tenantCode,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null">
+        member_id = #{memberId,jdbcType=BIGINT},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=TINYINT},
+      </if>
+      <if test="replyEmailId != null">
+        reply_email_id = #{replyEmailId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2021-02-01 15:50:04 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  <select id="selectList" parameterType="java.util.HashMap" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from o_feedback
+    <where>
+      <if test="isReply != null">
+        and is_reply = #{isReply,jdbcType=TINYINT}
+      </if>
+      <if test="replyId != null">
+        and reply_id = #{replyId,jdbcType=BIGINT}
+      </if>
+      <if test="feedbackSource != null">
+        and feedback_source = #{feedbackSource,jdbcType=TINYINT}
+      </if>
+      <if test="userName != null and userName != ''">
+        and user_name = #{userName,jdbcType=VARCHAR}
+      </if>
+      <if test="userEmail != null and userEmail != ''">
+        and user_email = #{userEmail,jdbcType=VARCHAR}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="tenantCode != null and tenantCode != ''">
+        and tenant_code = #{tenantCode,jdbcType=VARCHAR}
+      </if>
+      <if test="memberId != null">
+        and member_id = #{memberId,jdbcType=BIGINT}
+      </if>
+      <if test="state != null">
+        and state = #{state,jdbcType=TINYINT}
+      </if>
+      <if test="replyEmailId != null">
+        and reply_email_id = #{replyEmailId,jdbcType=BIGINT}
+      </if>
+      <if test="createTime != null">
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="content != null">
+        and content = #{content,jdbcType=LONGVARBINARY}
+      </if>
+      <if test="longList!=null and longList.size>0">
+        and reply_Id in
+        <foreach item="_itemType" collection="longList" open="(" separator="," close=")">
+          #{_itemType,jdbcType=BIGINT}
+        </foreach>
+      </if>
+      <if test="stateList!=null and stateList.size>0">
+        and state in
+        <foreach item="_state" collection="stateList" open="(" separator="," close=")">
+          #{_state,jdbcType=TINYINT}
+        </foreach>
+      </if>
+    </where>
+    order by create_time desc
+  </select>
+  
+</mapper>

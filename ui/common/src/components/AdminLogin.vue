@@ -7,44 +7,22 @@
       <a-form class="login-form">
         <div style="height: 50px; line-height: 50px; font-size: 24px; text-align: center;">运维登录</div>
         <a-form-item class="form-item">
-          <a-input
-              size="large"
-              type="text"
-              placeholder="账户"
-              v-model="loginParm.username"
-              v-decorator="[
-                'username',
-                {rules: [{ required: true, message: '请输入帐户名' }, { validator: handleUsernameOrEmail }], validateTrigger: 'change'}
-              ]">
+          <a-input size="large" type="text" placeholder="账户" v-model="loginParm.username">
             <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
           </a-input>
         </a-form-item>
         <a-form-item class="form-item">
-          <a-input
-              size="large"
-              type="password"
-              autocomplete="false"
-              placeholder="密码"
-              v-model="loginParm.password"
-              v-decorator="[
-                'password',
-                {rules: [{ required: true, message: '请输入密码' }], validateTrigger: 'blur'}
-              ]"
-          >
+          <a-input size="large" type="password" autocomplete="false" placeholder="密码" v-model="loginParm.password">
             <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
           </a-input>
         </a-form-item>
         <a-form-item class="form-item">
-          <a-button
-              style="width: 100%"
-              size="large"
-              type="primary"
-              htmlType="submit"
-              class="login-button"
-              :loading="loginBtn"
-              :disabled="loginBtn"
-              @click="login"
-          >确定
+          <a-input placeholder="验证码" style="width: 65%" v-model="loginParm.imageCert"/>
+          <img width="110" height="40px" alt="验证码" onclick="this.src='/operateApi/common/createImageCert?d=' + new Date()*1" src="/operateApi/common/createImageCert" />
+        </a-form-item>
+        <a-form-item class="form-item">
+          <a-button style="width: 100%" size="large" type="primary" htmlType="submit" class="login-button" :loading="loginBtn" :disabled="loginBtn" @click="login">
+            确定
           </a-button>
         </a-form-item>
       </a-form>
@@ -101,7 +79,8 @@
         loginType: 'user',
         loginParm: {
           username: '',
-          password: ''
+          password: '',
+          imageCert: ''
         },
         modal: {
           labelCol: {span: 7},
@@ -125,6 +104,7 @@
       },
       login () {
         let that = this
+        this.loginBtn = true
         operateApi.getPublicKey({}).then((pubRes) => {
           const pki = Forge.pki
           // 规定格式：publicKey之前需要加'-----BEGIN PUBLIC KEY-----\n'，之后需要加'\n-----END PUBLIC KEY-----'
@@ -132,9 +112,9 @@
           // forge通过公钥加密后一般会是乱码格式，可进行base64编码操作再进行传输，相应的，后台获取到密文的密码后需要先进行base64解码操作再进行解密
           const password =  Forge.util.encode64(publicK.encrypt(that.loginParm.password))
           operateApi.adminLogin({
-            'imageCert': '111',
-            'account': that.loginParm.username,
-            'password': password,
+            imageCert: that.loginParm.imageCert,
+            account: that.loginParm.username,
+            password: password,
             rsaTag: MenuUtils.getCookie('RSA-TAG')
           }).then((res) => {
             if (res.success) {
@@ -160,6 +140,7 @@
                 this.modal.visible = true
               }
             }
+            this.loginBtn = false
           })
         })
       },

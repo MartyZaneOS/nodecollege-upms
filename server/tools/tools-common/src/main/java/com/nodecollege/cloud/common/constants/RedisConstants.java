@@ -46,4 +46,10 @@ public class RedisConstants {
     public static final String ARTICLE_INFO_FLAG = "article:info:flag:";
     // 文章详情value 存文章信息 有效期是flag的两倍 预防缓存击穿
     public static final String ARTICLE_INFO_VALUE = "article:info:value:";
+
+    // 图片验证码
+    public static final String IMAGE_CERT = "image:cert:";
+
+    // 邮件验证码
+    public static final String EMAIL_CERT = "email:cert:";
 }

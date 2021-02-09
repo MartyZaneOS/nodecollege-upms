@@ -19,6 +19,9 @@ public interface AdminLoginService {
      */
     NCLoginUserVO login(LoginVO loginVO);
 
+    // 根据token获取用户信息
+    NCLoginUserVO getAdminInfoByToken(LoginVO loginVO);
+
     /**
      * 退出登陆
      *

@@ -5,6 +5,7 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
+import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.nodecollege.cloud.common.constants.RedisConstants;
 import com.nodecollege.cloud.common.exception.NCException;
 import com.nodecollege.cloud.common.utils.NCUtils;
@@ -13,6 +14,7 @@ import com.nodecollege.cloud.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +28,12 @@ public class CommonServiceImpl implements CommonService {
     @Autowired
     private RedisUtils redisUtils;
 
+    /**
+     * 1、验证码工具
+     */
+    @Autowired
+    DefaultKaptcha defaultKaptcha;
+
     @Override
     public Map<String, Object> getPublicKey() {
         // 从redis中获取 rsa标识
@@ -35,7 +43,7 @@ public class CommonServiceImpl implements CommonService {
         if (rsaTag == null) {
             // rsa标识为空，生成新的rsa，有效期25个小时，生成rsa标识，有效期24个小时
             // 差一个小时的原因是为了防止 刚获取到公钥，停了一会，然后公钥就失效了
-            rsaTag = NCUtils.getUUID().substring(0,8);
+            rsaTag = NCUtils.getUUID().substring(0, 8);
             RSA rsa = new RSA();
             publicKeyBase64 = rsa.getPublicKeyBase64();
             String privateKeyBase64 = rsa.getPrivateKeyBase64();
@@ -73,5 +81,27 @@ public class CommonServiceImpl implements CommonService {
         // 密码的密文先进行base64解码，之后再进行解密
         byte[] decrypt = rsa.decrypt(Base64.decode(mw), KeyType.PrivateKey);
         return StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8);
+    }
+
+    @Override
+    public BufferedImage createImageCert(String imageCertSessionId) {
+        // 生产验证码字符串并保存到session中
+        String imageCert = defaultKaptcha.createText();
+        // 使用生产的验证码字符串返回一个BufferedImage对象并转为byte写入到byte数组中
+        BufferedImage challenge = defaultKaptcha.createImage(imageCert);
+        // 验证码有效期5分钟
+        redisUtils.set(RedisConstants.IMAGE_CERT + imageCertSessionId, imageCert, 5 * 60);
+        return challenge;
+    }
+
+    @Override
+    public Boolean checkImageCert(String imageCertSessionId, String imageCert) {
+        if (imageCertSessionId == null || imageCert == null) return false;
+        String exImageCert = redisUtils.get(RedisConstants.IMAGE_CERT + imageCertSessionId, String.class);
+        if (null == exImageCert || !exImageCert.equalsIgnoreCase(imageCert)) {
+            return false;
+        }
+        redisUtils.delete(RedisConstants.IMAGE_CERT + imageCertSessionId);
+        return true;
     }
 }

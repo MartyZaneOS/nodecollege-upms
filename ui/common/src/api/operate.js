@@ -26,6 +26,10 @@ export function changeDefaultOption (data) {
   return http.post('operateApi', '/admin/centre/changeDefaultOption', data)
 }
 
+// 发送邮箱验证码
+export function sendEmailCert (data) {
+  return http.post('operateApi', '/user/sendEmailCert', data)
+}
 // 用户注册
 export function register (data) {
   return http.post('operateApi', '/user/register', data)

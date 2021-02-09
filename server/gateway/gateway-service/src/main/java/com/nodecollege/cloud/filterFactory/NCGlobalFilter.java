@@ -116,6 +116,10 @@ public class NCGlobalFilter implements GlobalFilter, Ordered {
                 NCLoginUtils.setAdminLoginInfo(loginInfo);
                 sysLog.setAdminId(loginInfo.getLoginId());
                 sysLog.setAdminAccount(loginInfo.getAccount());
+                Long expire = redisUtils.getExpire(RedisConstants.ADMIN_LOGIN_INFO + adminAccessToken);
+                if (expire != null || expire < 60 * 60) {
+                    redisUtils.set(RedisConstants.ADMIN_LOGIN_INFO + adminAccessToken, loginInfo, 60 * 60);
+                }
             }
         }
 
@@ -130,6 +134,10 @@ public class NCGlobalFilter implements GlobalFilter, Ordered {
                 NCLoginUtils.setUserLoginInfo(loginInfo);
                 sysLog.setUserId(loginInfo.getLoginId());
                 sysLog.setUserAccount(loginInfo.getAccount());
+                Long expire = redisUtils.getExpire(RedisConstants.USER_LOGIN_INFO + userAccessToken);
+                if (expire != null || expire < 60 * 60) {
+                    redisUtils.set(RedisConstants.USER_LOGIN_INFO + userAccessToken, loginInfo, 60 * 60);
+                }
             }
         }
 
@@ -146,6 +154,10 @@ public class NCGlobalFilter implements GlobalFilter, Ordered {
                 sysLog.setMemberAccount(loginInfo.getAccount());
                 sysLog.setTenantId(loginInfo.getTenantId());
                 sysLog.setTenantCode(loginInfo.getTenantCode());
+                Long expire = redisUtils.getExpire(RedisConstants.MEMBER_LOGIN_INFO + memberAccessToken);
+                if (expire != null || expire < 60 * 60) {
+                    redisUtils.set(RedisConstants.MEMBER_LOGIN_INFO + memberAccessToken, loginInfo, 60 * 60);
+                }
             }
         }
 

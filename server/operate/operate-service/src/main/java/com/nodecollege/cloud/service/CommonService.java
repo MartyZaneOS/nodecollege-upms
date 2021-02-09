@@ -1,5 +1,6 @@
 package com.nodecollege.cloud.service;
 
+import java.awt.image.BufferedImage;
 import java.util.Map;
 
 /**
@@ -26,4 +27,10 @@ public interface CommonService {
      * @return 明文
      */
     String rsaDecrypt(String rsaTag, String mw);
+
+    // 创建验证码图片
+    BufferedImage createImageCert(String imageCertSessionId);
+
+    // 验证验证码
+    Boolean checkImageCert(String imageCertSessionId, String imageCert);
 }

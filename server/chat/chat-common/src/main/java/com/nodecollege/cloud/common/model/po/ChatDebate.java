@@ -29,6 +29,7 @@ public class ChatDebate {
      * 4: 节点删除下级
      * 5: 百科文章修改
      * 6: 自由讨论主题 original为正方观点，update为反方观点
+     * 7: 节点题库新增修改删除
      */
     private Integer debateType;
 

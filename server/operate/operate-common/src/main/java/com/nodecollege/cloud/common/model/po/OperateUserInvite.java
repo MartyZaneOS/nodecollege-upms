@@ -25,6 +25,11 @@ public class OperateUserInvite {
     private String telephone;
 
     /**
+     * 被邀请用户邮箱
+     */
+    private String email;
+
+    /**
      * 被邀请用户名称
      */
     private String userName;

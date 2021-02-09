@@ -92,36 +92,9 @@ create table o_config
 	create_user varchar(64) null comment '创建用户',
 	create_time datetime null comment '创建时间',
 	update_user varchar(64) null comment '更新用户',
-	update_time datetime null comment '更新时间',
-	pre_flag tinyint null comment '预制标志 0或空非预制配置，1-预制配置'
+	update_time datetime null comment '更新时间'
 )
 comment '配置表';
-
-create table o_data_power
-(
-	id bigint auto_increment comment '主键'
-		primary key,
-	data_power_usage int null comment '数据权限用途 0-运营/运维，1-2C，2-2B',
-	data_power_code varchar(64) null comment '权限代码',
-	data_power_name varchar(64) null comment '数据权限名称',
-	data_power_type int null comment '数据权限类型 0-机构，1-机构用户',
-	data_option varchar(5000) null comment '数据权限选项 json字符串'
-)
-comment '数据权限主表';
-
-create table o_data_power_auth
-(
-	id bigint auto_increment
-		primary key,
-	data_power_code varchar(64) null comment '数据权限代码',
-	user_id bigint null comment '用户id',
-	org_code varchar(64) null comment '机构代码',
-	all_data tinyint(1) null comment '所有数据',
-	auth_list varchar(5000) null comment '授权权限列表',
-	create_time datetime null comment '创建时间',
-	state int null comment '状态 0-不允许修改'
-)
-comment '数据权限授权';
 
 create table o_file
 (
@@ -417,7 +390,7 @@ create table sys_log
 	access_source varchar(32) null comment '访问来源',
 	app_name varchar(32) null comment '服务名称',
 	request_uri varchar(64) null comment '请求地址',
-	referer varchar(255) null comment '请求页面',
+	referer varchar(64) null comment '请求页面',
 	request_ip varchar(32) null comment '请求ip',
 	in_param varchar(8192) null comment '入参',
 	out_param varchar(8192) null comment '出参',
@@ -435,22 +408,4 @@ create table sys_log
 	create_time timestamp null comment '创建时间'
 )
 comment '系统日志';
-
-create table sys_visit_log
-(
-	id bigint auto_increment comment 'id'
-		primary key,
-	visit_type tinyint null comment '访问类型 0-微服务接口访问量，1-微服务访问量, 2-ip接口访问量，3-ip访问量，4-文章访问量',
-	time_dimension tinyint null comment '时间维度 0-分钟，1-小时，2-天',
-	visit_day int null comment '访问天 yyyyMMdd',
-	visit_hour varchar(2) null comment '访问小时 HH',
-	visit_minute varchar(4) null comment '访问分钟 HHmm',
-	visit_app_name varchar(64) null comment '访问微服务名称',
-	visit_url varchar(255) null comment '访问地址',
-	visit_ip varchar(32) null comment '访问ip',
-	visit_count bigint null comment '访问总数',
-	visit_ip_count bigint null comment '访问ip数',
-	create_time datetime null comment '创建时间'
-)
-comment '系统访问日志';
 

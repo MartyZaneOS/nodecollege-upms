@@ -492,3 +492,29 @@ export function editAuth (data) {
 export function delAuth (data) {
   return http.post('operateApi', '/dataPower/delAuth', data)
 }
+
+// 查询发送邮件列表
+export function getSendMailList (data) {
+  return http.post('operateApi', '/mail/getList', data)
+}
+// 查询邮件详情
+export function getMailInfo (data) {
+  return http.post('operateApi', '/mail/getInfo', data)
+}
+// 发送邮件
+export function sendMail (data) {
+  return http.post('operateApi', '/mail/sendMail', data)
+}
+
+// 查询意见反馈
+export function getFeedbackList (data) {
+  return http.post('operateApi', '/feedback/getList', data)
+}
+// 添加意见反馈
+export function replyFeedback (data) {
+  return http.post('operateApi', '/feedback/replyFeedback', data)
+}
+// 编辑意见反馈
+export function editFeedback (data) {
+  return http.post('operateApi', '/feedback/editFeedback', data)
+}

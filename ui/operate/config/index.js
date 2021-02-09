@@ -95,6 +95,15 @@ module.exports = {
      */
 
     productionSourceMap: false,
+    chainWebpack: config => {
+      config.optimization.minimize(true);//进行代码压缩
+      config.externals({
+        'echarts': 'echarts',
+        // 'vue': 'Vue',
+        // 'vue-router': 'Router',
+        // 'vuex': 'Vuex'
+      });
+    },
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
 

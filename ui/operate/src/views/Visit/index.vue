@@ -21,8 +21,8 @@
             </a-form-item>
           </a-form>
         </a-col>
-        <a-col span="24" v-if="currentShow">
-          <v-chart theme="ovilia-green" :options="hourApiLines" style="width: 100%"/>
+        <a-col span="24">
+          <div id="hourApiLines" style="width: 100%;height: 400px"></div>
         </a-col>
       </a-card>
     </a-row>
@@ -50,11 +50,11 @@
             </a-form-item>
           </a-form>
         </a-col>
-        <a-col span="24" v-if="historyShow">
-          <v-chart theme="ovilia-green" :options="historyAppLines" style="width: 100%"/>
+        <a-col span="24">
+          <div id="historyAppLines" style="width: 100%;height: 400px"></div>
         </a-col>
-        <a-col span="24" v-if="historyShow">
-          <v-chart theme="ovilia-green" :options="historyApiLines" style="width: 100%"/>
+        <a-col span="24">
+          <div id="historyApiLines" style="width: 100%;height: 400px"></div>
         </a-col>
       </a-card>
     </a-row>
@@ -62,7 +62,6 @@
 </template>
 
 <script>
-  import ECharts from 'vue-echarts'
   import moment from 'moment'
   import 'moment/locale/zh-cn'
   import * as operateApi from '../../api/operate'
@@ -71,9 +70,6 @@
 
   export default {
     name: 'ApiVisit',
-    components: {
-      'v-chart': ECharts
-    },
     data () {
       return {
         dateFormat: 'YYYYMMDD',
@@ -312,6 +308,9 @@
             this.hourApiLines.series = service
             this.currentShow = true
             console.log('this.dateApiLines', this.hourApiLines)
+
+            var demo = window.echarts.init(document.getElementById('hourApiLines'))
+            demo.setOption(this.hourApiLines)
           }
         })
       },
@@ -379,6 +378,8 @@
             })
             this.historyAppLines.series = service
             console.log('this.historyApiLines', this.historyAppLines)
+            var demo = window.echarts.init(document.getElementById('historyAppLines'))
+            demo.setOption(this.historyAppLines)
           }
         })
       },
@@ -442,6 +443,8 @@
             })
             this.historyApiLines.series = service
             console.log('this.historyApiLines', this.historyApiLines)
+            var demo = window.echarts.init(document.getElementById('historyApiLines'))
+            demo.setOption(this.historyApiLines)
           }
         })
       },

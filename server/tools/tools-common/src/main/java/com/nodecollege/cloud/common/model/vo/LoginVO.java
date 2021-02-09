@@ -38,6 +38,8 @@ public class LoginVO {
      * 电话
      */
     private String telephone;
+    // 邮箱
+    private String email;
     /**
      * 短信验证码
      */

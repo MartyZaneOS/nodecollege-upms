@@ -146,7 +146,6 @@ public class NCGatewayFilterFactory extends AbstractGatewayFilterFactory<NCGatew
             if (accessAuth.indexOf("admin") >= 0) {
                 loginAdmin = NCLoginUtils.getAdminLoginInfo();
                 if (loginAdmin != null) {
-                    // todo 延长登录有效期
                     if (accessAuth.indexOf("adminLogin") >= 0 ||
                             (accessAuth.indexOf("adminAuth") >= 0 && checkApiPower(loginAdmin.getMenuTree(), pagePath, config.getAppName(), apiUrl))) {
                         logger.info("管理员授权校验通过！");
@@ -160,7 +159,6 @@ public class NCGatewayFilterFactory extends AbstractGatewayFilterFactory<NCGatew
             if (accessAuth.indexOf("user") >= 0) {
                 loginUser = NCLoginUtils.getUserLoginInfo();
                 if (loginUser != null) {
-                    // todo 延迟登录有效期
                     if (accessAuth.indexOf("userLogin") >= 0 ||
                             (accessAuth.indexOf("userAuth") >= 0 && checkApiPower(loginUser.getMenuTree(), pagePath, config.getAppName(), apiUrl))) {
                         logger.info("用户授权校验通过！");
@@ -175,7 +173,6 @@ public class NCGatewayFilterFactory extends AbstractGatewayFilterFactory<NCGatew
             if (accessAuth.indexOf("member") >= 0) {
                 loginMember = NCLoginUtils.getMemberLoginInfo();
                 if (loginMember != null) {
-                    // todo 延迟登录有效期
                     if (accessAuth.indexOf("memberLogin") >= 0 ||
                             (accessAuth.indexOf("memberAuth") >= 0 && checkApiPower(loginMember.getMenuTree(), pagePath, config.getAppName(), apiUrl))) {
                         logger.info("租户成员授权校验通过！");

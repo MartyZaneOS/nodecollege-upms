@@ -28,9 +28,9 @@ import ACascader from 'ant-design-vue/lib/cascader'
 import AMessage from 'ant-design-vue/lib/message'
 import ANotification from 'ant-design-vue/lib/notification'
 
-import ECharts from 'vue-echarts'
-import 'echarts/lib/chart/bar'
-import 'echarts/lib/component/tooltip'
+// import ECharts from 'vue-echarts'
+// import 'echarts/lib/chart/bar'
+// import 'echarts/lib/component/tooltip'
 // import 'ant-design-vue/dist/antd.css'
 import 'ant-design-vue/lib/row/style/css'
 import 'ant-design-vue/lib/col/style/css'
@@ -58,7 +58,7 @@ import 'ant-design-vue/lib/tabs/style/css'
 import 'ant-design-vue/lib/cascader/style/css'
 import 'ant-design-vue/lib/message/style/css'
 import 'ant-design-vue/lib/notification/style/css'
-import 'echarts-gl'
+// import 'echarts-gl'
 
 Vue.use(Storage, {
   namespace: 'pro__', // key prefix
@@ -91,7 +91,7 @@ Vue.use(ACard)
 Vue.use(ATabs)
 Vue.use(ACascader)
 
-Vue.component('v-chart', ECharts)
+// Vue.component('v-chart', ECharts)
 
 Vue.use(AMessage)
 Vue.use(ANotification)

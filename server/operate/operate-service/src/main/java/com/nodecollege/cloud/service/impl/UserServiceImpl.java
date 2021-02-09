@@ -9,10 +9,7 @@ import com.nodecollege.cloud.common.exception.NCException;
 import com.nodecollege.cloud.common.model.*;
 import com.nodecollege.cloud.common.model.po.*;
 import com.nodecollege.cloud.common.model.vo.LoginVO;
-import com.nodecollege.cloud.common.utils.NCUtils;
-import com.nodecollege.cloud.common.utils.PasswordUtil;
-import com.nodecollege.cloud.common.utils.RedisUtils;
-import com.nodecollege.cloud.common.utils.RegularExpUtils;
+import com.nodecollege.cloud.common.utils.*;
 import com.nodecollege.cloud.dao.mapper.*;
 import com.nodecollege.cloud.feign.TenantClient;
 import com.nodecollege.cloud.service.FileService;
@@ -81,6 +78,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RedisUtils redisUtils;
 
+    @Autowired
+    private RedisLock redisLock;
+
     /**
      * 查询所有用户信息
      */
@@ -125,27 +125,46 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public void addUser(LoginVO loginVO) {
         NCUtils.nullOrEmptyThrow(loginVO.getPassword());
-        NCUtils.nullOrEmptyThrow(loginVO.getTelephone());
-        // 1 校验账号是否已经注册
+        // 1 校验手机号是否已经注册
         QueryVO<OperateUser> query = new QueryVO<>(new OperateUser());
-        query.getData().setTelephone(loginVO.getTelephone());
-        List<OperateUser> result = userMapper.selectUserListByMap(query.toMap());
-        NCUtils.notNullOrNotEmptyThrow(result, "-1", "此电话已注册");
+        List<OperateUser> result = null;
+        if (StringUtils.isNotBlank(loginVO.getTelephone())) {
+            query.getData().setTelephone(loginVO.getTelephone());
+            result = userMapper.selectUserListByMap(query.toMap());
+            NCUtils.notNullOrNotEmptyThrow(result, "-1", "此电话已注册");
+        }
+        if (StringUtils.isNotBlank(loginVO.getEmail())) {
+            query.getData().setTelephone(null);
+            query.getData().setEmail(loginVO.getEmail());
+            result = userMapper.selectUserListByMap(query.toMap());
+            NCUtils.notNullOrNotEmptyThrow(result, "-1", "此邮箱已注册");
+        }
 
         // 校验密码规则
-        passwordPolicyService.checkRegisterPolicy(loginVO.getPassword(), loginVO.getAccount());
+        passwordPolicyService.checkRegisterPolicy(loginVO.getPassword(), loginVO.getEmail());
 
         // 查询邀请信息
-        QueryVO<OperateUserInvite> queryInvite = new QueryVO<>(new OperateUserInvite());
-        queryInvite.getData().setTelephone(loginVO.getTelephone());
-        queryInvite.getData().setState(0);
-        List<OperateUserInvite> exList = invitationMapper.selectListByMap(query.toMap());
+        List<OperateUserInvite> exList = new ArrayList<>();
+        if (StringUtils.isNotBlank(loginVO.getTelephone())) {
+            QueryVO<OperateUserInvite> queryInvite = new QueryVO<>(new OperateUserInvite());
+            queryInvite.getData().setTelephone(loginVO.getTelephone());
+            queryInvite.getData().setState(0);
+            exList.addAll(invitationMapper.selectListByMap(queryInvite.toMap()));
+        }
+        if (StringUtils.isNotBlank(loginVO.getEmail())) {
+            QueryVO<OperateUserInvite> queryInvite = new QueryVO<>(new OperateUserInvite());
+            queryInvite.getData().setEmail(loginVO.getEmail());
+            queryInvite.getData().setState(0);
+            exList.addAll(invitationMapper.selectListByMap(queryInvite.toMap()));
+        }
 
         // 2 保存用户信息
         OperateUser addUser = new OperateUser();
-        addUser.setAccount(loginVO.getTelephone());
+        String account = "u_" + new Date().getTime();
+        addUser.setAccount(account);
+        addUser.setEmail(loginVO.getEmail());
         addUser.setTelephone(loginVO.getTelephone());
-        addUser.setNickname(loginVO.getTelephone());
+        addUser.setNickname(account);
         addUser.setCreateTime(new Date());
         addUser.setState(1);
         addUser.setSalt(PasswordUtil.getRandomSalt());
@@ -185,7 +204,7 @@ public class UserServiceImpl implements UserService {
             invite.setUpdateTime(new Date());
             invitationMapper.updateByPrimaryKeySelective(invite);
 
-            // todo 通知租户添加成员
+            // 通知租户添加成员
             addUser.setTenantId(invite.getTenantId());
             addUser.setNickname(invite.getUserName());
             tenantClient.inviteMemberSuccess(addUser);

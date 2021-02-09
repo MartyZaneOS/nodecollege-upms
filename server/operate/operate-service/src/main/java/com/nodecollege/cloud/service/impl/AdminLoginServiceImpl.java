@@ -1,6 +1,7 @@
 package com.nodecollege.cloud.service.impl;
 
 import com.nodecollege.cloud.common.constants.RedisConstants;
+import com.nodecollege.cloud.common.enums.ErrorEnum;
 import com.nodecollege.cloud.common.exception.NCException;
 import com.nodecollege.cloud.common.model.NCLoginUserVO;
 import com.nodecollege.cloud.common.model.PowerVO;
@@ -83,6 +84,12 @@ public class AdminLoginServiceImpl implements AdminLoginService {
         // 清除登录失败次数缓存
         passwordPolicyService.deleteLoginFileNum(loginVO.getAccount());
         return adminLoginInfo;
+    }
+
+    @Override
+    public NCLoginUserVO getAdminInfoByToken(LoginVO loginVO) {
+        NCUtils.nullOrEmptyThrow(loginVO.getToken());
+        return redisUtils.get(RedisConstants.ADMIN_LOGIN_INFO + loginVO.getToken(), NCLoginUserVO.class);
     }
 
     /**

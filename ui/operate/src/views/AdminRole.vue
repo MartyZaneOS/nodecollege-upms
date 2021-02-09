@@ -73,8 +73,9 @@
     </a-modal>
     <a-modal v-model="bindModal.visible" title="绑定菜单">
       <a-tabs v-model="bindModal.navSelect" @change="modelNavChange">
-        <a-tab-pane :key="1" tab="PC端"></a-tab-pane>
-        <a-tab-pane :key="0" tab="其他"></a-tab-pane>
+        <a-tab-pane :key="1" tab="PC端后台"></a-tab-pane>
+        <a-tab-pane :key="0" tab="PC端首页"></a-tab-pane>
+        <a-tab-pane :key="2" tab="移动端"></a-tab-pane>
       </a-tabs>
       <a-tree
           :replace-fields="{children:'children', title:'menuName', key: 'menuCode'}"

@@ -36,13 +36,13 @@
       </a-table>
       <NCPagination :page="pageObj" @changePage="(page)=>{this.pageObj = page}" @searchList="searchList"/>
     </a-col>
-    <a-modal v-model="model.visible" :title="model.title">
+    <a-modal v-model="model.visible" :title="model.title" :label-col="model.labelCol" :wrapper-col="model.wrapperCol">
       <a-form :form="model.form">
-        <a-form-item label="管理员账号" :label-col="model.labelCol" :wrapper-col="model.wrapperCol">
+        <a-form-item label="管理员账号">
           <a-input placeholder="请输入管理员账号！"
                    v-decorator="['account', {rules: [{ required: true, message: '请输入管理员账号！'}]}]"/>
         </a-form-item>
-        <a-form-item label="管理员电话" :label-col="model.labelCol" :wrapper-col="model.wrapperCol">
+        <a-form-item label="管理员电话">
           <a-input placeholder="请输入管理员电话！"
                    v-decorator="['telephone', {rules: [{ required: true, message: '请输入管理员电话！'}]}]"/>
         </a-form-item>
@@ -106,8 +106,9 @@
         </a-col>
         <a-col span="12">
           <a-tabs v-model="powerModal.navSelect" @change="modelNavChange">
-            <a-tab-pane :key="1" tab="PC端"></a-tab-pane>
-            <a-tab-pane :key="0" tab="其他"></a-tab-pane>
+            <a-tab-pane :key="1" tab="PC端后台"></a-tab-pane>
+            <a-tab-pane :key="0" tab="PC端首页"></a-tab-pane>
+            <a-tab-pane :key="2" tab="移动端"></a-tab-pane>
           </a-tabs>
           <a-tree
               :replace-fields="{children:'children', title:'menuName', key: 'menuCode'}"

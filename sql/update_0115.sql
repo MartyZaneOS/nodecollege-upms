@@ -14,3 +14,4 @@ alter table t_role_menu
 -- operate库
 -- 日志出参格式修改
 ALTER TABLE sys_log modify out_param varchar(8192) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '出参';
+ALTER TABLE sys_log modify in_param varchar(8192) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '入参';
